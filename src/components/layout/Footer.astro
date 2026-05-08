@@ -1,0 +1,302 @@
+---
+import { SITE_CONFIG } from '~/config/site';
+
+const base = import.meta.env.BASE_URL;
+const b = base.replace(/\/$/, ''); // base sin trailing slash para concatenar rutas
+
+const serviceLinks = [
+  { label: 'Masaje Relajante',        href: '/masaje-californiano-relajante/' },
+  { label: 'Masaje a Cuatro Manos',   href: '/masaje-californiano-cuatro-manos/' },
+  { label: 'Masaje para Dos',         href: '/masaje-californiano-para-dos/' },
+  { label: 'Eventos y Negocios',      href: '/servicios-masaje-eventos-negocios/' },
+  { label: 'Aprende Masaje',          href: '/aprende-masaje-californiano/' },
+];
+
+const infoLinks = [
+  { label: 'Sobre mí',               href: '/sobre-mi/' },
+  { label: 'Sobre el Masaje',         href: '/sobre-masaje-californiano/' },
+  { label: 'Regala un Masaje',        href: '/regala-masaje/' },
+  { label: 'FAQs',                    href: '/faqs/' },
+  { label: 'Contacto',               href: '/contacto/' },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+
+    <!-- Col 1: Logo + tagline -->
+    <div class="site-footer__brand">
+      <a href={base} aria-label="Voramà Terapias — inicio">
+        <img
+          src={`${base}logo.svg`}
+          alt="Voramà Terapias"
+          width="56"
+          height="67"
+          loading="lazy"
+        />
+      </a>
+      <p class="site-footer__tagline">
+        La tranquilidad exterior comienza con la serenidad interior
+      </p>
+      {SITE_CONFIG.social.instagram && (
+        <a
+          href={SITE_CONFIG.social.instagram}
+          class="site-footer__social"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Instagram de Voramà Terapias"
+        >
+          <!-- Icono Instagram inline -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+          </svg>
+          <span>@vorama.terapias</span>
+        </a>
+      )}
+    </div>
+
+    <!-- Col 2: Servicios -->
+    <nav class="site-footer__nav" aria-label="Servicios">
+      <h3 class="site-footer__nav-title">Servicios</h3>
+      <ul role="list">
+        {serviceLinks.map(({ label, href }) => (
+          <li><a href={`${b}${href}`}>{label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <!-- Col 3: Información -->
+    <nav class="site-footer__nav" aria-label="Información">
+      <h3 class="site-footer__nav-title">Información</h3>
+      <ul role="list">
+        {infoLinks.map(({ label, href }) => (
+          <li><a href={`${b}${href}`}>{label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <!-- Col 4: Ubicación + contacto -->
+    <div class="site-footer__contact">
+      <h3 class="site-footer__nav-title">Ubicación</h3>
+      <address class="site-footer__address">
+        <p>{SITE_CONFIG.name}</p>
+        <p>{SITE_CONFIG.address.street}</p>
+        <p>{SITE_CONFIG.address.locality}, {SITE_CONFIG.address.postalCode}</p>
+      </address>
+      <a
+        href={SITE_CONFIG.whatsapp}
+        class="site-footer__phone"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Llamar o escribir a ${SITE_CONFIG.telephone}`}
+      >
+        {SITE_CONFIG.telephone}
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Línea inferior -->
+  <div class="site-footer__bottom">
+    <p class="site-footer__copy">
+      &copy; {year} {SITE_CONFIG.name} — Masaje Californiano Barcelona
+    </p>
+    <div class="site-footer__legal" role="list">
+      <!-- Los botones disparan LegalDialog (B6). Por ahora son buttons accesibles. -->
+      <button type="button" class="site-footer__legal-btn" data-dialog="privacidad" role="listitem">
+        Política de Privacidad
+      </button>
+      <button type="button" class="site-footer__legal-btn" data-dialog="cookies" role="listitem">
+        Política de Cookies
+      </button>
+      <button type="button" class="site-footer__legal-btn" data-dialog="aviso-legal" role="listitem">
+        Aviso Legal
+      </button>
+    </div>
+  </div>
+</footer>
+
+<style>
+  /* ── Layout ──────────────────────────────────────────────── */
+
+  .site-footer {
+    background-color: var(--vrm-color-bg-alt);
+    border-top: 1px solid var(--vrm-color-border);
+    margin-top: auto;
+  }
+
+  .site-footer__inner {
+    max-width: var(--vrm-container-width);
+    margin-inline: auto;
+    padding: var(--vrm-space-xl) var(--vrm-space-lg) var(--vrm-space-lg);
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: var(--vrm-space-xl);
+  }
+
+  /* ── Brand ───────────────────────────────────────────────── */
+
+  .site-footer__brand {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vrm-space-md);
+
+    & a:first-child:hover img {
+      opacity: 0.85;
+    }
+  }
+
+  .site-footer__tagline {
+    font-style: italic;
+    color: var(--vrm-color-text-muted);
+    font-size: var(--vrm-font-size-sm);
+    line-height: var(--vrm-line-height-relaxed);
+    margin-bottom: 0;
+  }
+
+  .site-footer__social {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--vrm-space-sm);
+    color: var(--vrm-color-text-muted);
+    font-size: var(--vrm-font-size-sm);
+    text-decoration: none;
+    transition: color var(--vrm-transition-fast);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--vrm-color-primary);
+      text-decoration: none;
+    }
+  }
+
+  /* ── Nav columnas ────────────────────────────────────────── */
+
+  .site-footer__nav-title {
+    font-family: var(--vrm-font-body);
+    font-size: var(--vrm-font-size-sm);
+    font-weight: var(--vrm-font-weight-semibold);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--vrm-color-text-muted);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  .site-footer__nav ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--vrm-space-sm);
+  }
+
+  .site-footer__nav a {
+    font-size: var(--vrm-font-size-sm);
+    color: var(--vrm-color-text);
+    text-decoration: none;
+    transition: color var(--vrm-transition-fast);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--vrm-color-primary);
+      text-decoration: none;
+    }
+  }
+
+  /* ── Contacto ────────────────────────────────────────────── */
+
+  .site-footer__address {
+    font-style: normal;
+    font-size: var(--vrm-font-size-sm);
+    color: var(--vrm-color-text);
+    line-height: var(--vrm-line-height-relaxed);
+    margin-bottom: var(--vrm-space-sm);
+
+    & p {
+      margin-bottom: 0;
+    }
+  }
+
+  .site-footer__phone {
+    display: inline-block;
+    margin-top: var(--vrm-space-sm);
+    font-size: var(--vrm-font-size-sm);
+    font-weight: var(--vrm-font-weight-semibold);
+    color: var(--vrm-color-primary);
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--vrm-color-primary-light);
+      text-decoration: underline;
+    }
+  }
+
+  /* ── Bottom bar ──────────────────────────────────────────── */
+
+  .site-footer__bottom {
+    max-width: var(--vrm-container-width);
+    margin-inline: auto;
+    padding: var(--vrm-space-md) var(--vrm-space-lg);
+    border-top: 1px solid var(--vrm-color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--vrm-space-md);
+    flex-wrap: wrap;
+  }
+
+  .site-footer__copy {
+    font-size: var(--vrm-font-size-xs);
+    color: var(--vrm-color-text-muted);
+    margin-bottom: 0;
+  }
+
+  .site-footer__legal {
+    display: flex;
+    gap: var(--vrm-space-md);
+    flex-wrap: wrap;
+  }
+
+  .site-footer__legal-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: var(--vrm-font-size-xs);
+    color: var(--vrm-color-text-muted);
+    padding: 0;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color var(--vrm-transition-fast);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--vrm-color-primary);
+    }
+  }
+
+  /* ── Responsive ──────────────────────────────────────────── */
+
+  @media (max-width: 1024px) {
+    .site-footer__inner {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--vrm-space-lg);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .site-footer__inner {
+      grid-template-columns: 1fr;
+      padding-inline: var(--vrm-space-md);
+    }
+
+    .site-footer__bottom {
+      flex-direction: column;
+      align-items: flex-start;
+      padding-inline: var(--vrm-space-md);
+    }
+  }
+</style>

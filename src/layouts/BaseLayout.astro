@@ -2,6 +2,10 @@
 // Tokens y estilos base — globales para toda la página
 import '~/styles/theme.css';
 import '~/styles/globals.css';
+// Componentes de layout presentes en todas las páginas
+import Header from '~/components/layout/Header.astro';
+import Footer from '~/components/layout/Footer.astro';
+import WhatsAppFloating from '~/components/layout/WhatsAppFloating.astro';
 
 interface Props {
   /** <title> de la página. Debe ser único por página. */
@@ -77,6 +81,12 @@ const base = import.meta.env.BASE_URL;
     <link rel="manifest" href={`${base}site.webmanifest`} />
   </head>
   <body class:list={[bodyClass]}>
-    <slot />
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <WhatsAppFloating />
+    <!-- LegalDialog x3 se montará aquí en B6 -->
   </body>
 </html>

@@ -78,6 +78,14 @@ body {
   background-color: var(--vrm-color-bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Layout: header sticky + footer al fondo */
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+
+  & > main {
+    flex: 1;
+  }
 }
 
 /* ── Tipografía base ─────────────────────────────────────── */

@@ -1,0 +1,359 @@
+---
+const base = import.meta.env.BASE_URL;
+
+// Ruta activa para aria-current="page"
+const currentPath = Astro.url.pathname.replace(base.replace(/\/$/, ''), '') || '/';
+
+interface NavItem {
+  label: string;
+  href: string;
+}
+
+const navItems: NavItem[] = [
+  { label: 'Inicio',                  href: '/' },
+  { label: 'Servicios',               href: '/servicios-masaje-californiano/' },
+  { label: 'Aprende',                 href: '/aprende-masaje-californiano/' },
+  { label: 'Sobre mí',               href: '/sobre-mi/' },
+  { label: 'FAQs',                    href: '/faqs/' },
+  { label: 'Contacto',               href: '/contacto/' },
+];
+
+function isActive(href: string): boolean {
+  if (href === '/') return currentPath === '/';
+  return currentPath.startsWith(href);
+}
+---
+
+<!-- Sentinel para IntersectionObserver sticky -->
+<div id="header-sentinel" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="site-header__inner">
+
+    <!-- Logo -->
+    <a href={base} class="site-header__logo" aria-label="Voramà Terapias — inicio">
+      <img
+        src={`${base}logo.svg`}
+        alt="Voramà Terapias"
+        width="48"
+        height="57"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </a>
+
+    <!-- Nav desktop -->
+    <nav class="site-header__nav" aria-label="Navegación principal">
+      <ul role="list">
+        {navItems.map(({ label, href }) => (
+          <li>
+            <a
+              href={`${base.replace(/\/$/, '')}${href}`}
+              aria-current={isActive(href) ? 'page' : undefined}
+            >
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <!-- CTA Reserva (abre CalendlyDialog en B6) -->
+    <a
+      href={`${base.replace(/\/$/, '')}/contacto/`}
+      class="site-header__cta"
+      id="btn-reserva-header"
+      aria-label="Reservar sesión de masaje"
+    >
+      Reserva
+    </a>
+
+    <!-- Toggle mobile -->
+    <button
+      class="site-header__menu-toggle"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      aria-label="Abrir menú de navegación"
+      type="button"
+    >
+      <span class="site-header__menu-toggle-bar"></span>
+      <span class="site-header__menu-toggle-bar"></span>
+      <span class="site-header__menu-toggle-bar"></span>
+    </button>
+
+  </div>
+
+  <!-- Drawer mobile -->
+  <nav
+    class="site-header__mobile"
+    id="mobile-menu"
+    aria-label="Menú móvil"
+    hidden
+  >
+    <ul role="list">
+      {navItems.map(({ label, href }) => (
+        <li>
+          <a
+            href={`${base.replace(/\/$/, '')}${href}`}
+            aria-current={isActive(href) ? 'page' : undefined}
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+    <a
+      href={`${base.replace(/\/$/, '')}/contacto/`}
+      class="site-header__cta site-header__cta--mobile"
+    >
+      Reserva
+    </a>
+  </nav>
+</header>
+
+<style>
+  /* ── Layout ──────────────────────────────────────────────── */
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--vrm-color-bg);
+    border-bottom: 1px solid transparent;
+    transition:
+      border-color var(--vrm-transition-base),
+      box-shadow var(--vrm-transition-base);
+
+    &.is-stuck {
+      border-color: var(--vrm-color-border);
+      box-shadow: var(--vrm-shadow-sm);
+    }
+  }
+
+  #header-sentinel {
+    position: absolute;
+    top: 0;
+    height: 1px;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  .site-header__inner {
+    max-width: var(--vrm-container-width);
+    margin-inline: auto;
+    padding-inline: var(--vrm-space-lg);
+    height: 72px;
+    display: flex;
+    align-items: center;
+    gap: var(--vrm-space-lg);
+  }
+
+  /* ── Logo ────────────────────────────────────────────────── */
+
+  .site-header__logo {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+
+    & img {
+      width: 48px;
+      height: auto;
+    }
+
+    &:hover,
+    &:focus-visible {
+      opacity: 0.85;
+      text-decoration: none;
+    }
+  }
+
+  /* ── Nav desktop ─────────────────────────────────────────── */
+
+  .site-header__nav {
+    flex: 1;
+
+    & ul {
+      display: flex;
+      align-items: center;
+      gap: var(--vrm-space-md);
+      list-style: none;
+    }
+
+    & a {
+      font-size: var(--vrm-font-size-sm);
+      font-weight: var(--vrm-font-weight-medium);
+      color: var(--vrm-color-text);
+      padding-block: var(--vrm-space-xs);
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      transition:
+        color var(--vrm-transition-fast),
+        border-color var(--vrm-transition-fast);
+
+      &:hover,
+      &:focus-visible {
+        color: var(--vrm-color-primary);
+        text-decoration: none;
+        border-color: var(--vrm-color-primary-light);
+      }
+
+      &[aria-current='page'] {
+        color: var(--vrm-color-primary);
+        border-color: var(--vrm-color-primary);
+      }
+    }
+  }
+
+  /* ── CTA ─────────────────────────────────────────────────── */
+
+  .site-header__cta {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    padding: var(--vrm-space-xs) var(--vrm-space-md);
+    background-color: var(--vrm-color-primary);
+    color: var(--vrm-color-text-inverted);
+    font-size: var(--vrm-font-size-sm);
+    font-weight: var(--vrm-font-weight-semibold);
+    border-radius: var(--vrm-radius-full);
+    text-decoration: none;
+    transition: background-color var(--vrm-transition-fast);
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--vrm-color-primary-light);
+      color: var(--vrm-color-text-inverted);
+      text-decoration: none;
+    }
+  }
+
+  /* ── Toggle mobile ───────────────────────────────────────── */
+
+  .site-header__menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--vrm-space-xs);
+    margin-left: auto;
+    border-radius: var(--vrm-radius-sm);
+
+    &:focus-visible {
+      outline: 2px solid var(--vrm-color-primary);
+      outline-offset: 2px;
+    }
+  }
+
+  .site-header__menu-toggle-bar {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background-color: var(--vrm-color-text);
+    border-radius: 2px;
+    transition: transform var(--vrm-transition-fast), opacity var(--vrm-transition-fast);
+  }
+
+  /* ── Mobile drawer ───────────────────────────────────────── */
+
+  .site-header__mobile {
+    border-top: 1px solid var(--vrm-color-border);
+    background-color: var(--vrm-color-bg);
+    padding: var(--vrm-space-md) var(--vrm-space-lg) var(--vrm-space-lg);
+
+    & ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--vrm-space-xs);
+    }
+
+    & a {
+      display: block;
+      padding-block: var(--vrm-space-sm);
+      font-size: var(--vrm-font-size-md);
+      color: var(--vrm-color-text);
+      text-decoration: none;
+      border-bottom: 1px solid var(--vrm-color-border);
+
+      &:hover {
+        color: var(--vrm-color-primary);
+      }
+
+      &[aria-current='page'] {
+        color: var(--vrm-color-primary);
+        font-weight: var(--vrm-font-weight-semibold);
+      }
+    }
+  }
+
+  .site-header__cta--mobile {
+    display: inline-flex;
+    margin-top: var(--vrm-space-md);
+    border-radius: var(--vrm-radius-full);
+  }
+
+  /* ── Responsive ──────────────────────────────────────────── */
+
+  @media (max-width: 768px) {
+    .site-header__nav {
+      display: none;
+    }
+
+    .site-header__cta:not(.site-header__cta--mobile) {
+      display: none;
+    }
+
+    .site-header__menu-toggle {
+      display: flex;
+    }
+  }
+
+  /* prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    .site-header,
+    .site-header__nav a,
+    .site-header__cta,
+    .site-header__menu-toggle-bar {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Sticky: añade .is-stuck cuando el sentinel sale del viewport
+  const sentinel = document.getElementById('header-sentinel');
+  const header = document.querySelector('.site-header');
+
+  if (sentinel && header) {
+    new IntersectionObserver(([entry]) => {
+      header.classList.toggle('is-stuck', !entry.isIntersecting);
+    }).observe(sentinel);
+  }
+
+  // Mobile menu toggle
+  const toggle = document.querySelector<HTMLButtonElement>('.site-header__menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  toggle?.addEventListener('click', () => {
+    const expanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!expanded));
+    if (expanded) {
+      mobileMenu?.setAttribute('hidden', '');
+    } else {
+      mobileMenu?.removeAttribute('hidden');
+    }
+  });
+
+  // Cerrar drawer al pulsar un enlace
+  mobileMenu?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      toggle?.setAttribute('aria-expanded', 'false');
+      mobileMenu.setAttribute('hidden', '');
+    });
+  });
+</script>
