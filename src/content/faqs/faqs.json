@@ -1,0 +1,50 @@
+[
+  {
+    "question": "¿Cuáles son los beneficios del masaje californiano?",
+    "answer": "Relajación y alivio físico. El masaje californiano ofrece numerosos beneficios, como la reducción del estrés, el alivio de tensiones musculares y contracturas, y la mejora de la circulación. Es una técnica que relaja profundamente tanto el cuerpo como la mente, ayudando a combatir el insomnio y la ansiedad. Además, su enfoque integral puede favorecer una sensación de bienestar general y promover una mejor recuperación física tras jornadas exigentes o actividades intensas.",
+    "order": 1,
+    "id": "faq-1"
+  },
+  {
+    "question": "¿Quién puede recibir un masaje californiano?",
+    "answer": "Apto para casi todos. El masaje californiano es adecuado para personas de todas las edades que buscan relajación, alivio de tensiones musculares o una mejora en su bienestar general. No obstante, si tienes condiciones médicas específicas, como lesiones recientes, infecciones en la piel o cualquier otra dolencia, se recomienda consultar previamente con un profesional de la salud antes de recibirlo.",
+    "order": 2,
+    "id": "faq-2"
+  },
+  {
+    "question": "¿Qué diferencia al masaje californiano de otros tipos de masajes y por qué elegirlo?",
+    "answer": "Técnica fluida y holística. Lo que distingue al masaje californiano son sus movimientos largos, envolventes y uniformes, que trabajan todo el cuerpo de manera fluida. A diferencia de técnicas más focalizadas, el masaje californiano combina relajación profunda con efectos terapéuticos, como el alivio de contracturas y la reducción de dolores musculares. Es ideal para quienes buscan no solo relajarse, sino también tratar molestias físicas de manera suave y efectiva. Por su enfoque integral y reconfortante, es una excelente elección frente a masajes más intensos o específicos.",
+    "order": 3,
+    "id": "faq-3"
+  },
+  {
+    "question": "¿Se necesita algún tipo de preparación antes del masaje californiano?",
+    "answer": "No. No es necesaria una preparación específica. Se recomienda evitar comidas copiosas antes del masaje y no beber líquidos en exceso. El terapeuta proporcionará el entorno adecuado para que te sientas a gusto y disfrutes plenamente de la experiencia.",
+    "order": 4,
+    "id": "faq-4"
+  },
+  {
+    "question": "¿Puedo hacer ejercicio después de recibir un masaje californiano?",
+    "answer": "Mejor esperar unas horas. Aunque es posible realizar ejercicio después de un masaje californiano, se recomienda esperar al menos 24 horas para permitir que los beneficios del tratamiento se asienten en el cuerpo. Esto es especialmente importante si el masaje ha sido profundo, ya que los músculos y tejidos necesitan tiempo para recuperarse y aprovechar los efectos relajantes y reparadores del masaje.",
+    "order": 5,
+    "id": "faq-5"
+  },
+  {
+    "question": "¿Ambos recibimos el masaje al mismo tiempo?",
+    "answer": "Sí. Ambos reciben el masaje al mismo tiempo, en la misma sala, cada terapeuta da el masaje a uno de los dos.",
+    "order": 6,
+    "id": "faq-6"
+  },
+  {
+    "question": "¿El masaje en pareja tiene los mismos beneficios que el individual?",
+    "answer": "Sí, pero compartidos. El masaje en pareja ofrece los mismos beneficios terapéuticos que el individual, como relajación muscular y alivio del estrés, pero añade la oportunidad de compartir esta experiencia con alguien especial, fortaleciendo el vínculo emocional.",
+    "order": 7,
+    "id": "faq-7"
+  },
+  {
+    "question": "¿Se pueden trabajar necesidades específicas de cada persona durante el masaje?",
+    "answer": "Sí. Aunque el masaje en pareja se sincroniza para ambos, los terapeutas pueden adaptar las técnicas a las necesidades específicas de cada persona, garantizando que cada uno reciba la atención que requiere.",
+    "order": 8,
+    "id": "faq-8"
+  }
+]
