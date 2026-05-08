@@ -1,0 +1,92 @@
+/* ============================================================
+   theme.css — Design tokens del sistema Voramà
+   Prefijo --vrm-* para evitar choques con third-party.
+   Todos los colores extraídos del sitio actual (ast-global-color-*).
+   ============================================================ */
+
+:root {
+  /* ── Colores ─────────────────────────────────────────────── */
+
+  /* Primarios — verde bosque oscuro */
+  --vrm-color-primary:       #205b4f;
+  --vrm-color-primary-light: #53a292; /* hover / estados activos */
+
+  /* Acento — terracota cálida */
+  --vrm-color-accent:        #cba590;
+
+  /* Texto */
+  --vrm-color-text:          #161513; /* body — casi-negro cálido */
+  --vrm-color-text-muted:    #7f7c76; /* secundario, meta, hints */
+  --vrm-color-text-inverted: #ffffff; /* sobre fondos oscuros */
+
+  /* Fondos */
+  --vrm-color-bg:            #ffffff;
+  --vrm-color-bg-alt:        #f6f5f4; /* crema — secciones alternas */
+  --vrm-color-bg-subtle:     #d9e8e5; /* verde muy suave */
+
+  /* Bordes */
+  --vrm-color-border:        #e2e1df;
+  --vrm-color-border-strong: #b8b6b3;
+
+  /* ── Tipografía ──────────────────────────────────────────── */
+
+  --vrm-font-body:    'Inter', system-ui, sans-serif;
+  --vrm-font-display: 'Brygada 1918', Georgia, serif;
+
+  --vrm-font-size-xs:   0.75rem;   /* 12px */
+  --vrm-font-size-sm:   0.875rem;  /* 14px */
+  --vrm-font-size-base: 1rem;      /* 16px */
+  --vrm-font-size-md:   1.125rem;  /* 18px */
+  --vrm-font-size-lg:   1.25rem;   /* 20px */
+  --vrm-font-size-xl:   1.5rem;    /* 24px */
+  --vrm-font-size-2xl:  2rem;      /* 32px */
+  --vrm-font-size-3xl:  2.5rem;    /* 40px */
+  --vrm-font-size-4xl:  3rem;      /* 48px */
+
+  --vrm-line-height-tight:   1.1;
+  --vrm-line-height-heading: 1.2;
+  --vrm-line-height-body:    1.65;
+  --vrm-line-height-relaxed: 1.8;
+
+  --vrm-font-weight-normal:   400;
+  --vrm-font-weight-medium:   500;
+  --vrm-font-weight-semibold: 600;
+
+  /* ── Espaciado ───────────────────────────────────────────── */
+
+  --vrm-space-xs:  0.25rem;  /* 4px  */
+  --vrm-space-sm:  0.5rem;   /* 8px  */
+  --vrm-space-md:  1rem;     /* 16px */
+  --vrm-space-lg:  2rem;     /* 32px */
+  --vrm-space-xl:  4rem;     /* 64px */
+  --vrm-space-2xl: 6rem;     /* 96px */
+  --vrm-space-3xl: 8rem;     /* 128px */
+
+  /* ── Layout ──────────────────────────────────────────────── */
+
+  --vrm-container-width:   1200px;
+  --vrm-container-narrow:  750px;
+  --vrm-section-padding-y: var(--vrm-space-xl);
+
+  /* ── Radios ──────────────────────────────────────────────── */
+
+  --vrm-radius-sm:   4px;
+  --vrm-radius-md:   8px;
+  --vrm-radius-lg:   16px;
+  --vrm-radius-full: 9999px;
+
+  /* ── Sombras ─────────────────────────────────────────────── */
+
+  --vrm-shadow-sm: 0 1px 3px rgb(0 0 0 / 0.08);
+  --vrm-shadow-md: 0 4px 12px rgb(0 0 0 / 0.10);
+  --vrm-shadow-lg: 0 8px 24px rgb(0 0 0 / 0.12);
+
+  /* ── Transiciones ────────────────────────────────────────── */
+
+  --vrm-transition-fast: 150ms ease;
+  --vrm-transition-base: 250ms ease;
+  --vrm-transition-slow: 400ms ease;
+
+  /* ── Breakpoints (referencia — úsalos en @media) ─────────── */
+  /* mobile: 375px | tablet: 768px | desktop: 1024px | wide: 1280px */
+}

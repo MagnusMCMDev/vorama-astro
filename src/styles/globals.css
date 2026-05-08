@@ -1,0 +1,158 @@
+/* ============================================================
+   globals.css — Reset, fuentes self-hosted y estilos base
+   Importado en BaseLayout → afecta toda la página.
+   NO incluir estilos de componentes aquí.
+   ============================================================ */
+
+/* ── Fuentes self-hosted (latin subset, Fase A) ──────────── */
+/* Vite resuelve las rutas relativas y hace hash de los archivos */
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/inter-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC,
+    U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F,
+    U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../assets/fonts/inter-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC,
+    U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F,
+    U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Brygada 1918';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../assets/fonts/brygada1918-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC,
+    U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F,
+    U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Brygada 1918';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../assets/fonts/brygada1918-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC,
+    U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F,
+    U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ── Reset ───────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Base HTML ───────────────────────────────────────────── */
+
+html {
+  font-size: 100%;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--vrm-font-body);
+  font-size: var(--vrm-font-size-base);
+  font-weight: var(--vrm-font-weight-normal);
+  line-height: var(--vrm-line-height-body);
+  color: var(--vrm-color-text);
+  background-color: var(--vrm-color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Tipografía base ─────────────────────────────────────── */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--vrm-font-display);
+  font-weight: var(--vrm-font-weight-semibold);
+  line-height: var(--vrm-line-height-heading);
+  color: var(--vrm-color-primary);
+}
+
+p {
+  margin-bottom: 1em;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+a {
+  color: var(--vrm-color-primary);
+  text-decoration: none;
+  transition: color var(--vrm-transition-fast);
+
+  &:hover,
+  &:focus-visible {
+    color: var(--vrm-color-primary-light);
+    text-decoration: underline;
+  }
+}
+
+/* Media resetados: no desbordamiento */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Inputs heredan fuente (reset común) */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Listas de navegación sin bullets */
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+}
+
+/* ── Accesibilidad — Focus visible (WCAG 2.4.7) ─────────── */
+
+/* Solo mostramos outline en navegación por teclado */
+:focus-visible {
+  outline: 2px solid var(--vrm-color-primary);
+  outline-offset: 3px;
+  border-radius: var(--vrm-radius-sm);
+}
+
+/* ── Utilidades globales ─────────────────────────────────── */
+
+/* Oculto visualmente pero accesible para screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

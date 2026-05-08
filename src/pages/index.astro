@@ -1,16 +1,15 @@
 ---
-// B1 — placeholder hasta que BaseLayout esté listo en B2
+// B2 — placeholder de portada hasta B7 (construcción de páginas)
+import BaseLayout from '~/layouts/BaseLayout.astro';
 ---
 
-<html lang="es">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Voramà Terapias — B1 Setup OK</title>
-	</head>
-	<body>
-		<h1>Hola Voramà 👋</h1>
-		<p>B1 setup correcto. Siguiente: B2 — Estilos base + BaseLayout.</p>
-	</body>
-</html>
+<BaseLayout
+  title="Voramà Terapias — Masaje Californiano en Barcelona"
+  description="Centro de masaje californiano en Barcelona. Sesiones individuales, en pareja y para eventos. Reserva online."
+>
+  <main style="padding: 4rem 2rem; font-family: sans-serif;">
+    <h1>Hola Voramà 👋</h1>
+    <p>B2 completo — BaseLayout, tokens <code>--vrm-*</code> y fuentes self-hosted activos.</p>
+    <p>Siguiente: B3 — Content Collections.</p>
+  </main>
+</BaseLayout>

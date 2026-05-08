@@ -1,0 +1,82 @@
+---
+// Tokens y estilos base — globales para toda la página
+import '~/styles/theme.css';
+import '~/styles/globals.css';
+
+interface Props {
+  /** <title> de la página. Debe ser único por página. */
+  title: string;
+  /** <meta name="description"> — 120-160 chars recomendado. */
+  description: string;
+  /** URL canónica. Por defecto: URL actual de la request. */
+  canonical?: string | undefined;
+  /** URL absoluta imagen Open Graph. Por defecto: og-default.webp. */
+  ogImage?: string | undefined;
+  /** Schema JSON-LD. Acepta un objeto o array de objetos. */
+  jsonLd?: object | object[] | undefined;
+  /** Clase extra para <body>, por si alguna página necesita override. */
+  bodyClass?: string | undefined;
+}
+
+const {
+  title,
+  description,
+  canonical = Astro.url.href,
+  ogImage,
+  jsonLd,
+  bodyClass,
+} = Astro.props;
+
+// Imagen OG: si no se pasa, usa og-default.webp relativo al site
+const siteOrigin = Astro.site?.origin ?? '';
+const ogImageUrl = ogImage ?? `${siteOrigin}/og-default.webp`;
+
+// JSON-LD: normaliza a array para el bucle
+const jsonLdSchemas = jsonLd
+  ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd])
+  : [];
+
+const base = import.meta.env.BASE_URL;
+---
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO básico -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:site_name" content="Voramà Terapias" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <!-- JSON-LD estructurado — is:inline porque lleva atributo type -->
+    {jsonLdSchemas.map((schema) => (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+    ))}
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href={`${base}favicon.ico`} />
+    <link rel="apple-touch-icon" href={`${base}icons/favicon-180.png`} />
+    <link rel="manifest" href={`${base}site.webmanifest`} />
+  </head>
+  <body class:list={[bodyClass]}>
+    <slot />
+  </body>
+</html>
