@@ -1,0 +1,89 @@
+---
+import { getEntry, render } from 'astro:content';
+import Dialog from './Dialog.astro';
+
+interface Props {
+  /** Slug del documento legal: 'privacidad' | 'cookies' | 'aviso-legal' */
+  slug: string;
+}
+
+const { slug } = Astro.props;
+
+const entry = await getEntry('legal', slug);
+if (!entry) throw new Error(`[LegalDialog] No se encontró el documento legal: "${slug}"`);
+
+const { Content } = await render(entry);
+const title = entry.data.title;
+---
+
+<Dialog id={`dialog-${slug}`} title={title}>
+  <div class="legal-content">
+    <Content />
+  </div>
+</Dialog>
+
+<style>
+  /* Tipografía básica para el contenido Markdown legal */
+  .legal-content {
+    font-size: var(--vrm-font-size-sm);
+    color: var(--vrm-color-text);
+    line-height: var(--vrm-line-height-relaxed);
+
+    & h2 {
+      font-family: var(--vrm-font-display);
+      font-size: var(--vrm-font-size-md);
+      color: var(--vrm-color-primary);
+      margin-top: var(--vrm-space-lg);
+      margin-bottom: var(--vrm-space-sm);
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+
+    & h3 {
+      font-size: var(--vrm-font-size-base);
+      font-weight: var(--vrm-font-weight-semibold);
+      color: var(--vrm-color-text);
+      margin-top: var(--vrm-space-md);
+      margin-bottom: var(--vrm-space-xs);
+    }
+
+    & p {
+      margin-bottom: var(--vrm-space-sm);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    & ul,
+    & ol {
+      padding-left: var(--vrm-space-lg);
+      margin-bottom: var(--vrm-space-sm);
+    }
+
+    & li {
+      margin-bottom: var(--vrm-space-xs);
+    }
+
+    & a {
+      color: var(--vrm-color-primary);
+      text-decoration: underline;
+
+      &:hover {
+        color: var(--vrm-color-primary-light);
+      }
+    }
+
+    & strong {
+      font-weight: var(--vrm-font-weight-semibold);
+    }
+
+    & hr {
+      border: none;
+      border-top: 1px solid var(--vrm-color-border);
+      margin-block: var(--vrm-space-md);
+    }
+  }
+</style>

@@ -1,0 +1,297 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/sections/PageHeader.astro';
+import Section from '~/components/sections/Section.astro';
+import AccordionFAQ from '~/components/sections/AccordionFAQ.astro';
+
+import imgQueEs from '~/assets/images/pages/relajante-1.webp';
+import imgEsalen from '~/assets/images/pages/esalen.webp';
+import imgBeneficios from '~/assets/images/pages/relajante-2.webp';
+import imgParaQuien from '~/assets/images/pages/para-quien.webp';
+import imgTecnicas from '~/assets/images/pages/tecnicas.webp';
+import imgFaqsExtra from '~/assets/images/pages/faqs.webp';
+
+const faqsCalifo = [
+  {
+    question: '¿Qué puedo esperar durante una sesión de masaje californiano?',
+    answer:
+      'Durante una sesión de masaje californiano, puedes esperar una experiencia de profunda relajación. El masajista utilizará movimientos largos y fluidos que cubrirán todo tu cuerpo, ayudándote a desconectar del estrés diario y a reconectar con tu cuerpo. Es importante que te sientas cómodo y que comuniques cualquier preferencia o necesidad específica que tengas durante la sesión.',
+  },
+  {
+    question: '¿Cómo debo prepararme para un masaje californiano?',
+    answer:
+      'No es necesario realizar ninguna preparación especial antes de un masaje californiano. Sin embargo, es recomendable llegar a la sesión bien hidratado y evitar comidas pesadas justo antes del masaje. Usa ropa cómoda y asegúrate de estar en un estado mental relajado para maximizar los beneficios de la experiencia.',
+  },
+  {
+    question: '¿Cuánto dura una sesión de masaje californiano?',
+    answer:
+      'Las sesiones de masaje californiano suelen durar alrededor de 90 minutos, dependiendo de tus necesidades y preferencias. Algunas personas prefieren sesiones más largas para disfrutar de una relajación más profunda.',
+  },
+  {
+    question: '¿Es adecuado para personas con condiciones médicas?',
+    answer:
+      'El masaje californiano es generalmente seguro para la mayoría de las personas. Sin embargo, si tienes alguna condición médica específica, es recomendable consultar con tu médico antes de recibir el masaje. Si tienes dudas, no dudes en comentarlas conmigo antes de la sesión.',
+  },
+];
+---
+
+<BaseLayout
+  title="Sobre el Masaje Californiano — Voramà Terapias"
+  description="Qué es el masaje californiano, sus orígenes, beneficios, técnicas y para quién está indicado. Una guía completa de Voramà Terapias."
+>
+  <PageHeader kicker="Sobre el" title="Masaje Californiano" />
+
+  <!-- ── §2: ¿Qué es? — imagen LEFT / texto RIGHT ── -->
+  <Section variant="default" ariaLabel="Qué es el masaje californiano">
+    <div class="row">
+      <figure class="row__media">
+        <Image
+          src={imgQueEs}
+          alt="Manos del terapeuta haciendo un Masaje Californiano sobre omoplato y hombro."
+          widths={[400, 600, 900]}
+          sizes="(max-width: 800px) 100vw, 45vw"
+          loading="eager"
+        />
+      </figure>
+      <div class="row__text">
+        <h2>¿Qué es el masaje californiano?</h2>
+        <p>
+          El masaje californiano es una técnica de masaje profundamente relajante y terapéutica que
+          se caracteriza por su enfoque en la conexión integral entre cuerpo, mente y emociones. Se
+          distingue por sus movimientos largos, fluidos y envolventes, que recorren todo el cuerpo,
+          utilizando una presión suave a moderada. Este tipo de masaje busca crear una sensación de
+          totalidad, en la que el receptor se siente plenamente conectado con su cuerpo y sus
+          emociones.
+        </p>
+        <p>
+          A diferencia de otros masajes que pueden centrarse más en aliviar áreas específicas de
+          tensión muscular, el masaje californiano se enfoca en trabajar todo el cuerpo de manera
+          armoniosa, promoviendo un estado de relajación profunda y conciencia corporal. Es ideal
+          para aquellas personas que buscan una experiencia de bienestar holístico.
+        </p>
+      </div>
+    </div>
+  </Section>
+
+  <!-- ── §3: Orígenes — texto LEFT / imagen RIGHT (Esalen) ── -->
+  <Section variant="muted" ariaLabel="Orígenes" id="origenes">
+    <div class="row row--reverse">
+      <div class="row__text">
+        <h3>Orígenes y evolución</h3>
+        <p>
+          El masaje californiano tiene sus raíces en la década de 1970, en el Instituto Esalen,
+          ubicado en Big Sur, California. Este centro era conocido por ser un lugar de encuentro
+          para diversas corrientes de terapia y autoconocimiento, y fue allí donde se desarrolló
+          esta técnica. Los primeros masajistas que practicaban el masaje californiano estaban
+          influenciados por ideas de la psicología humanista, que enfatizaba la importancia de la
+          experiencia sensorial y la conexión entre cuerpo y mente.
+        </p>
+        <p>
+          Originalmente, este masaje se utilizaba en sesiones de terapia grupal, donde las personas
+          podían experimentar un contacto respetuoso y reconfortante, promoviendo la sanación
+          emocional y física. A lo largo de los años, el masaje californiano ha evolucionado y se
+          ha refinado, integrando técnicas de otras modalidades de masaje y adaptándose a las
+          necesidades de los clientes modernos, pero siempre manteniendo su esencia centrada en el
+          bienestar holístico.
+        </p>
+      </div>
+      <figure class="row__media">
+        <Image
+          src={imgEsalen}
+          alt="Esalen, California. Zona donde se empezó a desarrollar las bases del masaje californiano."
+          widths={[400, 600, 900]}
+          sizes="(max-width: 800px) 100vw, 45vw"
+        />
+      </figure>
+    </div>
+  </Section>
+
+  <!-- ── §4: Beneficios — heading full + img LEFT / lista RIGHT ── -->
+  <Section variant="default" ariaLabel="Beneficios" id="beneficios">
+    <h2 class="full-heading">Beneficios del masaje californiano</h2>
+    <div class="row">
+      <figure class="row__media">
+        <Image
+          src={imgBeneficios}
+          alt="Masaje Californiano en pie. Los pulgares se deslizan sobre la planta del pie ejecutando movimientos envolventes y relajantes."
+          widths={[400, 600, 900]}
+          sizes="(max-width: 800px) 100vw, 45vw"
+        />
+      </figure>
+      <div class="row__text">
+        <p>
+          El masaje californiano ofrece una amplia gama de beneficios tanto a nivel físico como
+          emocional:
+        </p>
+        <ul class="bullet-list">
+          <li><strong>Relajación profunda:</strong> los movimientos largos y envolventes ayudan a inducir un estado de relajación profunda, reduciendo significativamente los niveles de estrés y ansiedad.</li>
+          <li><strong>Alivio del estrés:</strong> ideal para liberar tensiones acumuladas y proporcionar una sensación de calma y bienestar general.</li>
+          <li><strong>Mejora de la circulación:</strong> los movimientos fluidos y rítmicos promueven una mejor circulación sanguínea, ayudando a oxigenar los tejidos y eliminar toxinas del cuerpo.</li>
+          <li><strong>Reconexión con el cuerpo:</strong> al trabajar de manera integral, el masaje ayuda a los receptores a reconectarse con su cuerpo, aumentando la conciencia corporal y la autoaceptación.</li>
+          <li><strong>Liberación emocional:</strong> muchos clientes experimentan una liberación emocional durante o después del masaje, ya que esta técnica puede ayudar a desbloquear emociones reprimidas.</li>
+          <li><strong>Mejora de la flexibilidad y movilidad:</strong> los estiramientos suaves y la atención a todo el cuerpo pueden ayudar a mejorar la flexibilidad y la movilidad articular.</li>
+          <li><strong>Apoyo al bienestar mental:</strong> al proporcionar una experiencia de relajación profunda y reconexión, también puede ayudar a mejorar la calidad del sueño y a promover un estado mental positivo.</li>
+        </ul>
+      </div>
+    </div>
+  </Section>
+
+  <!-- ── §5: ¿Para quién? — texto LEFT / imagen RIGHT ── -->
+  <Section variant="muted" ariaLabel="Para quién está indicado">
+    <div class="row row--reverse">
+      <div class="row__text">
+        <h3>¿Para quién es el masaje californiano?</h3>
+        <p>
+          El masaje californiano es adecuado para casi cualquier persona que busque una experiencia
+          de relajación profunda y una reconexión integral con su cuerpo y mente. Es especialmente
+          beneficioso para:
+        </p>
+        <ul class="bullet-list">
+          <li><strong>Personas con altos niveles de estrés:</strong> aquellos que llevan un estilo de vida agitado pueden encontrar en el masaje californiano una vía para liberar tensiones y recargar energías.</li>
+          <li><strong>Personas que desean mejorar su bienestar emocional:</strong> quienes buscan una manera de explorar y liberar emociones reprimidas pueden beneficiarse de la conexión profunda que ofrece este masaje.</li>
+          <li><strong>Personas con dolores musculares crónicos:</strong> aunque no es un masaje profundamente invasivo, puede ayudar a aliviar dolores musculares leves a moderados a través de la relajación y la mejora de la circulación.</li>
+          <li><strong>Personas que desean mejorar su conciencia corporal:</strong> aquellos interesados en una mayor conexión y conciencia de su cuerpo encontrarán en este masaje una herramienta poderosa.</li>
+        </ul>
+        <p>
+          Sin embargo, como con cualquier terapia, hay algunas contraindicaciones. Personas con
+          ciertas condiciones médicas graves, como problemas cardíacos severos, infecciones activas
+          o lesiones agudas, deben consultar con un médico antes de recibir un masaje californiano.
+        </p>
+      </div>
+      <figure class="row__media">
+        <Image
+          src={imgParaQuien}
+          alt="Dos terapeutas haciendo un masaje a cuatro manos sobre una espalda; las cuatro manos pasan a lo largo de la espalda de forma cruzada."
+          widths={[400, 600, 900]}
+          sizes="(max-width: 800px) 100vw, 45vw"
+        />
+      </figure>
+    </div>
+  </Section>
+
+  <!-- ── §6: Técnicas — heading full + img LEFT / lista RIGHT ── -->
+  <Section variant="default" ariaLabel="Técnicas" id="tecnicas">
+    <h2 class="full-heading">Técnicas utilizadas</h2>
+    <div class="row">
+      <figure class="row__media">
+        <Image
+          src={imgTecnicas}
+          alt="Movimiento de masaje californiano donde con un brazo se coge la pierna y con el otro se pasa el codo y el antebrazo por cadera, paravertebrales, omoplato y cervicales."
+          widths={[400, 600, 900]}
+          sizes="(max-width: 800px) 100vw, 45vw"
+        />
+      </figure>
+      <div class="row__text">
+        <p>
+          El masaje californiano emplea una serie de técnicas que son clave para su efecto
+          terapéutico:
+        </p>
+        <ul class="bullet-list">
+          <li><strong>Movimientos largos y fluidos:</strong> con palmas, antebrazos y codos, cubriendo grandes áreas del cuerpo de manera continua para promover una sensación de totalidad.</li>
+          <li><strong>Contacto pleno:</strong> el masajista utiliza un contacto pleno con el cuerpo, una mano sigue el movimiento de la otra creando una sensación de continuidad y flujo.</li>
+          <li><strong>Estiramientos suaves:</strong> integrados para mejorar la flexibilidad y liberar tensiones musculares.</li>
+          <li><strong>Movimientos envolventes y ondulantes:</strong> ayudan a sincronizar la respiración y el ritmo del cuerpo con los movimientos del masaje, induciendo un estado meditativo y relajante.</li>
+          <li><strong>Uso de aceites esenciales:</strong> facilitan el deslizamiento de las manos y añaden un componente aromaterapéutico que potencia los efectos relajantes.</li>
+        </ul>
+      </div>
+    </div>
+  </Section>
+
+  <!-- ── §7: FAQs — texto LEFT / imagen RIGHT ── -->
+  <Section variant="muted" ariaLabel="Preguntas frecuentes" id="faqs">
+    <h2 class="full-heading">Preguntas frecuentes sobre el masaje californiano</h2>
+    <div class="row row--reverse">
+      <div class="row__text">
+        <AccordionFAQ items={faqsCalifo} />
+      </div>
+      <figure class="row__media">
+        <Image
+          src={imgFaqsExtra}
+          alt="Dos camillas de masaje californiano frente el mar preparadas para ofrecer un relajante masaje en pareja."
+          widths={[400, 600, 900]}
+          sizes="(max-width: 800px) 100vw, 45vw"
+        />
+      </figure>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: var(--vrm-space-xl);
+    align-items: center;
+    max-width: 1100px;
+    margin-inline: auto;
+  }
+
+  .row--reverse {
+    grid-template-columns: 1.2fr 1fr;
+  }
+
+  .row__media {
+    margin: 0;
+  }
+
+  .row__media img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--vrm-radius-lg);
+    box-shadow: var(--vrm-shadow-md);
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .row__text h2,
+  .row__text h3 {
+    color: var(--vrm-color-primary);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  .row__text p {
+    line-height: var(--vrm-line-height-relaxed);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  .full-heading {
+    text-align: center;
+    color: var(--vrm-color-primary);
+    margin-bottom: var(--vrm-space-xl);
+  }
+
+  .bullet-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--vrm-space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--vrm-space-sm);
+  }
+
+  .bullet-list li {
+    position: relative;
+    padding-left: var(--vrm-space-lg);
+    line-height: var(--vrm-line-height-relaxed);
+  }
+
+  .bullet-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--vrm-color-primary-light);
+    font-weight: var(--vrm-font-weight-semibold);
+  }
+
+  @media (max-width: 800px) {
+    .row,
+    .row--reverse {
+      grid-template-columns: 1fr;
+    }
+
+    .row--reverse .row__media {
+      order: -1;
+    }
+  }
+</style>

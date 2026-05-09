@@ -1,0 +1,230 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/sections/PageHeader.astro';
+import Section from '~/components/sections/Section.astro';
+import IconBox from '~/components/sections/IconBox.astro';
+import ImageCarousel from '~/components/sections/ImageCarousel.astro';
+import CardCTA from '~/components/sections/CardCTA.astro';
+
+import imgNuca from '~/assets/images/pages/relajante-3.webp';
+import imgPie from '~/assets/images/pages/relajante-2.webp';
+import imgParavertebrales from '~/assets/images/pages/filosofia.webp';
+import imgOmoplato from '~/assets/images/pages/relajante-1.webp';
+import imgCaderaLumbar from '~/assets/images/pages/relajante-4.webp';
+import imgCodoEspalda from '~/assets/images/pages/miguel-trabajo.webp';
+
+import imgCta4Manos from '~/assets/images/pages/4manos-paravertebrales.webp';
+import imgCtaPareja from '~/assets/images/pages/faqs.webp';
+import imgCtaVale from '~/assets/images/pages/regalo-camilla.webp';
+
+const base = import.meta.env.BASE_URL;
+const b = base.replace(/\/$/, '');
+
+const carousel = [
+  { src: imgNuca, alt: 'Pase de masaje californiano sobre nuca. Una mano abraza la nuca desplazándose lentamente por toda la zona cervical de forma profunda y envolvente.' },
+  { src: imgPie, alt: 'Masaje Californiano en pie. Los pulgares se deslizan sobre la planta del pie ejecutando movimientos envolventes y relajantes.' },
+  { src: imgParavertebrales, alt: 'Manos haciendo un Masaje Californiano sobre los paravertebrales. Los dedos pulgares presionan los paravertebrales a lo largo de la espalda desde las lumbares hasta las cervicales.' },
+  { src: imgOmoplato, alt: 'Manos del terapeuta haciendo un Masaje Californiano sobre omoplato y hombro.' },
+  { src: imgCaderaLumbar, alt: 'Pase de masaje californiano sobre cadera y lumbares. Las manos se desplazan longitudinalmente sobre estas zonas de forma cruzada.' },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  serviceType: 'Masaje Californiano',
+  name: 'Masaje Californiano Relajante',
+  provider: { '@type': 'LocalBusiness', name: 'Voramà Terapias' },
+  areaServed: 'Barcelona',
+  offers: [
+    { '@type': 'Offer', name: '90 minutos', price: '60', priceCurrency: 'EUR' },
+    { '@type': 'Offer', name: '120 minutos', price: '80', priceCurrency: 'EUR' },
+  ],
+};
+---
+
+<BaseLayout
+  title="Masaje Californiano Relajante en Barcelona — Voramà Terapias"
+  description="Masaje californiano individual en Barcelona. 90 o 120 minutos de movimientos largos y envolventes para una relajación profunda. Reserva online."
+  jsonLd={jsonLd}
+>
+  <PageHeader kicker="Servicio" title="Masaje Californiano" />
+
+  <!-- ── §2: heading + carrusel + lead ───────────────────────── -->
+  <Section variant="default" ariaLabel="Sobre el servicio">
+    <h2 class="section-heading">
+      Un viaje desde el cuerpo para una profunda conexión emocional
+    </h2>
+
+    <div class="carousel-wrap">
+      <ImageCarousel images={carousel} id="relajante-carrusel" />
+    </div>
+
+    <div class="prose">
+      <p>
+        El masaje californiano es una experiencia profundamente relajante, diseñada para llevarte a
+        un estado de armonía total entre cuerpo y mente. A través de movimientos largos, envolventes
+        y fluidos, esta técnica trabaja todo el cuerpo, desde los pies hasta la cabeza, para inducir
+        una profunda sensación de bienestar y conexión. Esta opción está disponible en sesiones de
+        90 o 120 minutos, según tu preferencia. Ambas duraciones permiten disfrutar de una
+        experiencia inmersiva, donde cada toque está orientado a liberar tensiones, tanto físicas
+        como emocionales.
+      </p>
+      <p>
+        La sesión de 90 minutos ofrece un tratamiento completo ideal para quienes buscan un
+        descanso profundo, mientras que los 120 minutos te permitirán entrar aún más en el estado
+        de relajación plena, con más tiempo para trabajar áreas específicas del cuerpo que
+        necesiten mayor atención. No importa la duración, cada sesión de masaje californiano es un
+        viaje sensorial único que te ayudará a desconectar del estrés diario y reconectar con tu
+        cuerpo.
+      </p>
+    </div>
+  </Section>
+
+  <!-- ── §3: 3 IconBoxes ─────────────────────────────────────── -->
+  <Section variant="muted" ariaLabel="Beneficios">
+    <div class="benefits-grid">
+      <IconBox icon="check" title="Conexión Profunda" description="Fomenta una conexión integral entre cuerpo, mente y emociones para mayor autoconciencia." />
+      <IconBox icon="star" title="Máxima Relajación" description="Induce un estado de relajación total mediante movimientos largos y envolventes." />
+      <IconBox icon="clock" title="Libera Tensiones" description="Alivia tensiones físicas y emocionales acumuladas, promoviendo un bienestar integral." />
+    </div>
+  </Section>
+
+  <!-- ── §4: Reserva — 2 cards image + h5 ────────────────────── -->
+  <Section variant="default" ariaLabel="Reserva tu sesión" id="reserva">
+    <h2 class="section-heading">Reserva tu sesión</h2>
+    <div class="reserva-grid">
+      <button type="button" class="reserva-card" data-dialog="dialog-calendly" aria-label="Reservar sesión de 90 minutos">
+        <Image
+          src={imgParavertebrales}
+          alt="Manos haciendo un Masaje Californiano sobre los paravertebrales."
+          class="reserva-card__img"
+          widths={[400, 600]}
+          sizes="(max-width: 800px) 100vw, 50vw"
+        />
+        <span class="reserva-card__price">Sesión de 90 minutos · 60€</span>
+      </button>
+      <button type="button" class="reserva-card" data-dialog="dialog-calendly" aria-label="Reservar sesión de 120 minutos">
+        <Image
+          src={imgCodoEspalda}
+          alt="Terapeuta deslizando el codo y el antebrazo sobre omoplato, nuca y hombro en un lado de la espalda."
+          class="reserva-card__img"
+          widths={[400, 600]}
+          sizes="(max-width: 800px) 100vw, 50vw"
+        />
+        <span class="reserva-card__price">Sesión de 120 minutos · 80€</span>
+      </button>
+    </div>
+  </Section>
+
+  <!-- ── §5: Otras ofertas ───────────────────────────────────── -->
+  <Section variant="muted" ariaLabel="Otras ofertas">
+    <h2 class="section-heading">Conoce otras ofertas de masaje</h2>
+    <div class="cards-grid">
+      <CardCTA
+        title="Masaje Cuatro Manos"
+        cta={{ label: 'Quiero probar este masaje', href: `${b}/masaje-californiano-cuatro-manos/` }}
+        image={imgCta4Manos}
+        imageAlt="Pase largo por paravertebrales de forma cruzada en un masaje a cuatro manos boca arriba."
+      />
+      <CardCTA
+        title="Masaje en Pareja"
+        cta={{ label: 'Quiero probar este masaje', href: `${b}/masaje-californiano-para-dos/` }}
+        image={imgCtaPareja}
+        imageAlt="Dos camillas de masaje californiano frente el mar preparadas para un masaje en pareja."
+      />
+      <CardCTA
+        title="Vale Regalo Masaje"
+        cta={{ label: 'Quiero mi vale para regalar', href: `${b}/regala-masaje/` }}
+        image={imgCtaVale}
+        imageAlt="Regalos y velas sobre una camilla de masaje californiano."
+      />
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .section-heading {
+    text-align: center;
+    color: var(--vrm-color-primary);
+    max-width: 900px;
+    margin: 0 auto var(--vrm-space-lg);
+  }
+
+  .carousel-wrap {
+    max-width: 1024px;
+    margin: 0 auto var(--vrm-space-xl);
+  }
+
+  .prose {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+
+  .prose p {
+    line-height: var(--vrm-line-height-relaxed);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--vrm-space-lg);
+  }
+
+  /* ── Reserva cards ───────────────────────────────────────── */
+  .reserva-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--vrm-space-lg);
+    max-width: 900px;
+    margin-inline: auto;
+
+    @media (max-width: 700px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .reserva-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vrm-space-sm);
+    padding: 0;
+    background: var(--vrm-color-bg);
+    border: 2px solid var(--vrm-color-border);
+    border-radius: var(--vrm-radius-lg);
+    overflow: hidden;
+    cursor: pointer;
+    font-family: var(--vrm-font-body);
+    box-shadow: var(--vrm-shadow-sm);
+    transition: transform var(--vrm-transition-fast), box-shadow var(--vrm-transition-fast), border-color var(--vrm-transition-fast);
+  }
+
+  .reserva-card:hover,
+  .reserva-card:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: var(--vrm-shadow-md);
+    border-color: var(--vrm-color-accent);
+  }
+
+  .reserva-card__img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+  }
+
+  .reserva-card__price {
+    padding: var(--vrm-space-md);
+    font-size: var(--vrm-font-size-lg);
+    font-weight: var(--vrm-font-weight-semibold);
+    color: var(--vrm-color-primary);
+    text-align: center;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--vrm-space-lg);
+  }
+</style>

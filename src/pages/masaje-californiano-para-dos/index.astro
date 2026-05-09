@@ -1,0 +1,304 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/sections/PageHeader.astro';
+import Section from '~/components/sections/Section.astro';
+import IconBox from '~/components/sections/IconBox.astro';
+import ImageCarousel from '~/components/sections/ImageCarousel.astro';
+import CardCTA from '~/components/sections/CardCTA.astro';
+
+import imgPd1 from '~/assets/images/pages/parados-1.webp';
+import imgPd2 from '~/assets/images/pages/parados-2.webp';
+import imgPd3 from '~/assets/images/pages/parados-3.webp';
+import imgPd4 from '~/assets/images/pages/parados-4.webp';
+import imgPd5Chiringuito from '~/assets/images/pages/parados-5.webp';
+import imgChiringuito from '~/assets/images/pages/faqs.webp';
+
+import imgAnabel from '~/assets/images/pages/anabel-1.webp';
+
+import imgCtaCalifo from '~/assets/images/pages/trapeado.webp';
+import imgCta4Manos from '~/assets/images/pages/4manos-1.webp';
+import imgCtaVale from '~/assets/images/pages/regalo-velas.webp';
+
+const carousel = [
+  { src: imgPd1, alt: 'Dos camillas de Masaje Californiano sobre la arena frente el mar. Están preparadas para dar un masaje en pareja.' },
+  { src: imgPd2, alt: 'Una pareja frente el mar estirados sobre dos camillas de Masaje Californiano. Se están cogiendo de la mano antes de recibir un masaje en pareja.' },
+  { src: imgPd3, alt: 'Dos camillas de Masaje Californiano sobre una tarima de un negocio de chiringuito frente arena de playa.' },
+  { src: imgChiringuito, alt: 'Dos camillas de masaje californiano frente el mar preparadas para ofrecer un relajante masaje en pareja.' },
+  { src: imgPd4, alt: 'Una pareja frente el mar estirados sobre dos camillas de masaje californiano. Están sonriendo tras recibir un masaje en pareja.' },
+];
+
+const base = import.meta.env.BASE_URL;
+const b = base.replace(/\/$/, '');
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  serviceType: 'Masaje Californiano para Dos',
+  name: 'Masaje para Dos',
+  provider: { '@type': 'LocalBusiness', name: 'Voramà Terapias' },
+  areaServed: 'Barcelona',
+  offers: [
+    { '@type': 'Offer', name: '60 minutos', price: '100', priceCurrency: 'EUR' },
+    { '@type': 'Offer', name: '90 minutos', price: '130', priceCurrency: 'EUR' },
+  ],
+};
+---
+
+<BaseLayout
+  title="Masaje Californiano para Dos en Barcelona — Voramà Terapias"
+  description="Masaje californiano en pareja en Barcelona. Disfruta de una sesión simultánea con dos terapeutas. Reserva online."
+  jsonLd={jsonLd}
+>
+  <PageHeader kicker="Servicio — Masaje Californiano" title="Masaje para Dos" />
+
+  <Section variant="default" ariaLabel="Sobre el servicio">
+    <h2 class="section-heading">
+      Comparte el bienestar y refuerza la conexión con tu mejor compañía
+    </h2>
+
+    <div class="carousel-wrap">
+      <ImageCarousel images={carousel} id="parados-carrusel" />
+    </div>
+
+    <div class="prose">
+      <p>
+        Vive la experiencia de relajación con tu ser querido gracias al masaje californiano para
+        dos. Dos terapeutas trabajan al unísono para ofrecer un masaje sincronizado, creando un
+        ambiente armonioso y equilibrado donde ambos podrán disfrutar de una conexión profunda
+        tanto entre ustedes como con su propio cuerpo. Cada terapeuta se dedicará a uno de los
+        miembros de la pareja, adaptando la técnica a las necesidades específicas de cada uno
+        mientras sincronizan sus movimientos para mantener la fluidez y la conexión entre los dos.
+      </p>
+      <p>
+        Este masaje no solo es una forma de relajarse juntos, sino también una oportunidad para
+        compartir un momento de bienestar y calma, alejándose del estrés cotidiano. Ideal para
+        aniversarios, celebraciones especiales o simplemente como una forma de reconectar en un
+        ambiente de paz y tranquilidad.
+      </p>
+    </div>
+  </Section>
+
+  <Section variant="muted" ariaLabel="Beneficios">
+    <div class="benefits-grid">
+      <IconBox icon="check" title="Conexión y complicidad" description="Al compartir esta experiencia, la pareja refuerza su vínculo emocional y aumenta la complicidad mutua." />
+      <IconBox icon="star" title="Relajación sincronizada" description="Ambos disfrutan de un estado de relajación profunda al mismo tiempo, mejorando la armonía en la relación." />
+      <IconBox icon="clock" title="Experiencia compartida de bienestar" description="Al recibir el masaje juntos, la pareja experimenta una sensación conjunta de bienestar físico y emocional, creando recuerdos especiales." />
+    </div>
+  </Section>
+
+  <Section variant="default" ariaLabel="Reserva tu sesión" id="reserva">
+    <h2 class="section-heading">Reserva tu sesión</h2>
+    <div class="reserva-grid">
+      <button type="button" class="reserva-card" data-dialog="dialog-calendly" aria-label="Reservar sesión de 60 minutos">
+        <Image src={imgPd2} alt="Una pareja frente el mar estirados sobre dos camillas de Masaje Californiano. Se están cogiendo de la mano antes de recibir un masaje en pareja." class="reserva-card__img" widths={[400, 600]} sizes="(max-width: 800px) 100vw, 50vw" />
+        <span class="reserva-card__price">Sesión de 60 minutos · 100€</span>
+      </button>
+      <button type="button" class="reserva-card" data-dialog="dialog-calendly" aria-label="Reservar sesión de 90 minutos">
+        <Image src={imgPd5Chiringuito} alt="Chiringuito en la playa, frente el mar. Hay dos camillas preparadas para ofrecer un masaje en pareja." class="reserva-card__img" widths={[400, 600]} sizes="(max-width: 800px) 100vw, 50vw" />
+        <span class="reserva-card__price">Sesión de 90 minutos · 130€</span>
+      </button>
+    </div>
+  </Section>
+
+  <Section variant="muted" ariaLabel="Colaboración con Anabel">
+    <div class="anabel">
+      <figure class="anabel__media">
+        <Image src={imgAnabel} alt="Anabel, socia de masaje a cuatro manos haciendo un masaje californiano en la playa." widths={[400, 600]} sizes="(max-width: 800px) 100vw, 40vw" />
+      </figure>
+      <div class="anabel__text">
+        <h3>Colaboración con Anabel: una sinergia de talento</h3>
+        <p>
+          En las sesiones de <strong>masaje para dos</strong> y <strong>masaje a 4 manos</strong>,
+          cuento con la valiosa colaboración de Anabel, una terapeuta con una gran experiencia en
+          masaje californiano. Trabajamos en perfecta sincronía para ofrecer una experiencia única
+          y profundamente reconfortante.
+        </p>
+        <p>
+          En el <strong>masaje para dos</strong>, cada uno de nosotros se encarga de uno de los
+          participantes, trabajando en paralelo para que ambos experimenten un viaje sensorial y
+          emocional que refuerza el bienestar compartido. Anabel y yo nos complementamos para que
+          ambos masajes mantengan una coherencia y un equilibrio perfectos, asegurando que cada
+          pareja disfrute del mismo nivel de conexión y bienestar.
+        </p>
+        <p>
+          Nuestra complicidad y experiencia hacen que cada sesión sea única, asegurando que cada
+          cliente sienta que está en manos de dos profesionales perfectamente alineados en su
+          objetivo de bienestar integral.
+        </p>
+      </div>
+    </div>
+    <div class="anabel-link">
+      <h4>Te invito a conocerla en:</h4>
+      <a href="https://www.samatayogastudio.com/masaje-californiano" target="_blank" rel="noopener noreferrer" class="anabel-link__url">
+        samatayogastudio.com/masaje-californiano
+      </a>
+    </div>
+  </Section>
+
+  <Section variant="default" ariaLabel="Otras ofertas">
+    <h2 class="section-heading">Conoce otras ofertas de masaje</h2>
+    <div class="cards-grid">
+      <CardCTA
+        title="Masaje Californiano"
+        cta={{ label: 'Quiero probar este masaje', href: `${b}/masaje-californiano-relajante/` }}
+        image={imgCtaCalifo}
+        imageAlt="Manos masajeando la parte lumbar del cliente mediante una técnica de Masaje Californiano llamada trapeado."
+      />
+      <CardCTA
+        title="Masaje Cuatro Manos"
+        cta={{ label: 'Quiero probar este masaje', href: `${b}/masaje-californiano-cuatro-manos/` }}
+        image={imgCta4Manos}
+        imageAlt="Pase largo por hombros, nuca y paravertebrales en un masaje a cuatro manos boca abajo."
+      />
+      <CardCTA
+        title="Vale Regalo Masaje"
+        cta={{ label: 'Quiero mi vale para regalar', href: `${b}/regala-masaje/` }}
+        image={imgCtaVale}
+        imageAlt="Un corazón y varias velas sobre una camilla de masaje californiano."
+      />
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .section-heading {
+    text-align: center;
+    color: var(--vrm-color-primary);
+    max-width: 900px;
+    margin: 0 auto var(--vrm-space-lg);
+  }
+
+  .carousel-wrap {
+    max-width: 1024px;
+    margin: 0 auto var(--vrm-space-xl);
+  }
+
+  .prose {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+
+  .prose p {
+    line-height: var(--vrm-line-height-relaxed);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--vrm-space-lg);
+  }
+
+  .reserva-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--vrm-space-lg);
+    max-width: 900px;
+    margin-inline: auto;
+
+    @media (max-width: 700px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .reserva-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vrm-space-sm);
+    padding: 0;
+    background: var(--vrm-color-bg);
+    border: 2px solid var(--vrm-color-border);
+    border-radius: var(--vrm-radius-lg);
+    overflow: hidden;
+    cursor: pointer;
+    font-family: var(--vrm-font-body);
+    box-shadow: var(--vrm-shadow-sm);
+    transition: transform var(--vrm-transition-fast), box-shadow var(--vrm-transition-fast), border-color var(--vrm-transition-fast);
+  }
+
+  .reserva-card:hover,
+  .reserva-card:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: var(--vrm-shadow-md);
+    border-color: var(--vrm-color-accent);
+  }
+
+  .reserva-card__img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+  }
+
+  .reserva-card__price {
+    padding: var(--vrm-space-md);
+    font-size: var(--vrm-font-size-lg);
+    font-weight: var(--vrm-font-weight-semibold);
+    color: var(--vrm-color-primary);
+    text-align: center;
+  }
+
+  .anabel {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: var(--vrm-space-xl);
+    align-items: center;
+    max-width: 1100px;
+    margin-inline: auto;
+  }
+
+  .anabel__media {
+    margin: 0;
+  }
+
+  .anabel__media img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--vrm-radius-lg);
+    box-shadow: var(--vrm-shadow-md);
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+  }
+
+  .anabel__text h3 {
+    color: var(--vrm-color-primary);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  .anabel__text p {
+    line-height: var(--vrm-line-height-relaxed);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  .anabel-link {
+    text-align: center;
+    margin-top: var(--vrm-space-xl);
+  }
+
+  .anabel-link h4 {
+    color: var(--vrm-color-primary);
+    margin-bottom: var(--vrm-space-sm);
+  }
+
+  .anabel-link__url {
+    font-size: var(--vrm-font-size-lg);
+    color: var(--vrm-color-primary);
+    font-weight: var(--vrm-font-weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--vrm-space-lg);
+  }
+
+  @media (max-width: 800px) {
+    .anabel {
+      grid-template-columns: 1fr;
+      gap: var(--vrm-space-lg);
+    }
+  }
+</style>

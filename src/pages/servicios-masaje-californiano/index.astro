@@ -1,0 +1,284 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/sections/PageHeader.astro';
+import Section from '~/components/sections/Section.astro';
+
+import imgRelajante from '~/assets/images/pages/tecnicas.webp';
+import imgCuatroManos from '~/assets/images/pages/4manos-pase-largo.webp';
+import imgParaDos from '~/assets/images/pages/faqs.webp';
+import imgEventos from '~/assets/images/pages/playa-spa.webp';
+
+const base = import.meta.env.BASE_URL;
+const b = base.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title="Servicios — Voramà Terapias"
+  description="Servicios de masaje californiano en Barcelona: individual, a cuatro manos, en pareja y para eventos. Reserva online."
+>
+  <PageHeader title="Servicios" />
+
+  <Section variant="default" ariaLabel="Ofertas de masaje terapéutico" id="oferta-masaje">
+    <header class="services-intro">
+      <h2>Ofertas de masaje terapéutico</h2>
+      <p>
+        Relájate, conecta y transforma tu bienestar con nuestras experiencias de Masaje Californiano
+        personalizadas.
+      </p>
+    </header>
+
+    <!-- 2a — Masaje Californiano: imagen LEFT / texto RIGHT -->
+    <div class="offer">
+      <figure class="offer__media">
+        <Image
+          src={imgRelajante}
+          alt="Movimiento de masaje californiano sobre cadera, paravertebrales, omoplato y cervicales."
+          widths={[400, 600, 900]}
+          sizes="(max-width: 800px) 100vw, 50vw"
+          loading="eager"
+        />
+      </figure>
+      <div class="offer__text">
+        <h3>Masaje Californiano</h3>
+        <p>
+          Una experiencia individual de profunda relajación y conexión corporal a través de
+          movimientos fluidos y envolventes. Ideal para liberar tensiones, reconectar con uno mismo
+          y disfrutar de un momento de máxima serenidad.
+        </p>
+        <div class="offer__ctas">
+          <a class="btn-secondary" href={`${b}/masaje-californiano-relajante/`}>Información</a>
+          <button type="button" class="btn-primary" data-dialog="dialog-calendly">
+            Reserva sesión 90 min — 60€
+          </button>
+          <button type="button" class="btn-primary" data-dialog="dialog-calendly">
+            Reserva sesión 120 min — 80€
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2b — Cuatro Manos: texto LEFT / imagen RIGHT -->
+    <div class="offer offer--reverse">
+      <div class="offer__text">
+        <h3>Masaje a Cuatro Manos</h3>
+        <p>
+          Dos terapeutas sincronizan sus movimientos en un masaje californiano, ofreciendo una
+          experiencia multisensorial intensificada. Perfecto para quienes buscan una relajación
+          profunda y la sensación de ser completamente envuelto en bienestar.
+        </p>
+        <div class="offer__ctas">
+          <a class="btn-secondary" href={`${b}/masaje-californiano-cuatro-manos/`}>Información</a>
+          <button type="button" class="btn-primary" data-dialog="dialog-calendly">
+            Reserva sesión 60 min — 100€
+          </button>
+          <button type="button" class="btn-primary" data-dialog="dialog-calendly">
+            Reserva sesión 90 min — 130€
+          </button>
+        </div>
+      </div>
+      <figure class="offer__media">
+        <Image
+          src={imgCuatroManos}
+          alt="Pase largo en un masaje a cuatro manos. Cada masajista en un lado de la camilla pasa desde la cadera o lumbares hasta la nuca."
+          widths={[400, 600, 900]}
+          sizes="(max-width: 800px) 100vw, 50vw"
+        />
+      </figure>
+    </div>
+
+    <!-- 2c — Para dos: imagen LEFT / texto RIGHT -->
+    <div class="offer">
+      <figure class="offer__media">
+        <Image
+          src={imgParaDos}
+          alt="Dos camillas de masaje californiano frente el mar preparadas para ofrecer un relajante masaje en pareja."
+          widths={[400, 600, 900]}
+          sizes="(max-width: 800px) 100vw, 50vw"
+        />
+      </figure>
+      <div class="offer__text">
+        <h3>Masaje para Dos</h3>
+        <p>
+          Disfruta junto a tu ser querido de un masaje californiano en sincronía, cada uno con su
+          propio terapeuta. Este masaje fomenta la conexión emocional y promueve la relajación
+          compartida en un ambiente íntimo y armonioso.
+        </p>
+        <div class="offer__ctas">
+          <a class="btn-secondary" href={`${b}/masaje-californiano-para-dos/`}>Información</a>
+          <button type="button" class="btn-primary" data-dialog="dialog-calendly">
+            Reserva sesión 60 min — 100€
+          </button>
+          <button type="button" class="btn-primary" data-dialog="dialog-calendly">
+            Reserva sesión 90 min — 130€
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2d — Eventos y Negocios: texto LEFT / imagen RIGHT -->
+    <div class="offer offer--reverse">
+      <div class="offer__text">
+        <h3>Servicio a Eventos y Negocios</h3>
+        <p>
+          Proporciona una experiencia de bienestar personalizada en eventos, retiros o negocios,
+          transformando cualquier lugar en un espacio de relajación. Atrae clientes y participantes
+          con un servicio adaptable que realza el ambiente general.
+        </p>
+        <div class="offer__ctas">
+          <a class="btn-secondary" href={`${b}/servicios-masaje-eventos-negocios/`}>Información</a>
+          <a class="btn-primary" href={`${b}/contacto/`}>Contacta para más info</a>
+        </div>
+      </div>
+      <figure class="offer__media">
+        <Image
+          src={imgEventos}
+          alt="Playa paradisíaca con spa y chiringuito donde ofrecer servicios de masaje californiano."
+          widths={[400, 600, 900]}
+          sizes="(max-width: 800px) 100vw, 50vw"
+        />
+      </figure>
+    </div>
+  </Section>
+
+  <!-- ── §3: Regala un Masaje ── -->
+  <Section variant="muted" ariaLabel="Regala un masaje">
+    <div class="regala-banner">
+      <h2>Regala un Masaje</h2>
+      <p>Sorprende a quienes más quieres con el regalo perfecto de relajación y bienestar.</p>
+      <a class="btn-primary" href={`${b}/regala-masaje/`}>Regalar Masaje</a>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .services-intro {
+    text-align: center;
+    margin-bottom: var(--vrm-space-2xl);
+    max-width: 720px;
+    margin-inline: auto;
+  }
+
+  .services-intro h2 {
+    color: var(--vrm-color-primary);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  /* ── Offer rows alternantes ──────────────────────────────── */
+  .offer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--vrm-space-xl);
+    align-items: center;
+    max-width: 1100px;
+    margin-inline: auto;
+  }
+
+  .offer + .offer {
+    margin-top: var(--vrm-space-2xl);
+  }
+
+  .offer__media {
+    margin: 0;
+  }
+
+  .offer__media img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--vrm-radius-lg);
+    box-shadow: var(--vrm-shadow-md);
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .offer__text h3 {
+    color: var(--vrm-color-primary);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  .offer__text p {
+    line-height: var(--vrm-line-height-relaxed);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  .offer__ctas {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vrm-space-sm);
+    align-items: flex-start;
+  }
+
+  /* ── Botones ─────────────────────────────────────────────── */
+  .btn-primary,
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--vrm-space-xs) var(--vrm-space-md);
+    border-radius: var(--vrm-radius-full);
+    font-family: var(--vrm-font-body);
+    font-size: var(--vrm-font-size-sm);
+    font-weight: var(--vrm-font-weight-semibold);
+    text-decoration: none;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: background-color var(--vrm-transition-fast);
+  }
+
+  .btn-primary {
+    background-color: var(--vrm-color-accent);
+    color: var(--vrm-color-text);
+    border-color: var(--vrm-color-accent);
+  }
+
+  .btn-primary:hover,
+  .btn-primary:focus-visible {
+    background-color: #b8906d;
+    border-color: #b8906d;
+    color: var(--vrm-color-text);
+    text-decoration: none;
+  }
+
+  .btn-secondary {
+    background-color: transparent;
+    color: var(--vrm-color-primary);
+    border-color: var(--vrm-color-primary);
+  }
+
+  .btn-secondary:hover,
+  .btn-secondary:focus-visible {
+    background-color: var(--vrm-color-primary);
+    color: var(--vrm-color-text-inverted);
+    text-decoration: none;
+  }
+
+  /* ── Banner regala ───────────────────────────────────────── */
+  .regala-banner {
+    text-align: center;
+    max-width: 600px;
+    margin-inline: auto;
+  }
+
+  .regala-banner h2 {
+    color: var(--vrm-color-primary);
+  }
+
+  .regala-banner p {
+    margin-bottom: var(--vrm-space-lg);
+  }
+
+  /* ── Responsive ──────────────────────────────────────────── */
+  @media (max-width: 800px) {
+    .offer,
+    .offer--reverse {
+      grid-template-columns: 1fr;
+    }
+
+    .offer--reverse .offer__media {
+      order: -1;
+    }
+
+    .offer + .offer {
+      margin-top: var(--vrm-space-xl);
+    }
+  }
+</style>

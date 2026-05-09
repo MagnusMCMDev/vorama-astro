@@ -1,0 +1,197 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/sections/PageHeader.astro';
+import Section from '~/components/sections/Section.astro';
+
+import miguelRetrato from '~/assets/images/pages/miguel-retrato.webp';
+import miguelTrabajo from '~/assets/images/pages/miguel-trabajo.webp';
+import filosofia from '~/assets/images/pages/filosofia.webp';
+---
+
+<BaseLayout
+  title="Sobre mí — Miguel Cerdá | Voramà Terapias"
+  description="Miguel Cerdá, masajista californiano en Barcelona. Más de una década de experiencia en quiromasaje y bienestar holístico."
+>
+  <PageHeader title="Sobre mí" />
+
+  <!-- ── §2: imagen LEFT / texto RIGHT — primera mitad de la bio ── -->
+  <Section variant="default" ariaLabel="Bio - inicio">
+    <div class="bio-row">
+      <figure class="bio-row__media">
+        <Image
+          src={miguelRetrato}
+          alt="Terapeuta dando un Masaje Californiano en el evento Spiritual Dance Festival."
+          class="bio-row__img"
+          widths={[400, 600, 900]}
+          sizes="(max-width: 800px) 100vw, 45vw"
+          loading="eager"
+        />
+      </figure>
+      <div class="bio-row__text">
+        <h2>¡Hola! Me llamo Miguel</h2>
+        <p>
+          Mi trayectoria en el mundo del masaje comenzó en 2011, cuando decidí estudiar quiromasaje
+          impulsado por un profundo interés en conectar terapéuticamente con las personas a través
+          del cuerpo. Finalicé mis estudios de quiromasajista en 2013 en Barcelona, donde también
+          me especialicé en masaje deportivo, masaje neuromuscular, miofascial, cyriax, liberación
+          de puntos gatillo, y drenaje linfático. Este aprendizaje me brindó también una sólida
+          base en anatomía relacional y cadenas musculares.
+        </p>
+        <p>
+          A pesar de esta formación y de emprender diversas colaboraciones en centros de terapias
+          y eventos deportivos, sentía que faltaba algo: no conseguía establecer el clima humano y
+          terapéutico que deseaba. Sin embargo, mi pasión por el masaje no disminuyó. Durante más
+          de una década, continué ofreciendo masajes relajantes y descontracturantes a amigos,
+          conocidos y familiares, mientras ejercía como ingeniero informático.
+        </p>
+      </div>
+    </div>
+  </Section>
+
+  <!-- ── §3: texto LEFT / imagen RIGHT — segunda mitad de la bio ── -->
+  <Section variant="muted" ariaLabel="Bio - 2023 turning point">
+    <div class="bio-row bio-row--reverse">
+      <div class="bio-row__text">
+        <p>
+          En 2023, decidí retomar mi camino como masajista con una renovada dedicación. En este
+          proceso, descubrí el masaje californiano, una técnica que revolucionó mi enfoque y me
+          permitió crear ese ambiente de presencia plena que tanto había buscado. Conectar con esta
+          técnica ha sido una experiencia transformadora, tanto para mí como para mis clientes. He
+          encontrado en el masaje californiano una forma de meditar en movimiento, ofreciendo a
+          cada persona un espacio donde pueden reconectar profundamente con su cuerpo y emociones.
+          La respuesta ha sido muy positiva, con testimonios que hablan de experiencias
+          profundamente satisfactorias y transformadoras.
+        </p>
+        <p>
+          Hoy, dirijo todos mis esfuerzos a ofrecer mis servicios como masajista californiano a
+          quienes buscan un viaje sensorial y un camino hacia la reconexión personal, con todos los
+          beneficios que este masaje puede proporcionar.
+        </p>
+        <div class="bio-row__cta">
+          <button type="button" class="btn-cta" data-dialog="dialog-calendly">
+            Reservar sesión
+          </button>
+        </div>
+      </div>
+      <figure class="bio-row__media">
+        <Image
+          src={miguelTrabajo}
+          alt="Terapeuta en un pase de masaje californiano deslizando el codo y el antebrazo sobre omoplato, nuca y hombro en un lado de la espalda."
+          class="bio-row__img"
+          widths={[400, 600, 900]}
+          sizes="(max-width: 800px) 100vw, 45vw"
+        />
+      </figure>
+    </div>
+  </Section>
+
+  <!-- ── §4: imagen LEFT / texto RIGHT — Filosofía ── -->
+  <Section variant="default" ariaLabel="Filosofía y enfoque">
+    <div class="bio-row">
+      <figure class="bio-row__media">
+        <Image
+          src={filosofia}
+          alt="Manos haciendo un Masaje Californiano sobre los paravertebrales, con los pulgares presionando a lo largo de la espalda desde las lumbares hasta las cervicales."
+          class="bio-row__img"
+          widths={[400, 600, 900]}
+          sizes="(max-width: 800px) 100vw, 45vw"
+        />
+      </figure>
+      <div class="bio-row__text">
+        <h2>Filosofía y enfoque</h2>
+        <p>
+          Mi enfoque como masajista se basa en una filosofía de bienestar holístico, donde cuerpo,
+          mente y espíritu son aspectos inseparables que deben ser tratados en conjunto para
+          alcanzar un estado de equilibrio y salud integral. El masaje californiano, con su
+          capacidad para trabajar profundamente en las dimensiones física y emocional, se ha
+          convertido en la piedra angular de mi práctica.
+        </p>
+        <p>
+          A través de esta técnica, busco ofrecer un espacio de calma y conexión, donde cada
+          persona pueda experimentar una presencia plena. Para mí, cada sesión es una oportunidad
+          de meditar en movimiento, creando un flujo continuo de energía que no solo relaja el
+          cuerpo, sino que también libera tensiones emocionales y promueve una mayor conciencia
+          corporal. Creo firmemente que el tacto consciente, combinado con una técnica adecuada,
+          tiene el poder de transformar vidas, ayudando a mis clientes a redescubrir su equilibrio
+          interior.
+        </p>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .bio-row {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: var(--vrm-space-xl);
+    align-items: center;
+    max-width: 1100px;
+    margin-inline: auto;
+  }
+
+  .bio-row--reverse {
+    grid-template-columns: 1.2fr 1fr;
+  }
+
+  .bio-row__media {
+    margin: 0;
+  }
+
+  .bio-row__img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--vrm-radius-lg);
+    box-shadow: var(--vrm-shadow-md);
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .bio-row__text h2 {
+    color: var(--vrm-color-primary);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  .bio-row__text p {
+    line-height: var(--vrm-line-height-relaxed);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  .bio-row__cta {
+    margin-top: var(--vrm-space-md);
+  }
+
+  .btn-cta {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--vrm-space-sm) var(--vrm-space-lg);
+    background-color: var(--vrm-color-accent);
+    color: var(--vrm-color-text);
+    font-family: var(--vrm-font-body);
+    font-size: var(--vrm-font-size-base);
+    font-weight: var(--vrm-font-weight-semibold);
+    border: none;
+    border-radius: var(--vrm-radius-full);
+    cursor: pointer;
+    transition: background-color var(--vrm-transition-fast);
+  }
+
+  .btn-cta:hover,
+  .btn-cta:focus-visible {
+    background-color: #b8906d;
+  }
+
+  @media (max-width: 800px) {
+    .bio-row,
+    .bio-row--reverse {
+      grid-template-columns: 1fr;
+      gap: var(--vrm-space-lg);
+    }
+
+    /* En móvil, en la fila reverse la imagen debe ir antes del texto */
+    .bio-row--reverse .bio-row__media {
+      order: -1;
+    }
+  }
+</style>

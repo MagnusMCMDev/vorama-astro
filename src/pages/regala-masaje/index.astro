@@ -1,0 +1,282 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/sections/PageHeader.astro';
+import Section from '~/components/sections/Section.astro';
+import Reviews from '~/components/sections/Reviews.astro';
+import ContactForm from '~/components/interactive/ContactForm.astro';
+
+import camillaVelas from '~/assets/images/pages/camilla-velas.webp';
+import imgRelajante1 from '~/assets/images/pages/relajante-1.webp';
+import img4manosParav from '~/assets/images/pages/4manos-paravertebrales.webp';
+import imgParaDos4 from '~/assets/images/pages/parados-4.webp';
+
+const base = import.meta.env.BASE_URL;
+const b = base.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title="Regala un Masaje — Voramà Terapias"
+  description="Regala bienestar con un vale de masaje californiano en Barcelona. Personalizable para cualquier ocasión especial. Solicítalo online."
+>
+  <PageHeader title="Regala un Masaje" />
+
+  <!-- ── §2: texto LEFT / imagen RIGHT (camilla candlelight) ── -->
+  <Section variant="default" ariaLabel="El poder del masaje como regalo">
+    <div class="row">
+      <div class="row__text">
+        <h2>El Poder del Masaje Californiano como Regalo</h2>
+        <p>
+          Nuestros vales de regalo son ideales para cualquier ocasión especial, ya sea Navidad, San
+          Valentín, un cumpleaños, o simplemente para recordar a esa persona importante que merece
+          un tiempo para sí misma. Con una atención personalizada y una amplia variedad de masajes,
+          ofrecemos el regalo perfecto para mimar el cuerpo y la mente.
+        </p>
+      </div>
+      <figure class="row__media">
+        <Image
+          src={camillaVelas}
+          alt="Camilla de masaje californiano con velas."
+          widths={[400, 600, 900]}
+          sizes="(max-width: 800px) 100vw, 45vw"
+          loading="eager"
+        />
+      </figure>
+    </div>
+  </Section>
+
+  <!-- ── §3: heading + 3 bloques alternando img/text ── -->
+  <Section variant="muted" ariaLabel="Opciones de regalo">
+    <h2 class="opciones-heading">Opciones de Masaje para un Regalo Perfecto</h2>
+
+    <!-- Block A: text LEFT / image RIGHT — Masaje Californiano Individual -->
+    <div class="row opcion">
+      <div class="row__text">
+        <h3>Masaje Californiano Individual</h3>
+        <p>
+          Nuestro masaje californiano individual ofrece 90 o 120 minutos de pura calma y conexión.
+          Diseñado para liberar tensiones y revitalizar el cuerpo, es una experiencia ideal para
+          quienes necesitan desconectar y renovarse.
+        </p>
+        <div class="opcion__ctas">
+          <a class="btn-secondary" href={`${b}/masaje-californiano-relajante/`}>Información</a>
+          <a class="btn-primary" href="#compra-vale">Quiero regalar un masaje californiano</a>
+        </div>
+      </div>
+      <figure class="row__media">
+        <Image
+          src={imgRelajante1}
+          alt="Manos del terapeuta haciendo un Masaje Californiano sobre omoplato y hombro."
+          widths={[400, 600, 900]}
+          sizes="(max-width: 800px) 100vw, 45vw"
+        />
+      </figure>
+    </div>
+
+    <!-- Block B: image LEFT / text RIGHT — Cuatro Manos -->
+    <div class="row row--reverse opcion">
+      <figure class="row__media">
+        <Image
+          src={img4manosParav}
+          alt="Pase largo por paravertebrales de forma cruzada en un masaje a cuatro manos boca arriba. Cada masajista pasa por la espalda de forma cruzada a lo largo de los paravertebrales."
+          widths={[400, 600, 900]}
+          sizes="(max-width: 800px) 100vw, 45vw"
+        />
+      </figure>
+      <div class="row__text">
+        <h3>Masaje a Cuatro Manos</h3>
+        <p>
+          Esta experiencia excepcional implica la presencia de dos terapeutas trabajando al
+          unísono en un masaje envolvente y profundamente relajante. Con movimientos coordinados,
+          el masaje a cuatro manos brinda una sensación de equilibrio total y alivio profundo.
+        </p>
+        <div class="opcion__ctas">
+          <a class="btn-secondary" href={`${b}/masaje-californiano-cuatro-manos/`}>Información</a>
+          <a class="btn-primary" href="#compra-vale">Quiero regalar un masaje a cuatro manos</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Block C: text LEFT / image RIGHT — Masaje en Pareja -->
+    <div class="row opcion">
+      <div class="row__text">
+        <h3>Masaje en Pareja</h3>
+        <p>
+          Esta propuesta es la opción perfecta para disfrutar juntos de la relajación y el
+          bienestar. Con dos terapeutas experimentados, cada persona recibe un masaje californiano
+          en sintonía con la otra, creando una experiencia de conexión profunda. Es el regalo
+          perfecto para parejas, familiares o amigos que deseen compartir un momento de calma y
+          complicidad.
+        </p>
+        <div class="opcion__ctas">
+          <a class="btn-secondary" href={`${b}/masaje-californiano-para-dos/`}>Información</a>
+          <a class="btn-primary" href="#compra-vale">Quiero regalar un masaje en pareja</a>
+        </div>
+      </div>
+      <figure class="row__media">
+        <Image
+          src={imgParaDos4}
+          alt="Una pareja frente el mar estirados sobre dos camillas de masaje californiano. Están sonriendo tras recibir un masaje en pareja."
+          widths={[400, 600, 900]}
+          sizes="(max-width: 800px) 100vw, 45vw"
+        />
+      </figure>
+    </div>
+  </Section>
+
+  <!-- ── §4: Reviews ── -->
+  <Section variant="default" ariaLabel="Testimonios">
+    <h3 class="testimonios-heading">Testimonios de Clientes Satisfechos</h3>
+    <Reviews variant="bubble" initialCount={2} />
+  </Section>
+
+  <!-- ── §5: text LEFT / form RIGHT — Solicitar vale ── -->
+  <Section variant="muted" ariaLabel="Solicitar vale regalo" id="compra-vale">
+    <div class="form-row">
+      <div class="form-row__text">
+        <h2>Solicita tu Vale Regalo</h2>
+        <p>
+          Simplemente rellena el formulario, indicando el masaje que deseas regalar y completando
+          tus datos. En un plazo máximo de 24 horas recibirás una confirmación por correo o
+          WhatsApp con los siguientes pasos para finalizar la compra y la entrega del vale.
+        </p>
+      </div>
+      <div class="form-row__form">
+        <ContactForm variant="regala" id="regala-form" />
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  /* ── Filas alternantes ───────────────────────────────────── */
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--vrm-space-xl);
+    align-items: center;
+    max-width: 1100px;
+    margin-inline: auto;
+  }
+
+  .row + .row {
+    margin-top: var(--vrm-space-2xl);
+  }
+
+  .row__media {
+    margin: 0;
+  }
+
+  .row__media img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--vrm-radius-lg);
+    box-shadow: var(--vrm-shadow-md);
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .row__text h2,
+  .row__text h3 {
+    color: var(--vrm-color-primary);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  .row__text p {
+    line-height: var(--vrm-line-height-relaxed);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  /* ── Heading sección §3 ──────────────────────────────────── */
+  .opciones-heading {
+    text-align: center;
+    color: var(--vrm-color-primary);
+    margin-bottom: var(--vrm-space-2xl);
+  }
+
+  .opcion__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--vrm-space-sm);
+  }
+
+  /* ── Botones ─────────────────────────────────────────────── */
+  .btn-primary,
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--vrm-space-xs) var(--vrm-space-md);
+    border-radius: var(--vrm-radius-full);
+    font-size: var(--vrm-font-size-sm);
+    font-weight: var(--vrm-font-weight-semibold);
+    text-decoration: none;
+    transition: background-color var(--vrm-transition-fast);
+  }
+
+  .btn-primary {
+    background-color: var(--vrm-color-accent);
+    color: var(--vrm-color-text);
+    border: 2px solid var(--vrm-color-accent);
+  }
+
+  .btn-primary:hover,
+  .btn-primary:focus-visible {
+    background-color: #b8906d;
+    border-color: #b8906d;
+    color: var(--vrm-color-text);
+    text-decoration: none;
+  }
+
+  .btn-secondary {
+    background-color: transparent;
+    color: var(--vrm-color-primary);
+    border: 2px solid var(--vrm-color-primary);
+  }
+
+  .btn-secondary:hover,
+  .btn-secondary:focus-visible {
+    background-color: var(--vrm-color-primary);
+    color: var(--vrm-color-text-inverted);
+    text-decoration: none;
+  }
+
+  /* ── §4 ──────────────────────────────────────────────────── */
+  .testimonios-heading {
+    text-align: center;
+    color: var(--vrm-color-primary);
+    margin-bottom: var(--vrm-space-lg);
+  }
+
+  /* ── §5: form row ────────────────────────────────────────── */
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: var(--vrm-space-xl);
+    align-items: start;
+    max-width: 1100px;
+    margin-inline: auto;
+  }
+
+  .form-row__text h2 {
+    color: var(--vrm-color-primary);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  /* ── Responsive ──────────────────────────────────────────── */
+  @media (max-width: 800px) {
+    .row,
+    .row--reverse,
+    .form-row {
+      grid-template-columns: 1fr;
+      gap: var(--vrm-space-lg);
+    }
+
+    .row--reverse .row__media {
+      order: -1;
+    }
+
+    .row + .row {
+      margin-top: var(--vrm-space-xl);
+    }
+  }
+</style>
