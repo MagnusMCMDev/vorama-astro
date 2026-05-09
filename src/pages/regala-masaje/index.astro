@@ -127,7 +127,7 @@ const b = base.replace(/\/$/, '');
   <!-- ── §4: Reviews ── -->
   <Section variant="default" ariaLabel="Testimonios">
     <h3 class="testimonios-heading">Testimonios de Clientes Satisfechos</h3>
-    <Reviews variant="bubble" initialCount={2} />
+    <Reviews variant="fill" count={2} showHeader={false} />
   </Section>
 
   <!-- ── §5: text LEFT / form RIGHT — Solicitar vale ── -->
@@ -214,16 +214,17 @@ const b = base.replace(/\/$/, '');
   }
 
   .btn-primary {
-    background-color: var(--vrm-color-accent);
-    color: var(--vrm-color-text);
-    border: 2px solid var(--vrm-color-accent);
+    background-color: var(--vrm-color-primary);
+    color: var(--vrm-color-text-inverted);
+    border: 2px solid var(--vrm-color-primary);
+    box-shadow: 0 2px 8px rgb(32 91 79 / 0.18);
   }
 
   .btn-primary:hover,
   .btn-primary:focus-visible {
-    background-color: #b8906d;
-    border-color: #b8906d;
-    color: var(--vrm-color-text);
+    background-color: var(--vrm-color-primary-light);
+    border-color: var(--vrm-color-primary-light);
+    color: var(--vrm-color-text-inverted);
     text-decoration: none;
   }
 

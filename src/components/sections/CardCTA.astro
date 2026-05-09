@@ -37,7 +37,9 @@ const { title, cta, image, imageAlt } = Astro.props;
     border-radius: var(--vrm-radius-lg);
     min-height: 320px;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
 
   .card-cta__bg {
@@ -57,10 +59,10 @@ const { title, cta, image, imageAlt } = Astro.props;
     position: absolute;
     inset: 0;
     background: linear-gradient(
-      to top,
-      rgb(0 0 0 / 0.72) 0%,
-      rgb(0 0 0 / 0.2) 60%,
-      transparent 100%
+      to bottom,
+      rgb(0 0 0 / 0.15) 0%,
+      rgb(0 0 0 / 0.45) 60%,
+      rgb(0 0 0 / 0.65) 100%
     );
   }
 
@@ -72,7 +74,8 @@ const { title, cta, image, imageAlt } = Astro.props;
     display: flex;
     flex-direction: column;
     gap: var(--vrm-space-md);
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
   }
 
   .card-cta__title {

@@ -57,17 +57,17 @@ const b = base.replace(/\/$/, '');
   <Section variant="muted" ariaLabel="Beneficios">
     <div class="benefits-grid">
       <IconBox
-        icon="check"
+        icon="spa"
         title="Ambiente relajante en cualquier lugar"
         description="Transforma cualquier espacio en un oasis de calma, proporcionando una experiencia de relajación integral durante eventos, festivales o retiros."
       />
       <IconBox
-        icon="star"
+        icon="igloo"
         title="Adaptabilidad a diferentes entornos"
         description="El servicio se adapta a las necesidades del evento o negocio, ofreciendo masajes personalizados en espacios al aire libre o en interiores, brindando bienestar en cualquier contexto."
       />
       <IconBox
-        icon="clock"
+        icon="thumbs-up"
         title="Atracción para clientes y participantes"
         description="Añade un valor adicional a los eventos al ofrecer una experiencia de bienestar única que atrae a los asistentes y eleva la percepción del evento o negocio."
       />
@@ -110,18 +110,21 @@ const b = base.replace(/\/$/, '');
     display: inline-flex;
     align-items: center;
     padding: var(--vrm-space-sm) var(--vrm-space-lg);
-    background-color: var(--vrm-color-accent);
-    color: var(--vrm-color-text);
+    background-color: var(--vrm-color-primary);
+    color: var(--vrm-color-text-inverted);
     font-weight: var(--vrm-font-weight-semibold);
     border-radius: var(--vrm-radius-full);
     text-decoration: none;
-    transition: background-color var(--vrm-transition-fast);
+    box-shadow: 0 4px 12px rgb(32 91 79 / 0.22);
+    transition: background-color var(--vrm-transition-fast), transform var(--vrm-transition-fast), box-shadow var(--vrm-transition-fast);
   }
 
   .btn-primary:hover,
   .btn-primary:focus-visible {
-    background-color: #b8906d;
-    color: var(--vrm-color-text);
+    background-color: var(--vrm-color-primary-light);
+    color: var(--vrm-color-text-inverted);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgb(32 91 79 / 0.32);
     text-decoration: none;
   }
 </style>

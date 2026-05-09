@@ -112,7 +112,7 @@ const {
     }
 
     & .hero-banner__kicker {
-      color: var(--vrm-color-accent);
+      color: rgb(255 255 255 / 0.85);
     }
 
     & .hero-banner__lead {
@@ -171,20 +171,21 @@ const {
     display: inline-flex;
     align-items: center;
     padding: var(--vrm-space-sm) var(--vrm-space-lg);
-    background-color: var(--vrm-color-accent);
-    color: var(--vrm-color-text);
+    background-color: #fff;
+    color: var(--vrm-color-primary);
     font-weight: var(--vrm-font-weight-semibold);
     border-radius: var(--vrm-radius-full);
     text-decoration: none;
-    transition: background-color var(--vrm-transition-fast), transform var(--vrm-transition-fast);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.18);
+    transition: background-color var(--vrm-transition-fast), color var(--vrm-transition-fast), transform var(--vrm-transition-fast);
     align-self: flex-start;
 
     &:hover,
     &:focus-visible {
-      background-color: #b8906d;
-      transform: translateY(-1px);
+      background-color: var(--vrm-color-primary);
+      color: var(--vrm-color-text-inverted);
+      transform: translateY(-2px);
       text-decoration: none;
-      color: var(--vrm-color-text);
     }
   }
 

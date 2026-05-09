@@ -34,8 +34,11 @@ export const SITE_CONFIG = {
   openingHours: 'Mo-Sa 09:00-20:00', // formato schema.org
   social: {
     instagram: 'https://www.instagram.com/vorama.terapias/',
-    facebook: '',
-    // Añadir Google Maps URL cuando esté disponible
+    facebook: 'https://www.facebook.com/vorama.terapias',
+  },
+  googleBusiness: {
+    rating: 4.9,
+    count: 80,
   },
   aggregateRating: {
     ratingValue: 5.0,
