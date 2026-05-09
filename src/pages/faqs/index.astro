@@ -1,0 +1,67 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/sections/PageHeader.astro';
+import Section from '~/components/sections/Section.astro';
+import AccordionFAQ from '~/components/sections/AccordionFAQ.astro';
+
+const allFaqs = (await getCollection('faqs')).sort((a, b) => a.data.order - b.data.order);
+
+// faqs.json: orders 1-5 son sobre el masaje californiano; 6-8 sobre masaje en pareja.
+const faqsCalifo = allFaqs
+  .filter((f) => f.data.order <= 5)
+  .map((f) => ({ question: f.data.question, answer: f.data.answer }));
+
+const faqsPareja = allFaqs
+  .filter((f) => f.data.order >= 6)
+  .map((f) => ({ question: f.data.question, answer: f.data.answer }));
+
+// JSON-LD FAQPage para SEO
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: allFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.data.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: f.data.answer,
+    },
+  })),
+};
+---
+
+<BaseLayout
+  title="Preguntas Frecuentes — Voramà Terapias"
+  description="Resolvemos tus dudas sobre el masaje californiano: beneficios, contraindicaciones, sesiones individuales y en pareja."
+  jsonLd={faqJsonLd}
+>
+  <PageHeader title="Preguntas Frecuentes" />
+
+  <Section variant="default" ariaLabel="FAQs masaje californiano">
+    <div class="faqs-wrap">
+      <h2>Masaje Californiano</h2>
+      <AccordionFAQ items={faqsCalifo} />
+    </div>
+  </Section>
+
+  <Section variant="muted" ariaLabel="FAQs masaje en pareja">
+    <div class="faqs-wrap">
+      <h2>Masaje en Pareja</h2>
+      <AccordionFAQ items={faqsPareja} />
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .faqs-wrap {
+    max-width: 900px;
+    margin-inline: auto;
+  }
+
+  .faqs-wrap h2 {
+    color: var(--vrm-color-primary);
+    margin-bottom: var(--vrm-space-lg);
+    text-align: center;
+  }
+</style>

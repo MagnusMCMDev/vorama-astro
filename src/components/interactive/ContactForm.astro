@@ -1,0 +1,386 @@
+---
+interface Props {
+  /** 'contacto' — formulario general | 'regala' — solicitar vale regalo */
+  variant?: 'contacto' | 'regala';
+  /** ID único del form; útil si hay más de uno en la misma página. */
+  id?: string;
+}
+
+const { variant = 'contacto', id = 'contact-form' } = Astro.props;
+const isRegala = variant === 'regala';
+---
+
+<form
+  class="contact-form"
+  id={id}
+  novalidate
+  aria-label={isRegala ? 'Solicitar vale regalo' : 'Formulario de contacto'}
+  data-form-id={id}
+  data-is-regala={isRegala ? 'true' : undefined}
+>
+
+  <!-- Nombre + Apellidos -->
+  <div class="contact-form__row">
+    <div class="contact-form__field">
+      <label class="contact-form__label" for={`${id}-nombre`}>
+        Nombre <span class="contact-form__required" aria-hidden="true">*</span>
+      </label>
+      <input
+        class="contact-form__input"
+        type="text"
+        id={`${id}-nombre`}
+        name="nombre"
+        required
+        autocomplete="given-name"
+        aria-required="true"
+      />
+    </div>
+    <div class="contact-form__field">
+      <label class="contact-form__label" for={`${id}-apellidos`}>
+        Apellidos <span class="contact-form__required" aria-hidden="true">*</span>
+      </label>
+      <input
+        class="contact-form__input"
+        type="text"
+        id={`${id}-apellidos`}
+        name="apellidos"
+        required
+        autocomplete="family-name"
+        aria-required="true"
+      />
+    </div>
+  </div>
+
+  <!-- Email + Teléfono -->
+  <div class="contact-form__row">
+    <div class="contact-form__field">
+      <label class="contact-form__label" for={`${id}-email`}>
+        Correo electrónico <span class="contact-form__required" aria-hidden="true">*</span>
+      </label>
+      <input
+        class="contact-form__input"
+        type="email"
+        id={`${id}-email`}
+        name="email"
+        required
+        autocomplete="email"
+        aria-required="true"
+        inputmode="email"
+      />
+    </div>
+    <div class="contact-form__field">
+      <label class="contact-form__label" for={`${id}-telefono`}>
+        Teléfono
+      </label>
+      <input
+        class="contact-form__input"
+        type="tel"
+        id={`${id}-telefono`}
+        name="telefono"
+        autocomplete="tel"
+        inputmode="tel"
+      />
+    </div>
+  </div>
+
+  <!-- Mensaje / Comentario -->
+  <div class="contact-form__field">
+    <label class="contact-form__label" for={`${id}-mensaje`}>
+      {isRegala ? 'Mensaje para el destinatario' : 'Comentario o pregunta'}
+    </label>
+    <textarea
+      class="contact-form__input contact-form__textarea"
+      id={`${id}-mensaje`}
+      name="mensaje"
+      rows="4"
+    ></textarea>
+  </div>
+
+  <!-- Privacidad -->
+  <div class="contact-form__field contact-form__field--check">
+    <input
+      class="contact-form__checkbox"
+      type="checkbox"
+      id={`${id}-privacidad`}
+      name="privacidad"
+      required
+      aria-required="true"
+    />
+    <label class="contact-form__label contact-form__label--check" for={`${id}-privacidad`}>
+      He leído y acepto la
+      <button type="button" class="contact-form__link" data-dialog="dialog-privacidad">
+        política de privacidad
+      </button>
+      <span class="contact-form__required" aria-hidden="true">*</span>
+    </label>
+  </div>
+
+  <!-- Error de validación -->
+  <div
+    class="contact-form__error"
+    id={`${id}-error`}
+    role="alert"
+    aria-live="assertive"
+    hidden
+  ></div>
+
+  <!-- Submit -->
+  <button type="submit" class="contact-form__submit">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" fill="currentColor"/>
+    </svg>
+    {isRegala ? 'Solicitar vale regalo por WhatsApp' : 'Enviar por WhatsApp'}
+  </button>
+
+  <p class="contact-form__note">
+    Al pulsar el botón se abrirá WhatsApp con tu mensaje prellenado.
+    No guardamos datos en ningún servidor.
+  </p>
+</form>
+
+<style>
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vrm-space-md);
+  }
+
+  /* ── Fila doble ──────────────────────────────────────────── */
+
+  .contact-form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--vrm-space-md);
+
+    @media (max-width: 500px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ── Campo individual ────────────────────────────────────── */
+
+  .contact-form__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vrm-space-xs);
+  }
+
+  .contact-form__field--check {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--vrm-space-sm);
+  }
+
+  /* ── Labels ──────────────────────────────────────────────── */
+
+  .contact-form__label {
+    font-size: var(--vrm-font-size-sm);
+    font-weight: var(--vrm-font-weight-semibold);
+    color: var(--vrm-color-text);
+  }
+
+  .contact-form__label--check {
+    font-size: var(--vrm-font-size-sm);
+    font-weight: var(--vrm-font-weight-normal);
+    cursor: pointer;
+    line-height: 1.5;
+  }
+
+  .contact-form__required {
+    color: #c0392b;
+    margin-left: 1px;
+  }
+
+  /* ── Inputs ──────────────────────────────────────────────── */
+
+  .contact-form__input {
+    width: 100%;
+    padding: var(--vrm-space-sm) var(--vrm-space-md);
+    font-family: var(--vrm-font-body);
+    font-size: var(--vrm-font-size-base);
+    color: var(--vrm-color-text);
+    background-color: var(--vrm-color-bg);
+    border: 1px solid var(--vrm-color-border);
+    border-radius: var(--vrm-radius-md);
+    transition: border-color var(--vrm-transition-fast), box-shadow var(--vrm-transition-fast);
+    appearance: none;
+
+    &:hover {
+      border-color: var(--vrm-color-border-strong);
+    }
+
+    &:focus-visible {
+      outline: none;
+      border-color: var(--vrm-color-primary);
+      box-shadow: 0 0 0 3px rgb(32 91 79 / 0.15);
+    }
+
+    &:invalid:not(:placeholder-shown) {
+      border-color: #c0392b;
+    }
+  }
+
+  .contact-form__textarea {
+    resize: vertical;
+    min-height: 96px;
+  }
+
+  /* ── Checkbox ────────────────────────────────────────────── */
+
+  .contact-form__checkbox {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    accent-color: var(--vrm-color-primary);
+    cursor: pointer;
+  }
+
+  /* ── Enlace inline (política de privacidad) ──────────────── */
+
+  .contact-form__link {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: inherit;
+    color: var(--vrm-color-primary);
+    font-weight: var(--vrm-font-weight-semibold);
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--vrm-color-primary-light);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--vrm-color-primary);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+  }
+
+  /* ── Error ───────────────────────────────────────────────── */
+
+  .contact-form__error {
+    padding: var(--vrm-space-sm) var(--vrm-space-md);
+    border-radius: var(--vrm-radius-md);
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+    font-size: var(--vrm-font-size-sm);
+    line-height: 1.5;
+  }
+
+  /* ── Submit ──────────────────────────────────────────────── */
+
+  .contact-form__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--vrm-space-sm);
+    padding: var(--vrm-space-sm) var(--vrm-space-lg);
+    background-color: #25d366;
+    color: #ffffff;
+    font-family: var(--vrm-font-body);
+    font-size: var(--vrm-font-size-base);
+    font-weight: var(--vrm-font-weight-semibold);
+    border: none;
+    border-radius: var(--vrm-radius-full);
+    cursor: pointer;
+    transition: background-color var(--vrm-transition-fast);
+
+    &:hover,
+    &:focus-visible {
+      background-color: #128c7e;
+    }
+
+    &:focus-visible {
+      outline: 2px solid #25d366;
+      outline-offset: 3px;
+    }
+  }
+
+  /* ── Nota informativa ────────────────────────────────────── */
+
+  .contact-form__note {
+    font-size: var(--vrm-font-size-xs);
+    color: var(--vrm-color-text-muted);
+    text-align: center;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contact-form__input,
+    .contact-form__submit {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Lee configuración desde los data-* del form (evita define:vars)
+  const WA_BASE = 'https://wa.me/34623941891?text=';
+
+  document.querySelectorAll<HTMLFormElement>('form.contact-form').forEach((form) => {
+    const formId   = form.dataset.formId ?? form.id;
+    const isRegala = form.dataset.isRegala === 'true';
+    const errorEl  = document.getElementById(`${formId}-error`);
+
+    function showError(msg: string): void {
+      if (!errorEl) return;
+      errorEl.textContent = msg;
+      errorEl.removeAttribute('hidden');
+      errorEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function hideError(): void {
+      errorEl?.setAttribute('hidden', '');
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const data      = new FormData(form);
+      const nombre    = data.get('nombre')?.toString().trim()    ?? '';
+      const apellidos = data.get('apellidos')?.toString().trim() ?? '';
+      const email     = data.get('email')?.toString().trim()     ?? '';
+      const telefono  = data.get('telefono')?.toString().trim()  ?? '';
+      const mensaje   = data.get('mensaje')?.toString().trim()   ?? '';
+      const privacidad = data.get('privacidad');
+
+      if (!nombre || !apellidos) {
+        showError('Por favor, introduce tu nombre y apellidos.');
+        return;
+      }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showError('Por favor, introduce un correo electrónico válido.');
+        return;
+      }
+      if (!privacidad) {
+        showError('Debes aceptar la política de privacidad para continuar.');
+        return;
+      }
+
+      hideError();
+
+      let text = isRegala
+        ? `Hola, me llamo ${nombre} ${apellidos} y me interesa un vale regalo de masaje.\n`
+        : `Hola, me llamo ${nombre} ${apellidos} y me gustaría reservar una sesión de masaje californiano.\n`;
+
+      text += `Email: ${email}\n`;
+      if (telefono) text += `Teléfono: ${telefono}\n`;
+      if (mensaje)  text += `Mensaje: ${mensaje}\n`;
+
+      window.open(WA_BASE + encodeURIComponent(text), '_blank', 'noopener,noreferrer');
+    });
+  });
+</script>

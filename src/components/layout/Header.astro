@@ -1,26 +1,59 @@
 ---
 const base = import.meta.env.BASE_URL;
+const b = base.replace(/\/$/, '');
 
 // Ruta activa para aria-current="page"
-const currentPath = Astro.url.pathname.replace(base.replace(/\/$/, ''), '') || '/';
+const currentPath = Astro.url.pathname.replace(b, '') || '/';
 
-interface NavItem {
+interface SubItem {
   label: string;
   href: string;
 }
+interface NavItem {
+  label: string;
+  href: string;
+  children?: SubItem[];
+}
 
+// Estructura tomada del WP origen (ver auditoría B7).
 const navItems: NavItem[] = [
-  { label: 'Inicio',                  href: '/' },
-  { label: 'Servicios',               href: '/servicios-masaje-californiano/' },
-  { label: 'Aprende',                 href: '/aprende-masaje-californiano/' },
-  { label: 'Sobre mí',               href: '/sobre-mi/' },
-  { label: 'FAQs',                    href: '/faqs/' },
-  { label: 'Contacto',               href: '/contacto/' },
+  { label: 'Inicio', href: '/' },
+  {
+    label: 'Sobre Masaje Californiano',
+    href: '/sobre-masaje-californiano/',
+    children: [
+      { label: 'Orígenes',           href: '/sobre-masaje-californiano/#origenes' },
+      { label: 'Beneficios',         href: '/sobre-masaje-californiano/#beneficios' },
+      { label: 'Técnicas',           href: '/sobre-masaje-californiano/#tecnicas' },
+      { label: 'Preguntas frecuentes', href: '/sobre-masaje-californiano/#faqs' },
+    ],
+  },
+  {
+    label: 'Servicios',
+    href: '/servicios-masaje-californiano/',
+    children: [
+      { label: 'Masaje Californiano',         href: '/masaje-californiano-relajante/' },
+      { label: 'Masaje a Cuatro Manos',       href: '/masaje-californiano-cuatro-manos/' },
+      { label: 'Masaje para Dos',             href: '/masaje-californiano-para-dos/' },
+      { label: 'Eventos y Negocios',          href: '/servicios-masaje-eventos-negocios/' },
+      { label: 'Aprende Masaje Californiano', href: '/aprende-masaje-californiano/' },
+    ],
+  },
+  { label: 'Regala Masaje', href: '/regala-masaje/' },
+  { label: 'Sobre mí',      href: '/sobre-mi/' },
+  { label: 'FAQs',          href: '/faqs/' },
+  { label: 'Contacto',      href: '/contacto/' },
 ];
 
 function isActive(href: string): boolean {
-  if (href === '/') return currentPath === '/';
-  return currentPath.startsWith(href);
+  const clean = href.split('#')[0] ?? href;
+  if (clean === '/') return currentPath === '/';
+  return currentPath.startsWith(clean);
+}
+
+function isParentActive(item: NavItem): boolean {
+  if (isActive(item.href)) return true;
+  return item.children?.some((c) => isActive(c.href)) ?? false;
 }
 ---
 
@@ -45,28 +78,54 @@ function isActive(href: string): boolean {
     <!-- Nav desktop -->
     <nav class="site-header__nav" aria-label="Navegación principal">
       <ul role="list">
-        {navItems.map(({ label, href }) => (
-          <li>
-            <a
-              href={`${base.replace(/\/$/, '')}${href}`}
-              aria-current={isActive(href) ? 'page' : undefined}
-            >
-              {label}
-            </a>
+        {navItems.map((item) => (
+          <li class:list={['site-header__nav-item', item.children && 'has-dropdown']}>
+            {item.children ? (
+              <>
+                <a
+                  href={`${b}${item.href}`}
+                  class="site-header__nav-link"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  aria-current={isParentActive(item) ? 'page' : undefined}
+                >
+                  {item.label}
+                  <svg class="site-header__chevron" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </a>
+                <ul class="site-header__submenu" role="list">
+                  {item.children.map((sub) => (
+                    <li>
+                      <a href={`${b}${sub.href}`} class="site-header__sub-link">{sub.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <a
+                href={`${b}${item.href}`}
+                class="site-header__nav-link"
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            )}
           </li>
         ))}
       </ul>
     </nav>
 
-    <!-- CTA Reserva (abre CalendlyDialog en B6) -->
-    <a
-      href={`${base.replace(/\/$/, '')}/contacto/`}
+    <!-- CTA Reserva — abre CalendlyDialog -->
+    <button
+      type="button"
       class="site-header__cta"
       id="btn-reserva-header"
+      data-dialog="dialog-calendly"
       aria-label="Reservar sesión de masaje"
     >
       Reserva
-    </a>
+    </button>
 
     <!-- Toggle mobile -->
     <button
@@ -91,29 +150,50 @@ function isActive(href: string): boolean {
     hidden
   >
     <ul role="list">
-      {navItems.map(({ label, href }) => (
+      {navItems.map((item) => (
         <li>
-          <a
-            href={`${base.replace(/\/$/, '')}${href}`}
-            aria-current={isActive(href) ? 'page' : undefined}
-          >
-            {label}
-          </a>
+          {item.children ? (
+            <details class="site-header__mobile-group">
+              <summary>
+                <span>{item.label}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              </summary>
+              <ul role="list" class="site-header__mobile-sub">
+                <li>
+                  <a href={`${b}${item.href}`} class="site-header__mobile-overview">
+                    Ver página principal
+                  </a>
+                </li>
+                {item.children.map((sub) => (
+                  <li><a href={`${b}${sub.href}`}>{sub.label}</a></li>
+                ))}
+              </ul>
+            </details>
+          ) : (
+            <a
+              href={`${b}${item.href}`}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          )}
         </li>
       ))}
     </ul>
-    <a
-      href={`${base.replace(/\/$/, '')}/contacto/`}
+    <button
+      type="button"
       class="site-header__cta site-header__cta--mobile"
+      data-dialog="dialog-calendly"
     >
       Reserva
-    </a>
+    </button>
   </nav>
 </header>
 
 <style>
   /* ── Layout ──────────────────────────────────────────────── */
-
   .site-header {
     position: sticky;
     top: 0;
@@ -149,7 +229,6 @@ function isActive(href: string): boolean {
   }
 
   /* ── Logo ────────────────────────────────────────────────── */
-
   .site-header__logo {
     flex-shrink: 0;
     display: flex;
@@ -168,44 +247,107 @@ function isActive(href: string): boolean {
   }
 
   /* ── Nav desktop ─────────────────────────────────────────── */
-
   .site-header__nav {
     flex: 1;
 
-    & ul {
+    & > ul {
       display: flex;
       align-items: center;
       gap: var(--vrm-space-md);
       list-style: none;
     }
+  }
 
-    & a {
-      font-size: var(--vrm-font-size-sm);
-      font-weight: var(--vrm-font-weight-medium);
-      color: var(--vrm-color-text);
-      padding-block: var(--vrm-space-xs);
+  .site-header__nav-item {
+    position: relative;
+  }
+
+  .site-header__nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--vrm-font-size-sm);
+    font-weight: var(--vrm-font-weight-medium);
+    color: var(--vrm-color-text);
+    padding-block: var(--vrm-space-xs);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition:
+      color var(--vrm-transition-fast),
+      border-color var(--vrm-transition-fast);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--vrm-color-primary);
       text-decoration: none;
-      border-bottom: 2px solid transparent;
-      transition:
-        color var(--vrm-transition-fast),
-        border-color var(--vrm-transition-fast);
+      border-color: var(--vrm-color-primary-light);
+    }
 
-      &:hover,
-      &:focus-visible {
-        color: var(--vrm-color-primary);
-        text-decoration: none;
-        border-color: var(--vrm-color-primary-light);
-      }
+    &[aria-current='page'] {
+      color: var(--vrm-color-primary);
+      border-color: var(--vrm-color-primary);
+    }
+  }
 
-      &[aria-current='page'] {
-        color: var(--vrm-color-primary);
-        border-color: var(--vrm-color-primary);
-      }
+  .site-header__chevron {
+    transition: transform var(--vrm-transition-fast);
+  }
+
+  /* ── Submenu (dropdown) ──────────────────────────────────── */
+  .site-header__submenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 4px;
+    min-width: 240px;
+    list-style: none;
+    background-color: var(--vrm-color-bg);
+    border: 1px solid var(--vrm-color-border);
+    border-radius: var(--vrm-radius-md);
+    box-shadow: var(--vrm-shadow-md);
+    padding: var(--vrm-space-xs);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition:
+      opacity var(--vrm-transition-fast),
+      visibility var(--vrm-transition-fast),
+      transform var(--vrm-transition-fast);
+    z-index: 110;
+  }
+
+  .has-dropdown:hover > .site-header__submenu,
+  .has-dropdown:focus-within > .site-header__submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .has-dropdown:hover > .site-header__nav-link .site-header__chevron,
+  .has-dropdown:focus-within > .site-header__nav-link .site-header__chevron {
+    transform: rotate(180deg);
+  }
+
+  .site-header__sub-link {
+    display: block;
+    padding: var(--vrm-space-xs) var(--vrm-space-sm);
+    font-size: var(--vrm-font-size-sm);
+    color: var(--vrm-color-text);
+    text-decoration: none;
+    border-radius: var(--vrm-radius-sm);
+    transition:
+      background-color var(--vrm-transition-fast),
+      color var(--vrm-transition-fast);
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--vrm-color-bg-subtle);
+      color: var(--vrm-color-primary);
+      text-decoration: none;
     }
   }
 
   /* ── CTA ─────────────────────────────────────────────────── */
-
   .site-header__cta {
     flex-shrink: 0;
     display: inline-flex;
@@ -213,10 +355,13 @@ function isActive(href: string): boolean {
     padding: var(--vrm-space-xs) var(--vrm-space-md);
     background-color: var(--vrm-color-primary);
     color: var(--vrm-color-text-inverted);
+    font-family: var(--vrm-font-body);
     font-size: var(--vrm-font-size-sm);
     font-weight: var(--vrm-font-weight-semibold);
+    border: none;
     border-radius: var(--vrm-radius-full);
     text-decoration: none;
+    cursor: pointer;
     transition: background-color var(--vrm-transition-fast);
 
     &:hover,
@@ -225,10 +370,14 @@ function isActive(href: string): boolean {
       color: var(--vrm-color-text-inverted);
       text-decoration: none;
     }
+
+    &:focus-visible {
+      outline: 2px solid var(--vrm-color-primary-light);
+      outline-offset: 3px;
+    }
   }
 
   /* ── Toggle mobile ───────────────────────────────────────── */
-
   .site-header__menu-toggle {
     display: none;
     flex-direction: column;
@@ -259,20 +408,19 @@ function isActive(href: string): boolean {
   }
 
   /* ── Mobile drawer ───────────────────────────────────────── */
-
   .site-header__mobile {
     border-top: 1px solid var(--vrm-color-border);
     background-color: var(--vrm-color-bg);
     padding: var(--vrm-space-md) var(--vrm-space-lg) var(--vrm-space-lg);
 
-    & ul {
+    & > ul {
       list-style: none;
       display: flex;
       flex-direction: column;
       gap: var(--vrm-space-xs);
     }
 
-    & a {
+    & > ul > li > a {
       display: block;
       padding-block: var(--vrm-space-sm);
       font-size: var(--vrm-font-size-md);
@@ -291,6 +439,54 @@ function isActive(href: string): boolean {
     }
   }
 
+  .site-header__mobile-group {
+    border-bottom: 1px solid var(--vrm-color-border);
+
+    & > summary {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-block: var(--vrm-space-sm);
+      font-size: var(--vrm-font-size-md);
+      cursor: pointer;
+      color: var(--vrm-color-text);
+
+      &::-webkit-details-marker { display: none; }
+      &::marker { display: none; }
+    }
+
+    &[open] > summary svg {
+      transform: rotate(180deg);
+    }
+
+    & svg {
+      transition: transform var(--vrm-transition-fast);
+    }
+  }
+
+  .site-header__mobile-sub {
+    list-style: none;
+    padding: 0 0 var(--vrm-space-sm) var(--vrm-space-md);
+    margin: 0;
+
+    & a {
+      display: block;
+      padding-block: var(--vrm-space-xs);
+      font-size: var(--vrm-font-size-sm);
+      color: var(--vrm-color-text-muted);
+      text-decoration: none;
+
+      &:hover {
+        color: var(--vrm-color-primary);
+      }
+    }
+  }
+
+  .site-header__mobile-overview {
+    font-style: italic;
+  }
+
   .site-header__cta--mobile {
     display: inline-flex;
     margin-top: var(--vrm-space-md);
@@ -298,8 +494,7 @@ function isActive(href: string): boolean {
   }
 
   /* ── Responsive ──────────────────────────────────────────── */
-
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     .site-header__nav {
       display: none;
     }
@@ -316,9 +511,11 @@ function isActive(href: string): boolean {
   /* prefers-reduced-motion */
   @media (prefers-reduced-motion: reduce) {
     .site-header,
-    .site-header__nav a,
+    .site-header__nav-link,
     .site-header__cta,
-    .site-header__menu-toggle-bar {
+    .site-header__menu-toggle-bar,
+    .site-header__submenu,
+    .site-header__chevron {
       transition: none;
     }
   }
@@ -331,7 +528,7 @@ function isActive(href: string): boolean {
 
   if (sentinel && header) {
     new IntersectionObserver(([entry]) => {
-      header.classList.toggle('is-stuck', !entry.isIntersecting);
+      header.classList.toggle('is-stuck', !entry?.isIntersecting);
     }).observe(sentinel);
   }
 
@@ -349,7 +546,7 @@ function isActive(href: string): boolean {
     }
   });
 
-  // Cerrar drawer al pulsar un enlace
+  // Cerrar drawer al pulsar un enlace (no aplicar a <summary>)
   mobileMenu?.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', () => {
       toggle?.setAttribute('aria-expanded', 'false');

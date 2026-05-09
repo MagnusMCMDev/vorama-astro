@@ -1,0 +1,127 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/sections/PageHeader.astro';
+import Section from '~/components/sections/Section.astro';
+import IconBox from '~/components/sections/IconBox.astro';
+import ImageCarousel from '~/components/sections/ImageCarousel.astro';
+
+import imgEventos1 from '~/assets/images/pages/eventos-1.webp';
+import imgParaDos5 from '~/assets/images/pages/parados-5.webp';
+import imgMiguel from '~/assets/images/pages/miguel-retrato.webp';
+
+const carouselImages = [
+  { src: imgEventos1, alt: 'Puesto de Masaje Californiano en el evento Spiritual Dance Festival.' },
+  { src: imgParaDos5, alt: 'Chiringuito en la playa, frente el mar. Hay dos camillas preparadas para ofrecer un masaje en pareja.' },
+  { src: imgMiguel, alt: 'Terapeuta dando un Masaje Californiano en el evento Spiritual Dance Festival.' },
+];
+
+const base = import.meta.env.BASE_URL;
+const b = base.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title="Masaje en Eventos y Negocios — Voramà Terapias"
+  description="Servicio de masaje californiano para festivales, retiros, eventos corporativos y empresas en Barcelona. Pide presupuesto sin compromiso."
+>
+  <PageHeader kicker="Servicios — Masaje Californiano" title="Masaje en Eventos y Negocios" />
+
+  <!-- ── Lead + carrusel + intro ───────────────────────────── -->
+  <Section variant="default" ariaLabel="Bienestar en tu evento">
+    <h2 style="text-align:center; max-width: 900px; margin: 0 auto var(--vrm-space-lg)">
+      Lleva la calma a tu evento: bienestar que transforma cualquier espacio en un oasis de relajación
+    </h2>
+
+    <div class="carousel-wrap">
+      <ImageCarousel images={carouselImages} id="eventos-carrusel" />
+    </div>
+
+    <div class="prose">
+      <p>
+        Lleva la serenidad y la relajación del masaje californiano a tus eventos o negocios. Ofrezco
+        la posibilidad de establecer un puesto de masajes en festivales, retiros, chiringuitos y
+        cualquier evento que desees enriquecer con una experiencia de bienestar. Este servicio es
+        una excelente manera de añadir un toque especial a tu evento, permitiendo a los asistentes
+        disfrutar de una pausa relajante en medio de las actividades.
+      </p>
+      <p>
+        Ya sea que organices un retiro de bienestar, un festival de consciencia o un evento
+        corporativo, el masaje californiano se adapta perfectamente para crear un espacio de calma
+        en cualquier entorno. El servicio se puede ajustar en función de las necesidades del evento.
+        Aporta un valor añadido a tu evento, brindando a tus asistentes la oportunidad de relajarse
+        y recargar energías con un masaje suave y terapéutico.
+      </p>
+    </div>
+  </Section>
+
+  <!-- ── Iconos beneficios ──────────────────────────────────── -->
+  <Section variant="muted" ariaLabel="Beneficios">
+    <div class="benefits-grid">
+      <IconBox
+        icon="check"
+        title="Ambiente relajante en cualquier lugar"
+        description="Transforma cualquier espacio en un oasis de calma, proporcionando una experiencia de relajación integral durante eventos, festivales o retiros."
+      />
+      <IconBox
+        icon="star"
+        title="Adaptabilidad a diferentes entornos"
+        description="El servicio se adapta a las necesidades del evento o negocio, ofreciendo masajes personalizados en espacios al aire libre o en interiores, brindando bienestar en cualquier contexto."
+      />
+      <IconBox
+        icon="clock"
+        title="Atracción para clientes y participantes"
+        description="Añade un valor adicional a los eventos al ofrecer una experiencia de bienestar única que atrae a los asistentes y eleva la percepción del evento o negocio."
+      />
+    </div>
+
+    <div class="cta-wrap">
+      <a class="btn-primary" href={`${b}/contacto/`}>Pedir presupuesto sin compromiso</a>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .carousel-wrap {
+    max-width: 1024px;
+    margin: 0 auto var(--vrm-space-xl);
+  }
+
+  .prose {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+
+  .prose p {
+    line-height: var(--vrm-line-height-relaxed);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--vrm-space-lg);
+    margin-bottom: var(--vrm-space-xl);
+  }
+
+  .cta-wrap {
+    text-align: center;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--vrm-space-sm) var(--vrm-space-lg);
+    background-color: var(--vrm-color-accent);
+    color: var(--vrm-color-text);
+    font-weight: var(--vrm-font-weight-semibold);
+    border-radius: var(--vrm-radius-full);
+    text-decoration: none;
+    transition: background-color var(--vrm-transition-fast);
+  }
+
+  .btn-primary:hover,
+  .btn-primary:focus-visible {
+    background-color: #b8906d;
+    color: var(--vrm-color-text);
+    text-decoration: none;
+  }
+</style>

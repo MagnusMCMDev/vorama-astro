@@ -13,6 +13,7 @@ import IconBox from '~/components/sections/IconBox.astro';
 import AccordionFAQ from '~/components/sections/AccordionFAQ.astro';
 import Reviews from '~/components/sections/Reviews.astro';
 import ImageCarousel from '~/components/sections/ImageCarousel.astro';
+import ContactForm from '~/components/interactive/ContactForm.astro';
 
 // Datos de prueba
 import relajanteImg from '~/assets/images/services/relajante-hero.webp';
@@ -164,6 +165,44 @@ const carouselImages = [
   <Section variant="default" ariaLabel="Carrusel">
     <h2 style="margin-bottom:2rem">ImageCarousel</h2>
     <ImageCarousel images={carouselImages} id="dev-carousel" />
+  </Section>
+
+  <!-- ── ContactForm ───────────────────────────────────────── -->
+  <Section variant="muted" ariaLabel="Formulario de contacto">
+    <h2 style="margin-bottom:2rem">ContactForm — variant="contacto"</h2>
+    <div style="max-width:640px">
+      <ContactForm variant="contacto" id="dev-form-contacto" />
+    </div>
+  </Section>
+
+  <Section variant="default" ariaLabel="Formulario vale regalo">
+    <h2 style="margin-bottom:2rem">ContactForm — variant="regala"</h2>
+    <div style="max-width:640px">
+      <ContactForm variant="regala" id="dev-form-regala" />
+    </div>
+  </Section>
+
+  <!-- ── Diálogos (botones de prueba) ──────────────────────── -->
+  <Section variant="accent" ariaLabel="Diálogos interactivos">
+    <h2 style="margin-bottom:2rem">Diálogos interactivos</h2>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap">
+      <button type="button" data-dialog="dialog-privacidad"
+        style="padding:.5rem 1.25rem;background:var(--vrm-color-primary);color:#fff;border:none;border-radius:9999px;cursor:pointer;font-size:.875rem">
+        Política de privacidad
+      </button>
+      <button type="button" data-dialog="dialog-cookies"
+        style="padding:.5rem 1.25rem;background:var(--vrm-color-primary);color:#fff;border:none;border-radius:9999px;cursor:pointer;font-size:.875rem">
+        Política de cookies
+      </button>
+      <button type="button" data-dialog="dialog-aviso-legal"
+        style="padding:.5rem 1.25rem;background:var(--vrm-color-primary);color:#fff;border:none;border-radius:9999px;cursor:pointer;font-size:.875rem">
+        Aviso legal
+      </button>
+      <button type="button" data-dialog="dialog-calendly"
+        style="padding:.5rem 1.25rem;background:var(--vrm-color-accent);color:#161513;border:none;border-radius:9999px;cursor:pointer;font-size:.875rem;font-weight:600">
+        Calendly — Reservar
+      </button>
+    </div>
   </Section>
 
 </BaseLayout>

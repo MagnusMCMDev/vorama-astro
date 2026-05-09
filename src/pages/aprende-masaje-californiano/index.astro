@@ -1,0 +1,100 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/sections/PageHeader.astro';
+import Section from '~/components/sections/Section.astro';
+
+const base = import.meta.env.BASE_URL;
+const b = base.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title="Aprende Masaje Californiano — Voramà Terapias"
+  description="Aprende los fundamentos del masaje californiano. Próximamente formaciones y talleres en Barcelona. Avísate por WhatsApp."
+>
+  <PageHeader title="Aprende Masaje Californiano" />
+
+  <Section variant="default" ariaLabel="Próximamente">
+    <div class="placeholder">
+      <h2>Formaciones en preparación</h2>
+      <p>
+        Estamos preparando un programa de iniciación al masaje californiano: principios técnicos,
+        movimientos largos y envolventes, postura del terapeuta, y la actitud meditativa que
+        distingue a esta técnica de cualquier otro masaje.
+      </p>
+      <p>
+        Si te interesa apuntarte cuando esté listo, escríbenos por WhatsApp y te avisaremos en
+        cuanto abramos inscripciones.
+      </p>
+      <div class="placeholder__ctas">
+        <a class="btn-primary" href="https://wa.me/34623941891?text=Hola,%20quiero%20m%C3%A1s%20info%20sobre%20las%20formaciones%20de%20masaje%20californiano" target="_blank" rel="noopener noreferrer">
+          Avisadme por WhatsApp
+        </a>
+        <a class="btn-secondary" href={`${b}/sobre-masaje-californiano/`}>
+          Saber más sobre el masaje
+        </a>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .placeholder {
+    max-width: 720px;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .placeholder h2 {
+    color: var(--vrm-color-primary);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  .placeholder p {
+    line-height: var(--vrm-line-height-relaxed);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  .placeholder__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--vrm-space-md);
+    justify-content: center;
+    margin-top: var(--vrm-space-lg);
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--vrm-space-sm) var(--vrm-space-lg);
+    border-radius: var(--vrm-radius-full);
+    font-weight: var(--vrm-font-weight-semibold);
+    text-decoration: none;
+    transition: background-color var(--vrm-transition-fast);
+  }
+
+  .btn-primary {
+    background-color: var(--vrm-color-accent);
+    color: var(--vrm-color-text);
+  }
+
+  .btn-primary:hover,
+  .btn-primary:focus-visible {
+    background-color: #b8906d;
+    color: var(--vrm-color-text);
+    text-decoration: none;
+  }
+
+  .btn-secondary {
+    background-color: transparent;
+    color: var(--vrm-color-primary);
+    border: 2px solid var(--vrm-color-primary);
+  }
+
+  .btn-secondary:hover,
+  .btn-secondary:focus-visible {
+    background-color: var(--vrm-color-primary);
+    color: var(--vrm-color-text-inverted);
+    text-decoration: none;
+  }
+</style>

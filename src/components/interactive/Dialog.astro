@@ -1,0 +1,222 @@
+---
+interface Props {
+  id: string;
+  title: string;
+}
+
+const { id, title } = Astro.props;
+---
+
+<dialog class="vrm-dialog" id={id} aria-labelledby={`${id}-title`}>
+  <div class="vrm-dialog__inner">
+    <header class="vrm-dialog__header">
+      <h2 class="vrm-dialog__title" id={`${id}-title`}>{title}</h2>
+      <button
+        type="button"
+        class="vrm-dialog__close"
+        data-dialog-close={id}
+        aria-label="Cerrar diálogo"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </header>
+    <div class="vrm-dialog__body">
+      <slot />
+    </div>
+  </div>
+</dialog>
+
+<style>
+  /* ── Dialog overlay ──────────────────────────────────────── */
+
+  .vrm-dialog {
+    /* Resetea defaults del UA */
+    margin: 0;
+    padding: var(--vrm-space-md);
+    border: none;
+    background: transparent;
+
+    /* Overlay de viewport completo */
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+
+    /* Oculto por defecto */
+    display: none;
+
+    &[open] {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &::backdrop {
+      background-color: rgb(0 0 0 / 0.55);
+      backdrop-filter: blur(2px);
+    }
+  }
+
+  /* ── Tarjeta interior ────────────────────────────────────── */
+
+  .vrm-dialog__inner {
+    position: relative;
+    background-color: var(--vrm-color-bg);
+    border-radius: var(--vrm-radius-lg);
+    box-shadow: var(--vrm-shadow-lg);
+    width: 100%;
+    max-width: 640px;
+    max-height: calc(100dvh - 2 * var(--vrm-space-md));
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── Cabecera ────────────────────────────────────────────── */
+
+  .vrm-dialog__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--vrm-space-md);
+    padding: var(--vrm-space-md) var(--vrm-space-lg);
+    border-bottom: 1px solid var(--vrm-color-border);
+    flex-shrink: 0;
+  }
+
+  .vrm-dialog__title {
+    font-family: var(--vrm-font-display);
+    font-size: var(--vrm-font-size-lg);
+    color: var(--vrm-color-primary);
+    margin: 0;
+    line-height: var(--vrm-line-height-heading);
+  }
+
+  .vrm-dialog__close {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: var(--vrm-radius-sm);
+    color: var(--vrm-color-text-muted);
+    cursor: pointer;
+    transition:
+      background-color var(--vrm-transition-fast),
+      color var(--vrm-transition-fast);
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--vrm-color-bg-subtle);
+      color: var(--vrm-color-text);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--vrm-color-primary);
+      outline-offset: 2px;
+    }
+  }
+
+  /* ── Cuerpo scrollable ───────────────────────────────────── */
+
+  .vrm-dialog__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--vrm-space-lg);
+    overscroll-behavior: contain;
+  }
+
+  /* ── Móvil: sheet desde abajo ────────────────────────────── */
+
+  @media (max-width: 600px) {
+    .vrm-dialog {
+      padding: 0;
+      align-items: flex-end;
+    }
+
+    .vrm-dialog__inner {
+      max-width: 100%;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      max-height: 90dvh;
+    }
+  }
+
+  /* ── Animación entrada ───────────────────────────────────── */
+
+  @media (prefers-reduced-motion: no-preference) {
+    .vrm-dialog[open] .vrm-dialog__inner {
+      animation: dialog-enter 0.2s ease;
+    }
+
+    @keyframes dialog-enter {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .vrm-dialog[open] .vrm-dialog__inner {
+        animation: dialog-enter-mobile 0.25s ease;
+      }
+
+      @keyframes dialog-enter-mobile {
+        from { transform: translateY(100%); }
+        to   { transform: translateY(0); }
+      }
+    }
+  }
+</style>
+
+<script>
+  // ── Opener global ─────────────────────────────────────────
+  // Cualquier elemento con [data-dialog="id"] abre el diálogo correspondiente.
+  // Funciona para botones y enlaces añadidos dinámicamente.
+
+  document.addEventListener('click', (e) => {
+    // Abrir
+    const opener = (e.target as Element).closest<HTMLElement>('[data-dialog]');
+    if (opener?.dataset.dialog) {
+      e.preventDefault();
+      const dlg = document.getElementById(opener.dataset.dialog) as HTMLDialogElement | null;
+      if (dlg) {
+        dlg.showModal();
+        dlg.dispatchEvent(new CustomEvent('vrm:dialog-open', { bubbles: false }));
+      }
+      return;
+    }
+
+    // Cerrar
+    const closer = (e.target as Element).closest<HTMLElement>('[data-dialog-close]');
+    if (closer?.dataset.dialogClose) {
+      const dlg = document.getElementById(closer.dataset.dialogClose) as HTMLDialogElement | null;
+      dlg?.close();
+    }
+  });
+
+  // Cerrar al hacer clic en el backdrop (fuera de .vrm-dialog__inner)
+  document.querySelectorAll<HTMLDialogElement>('dialog.vrm-dialog').forEach((dlg) => {
+    dlg.addEventListener('click', (e) => {
+      if (e.target === dlg) dlg.close();
+    });
+  });
+</script>

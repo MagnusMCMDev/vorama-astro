@@ -1,0 +1,310 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/sections/PageHeader.astro';
+import Section from '~/components/sections/Section.astro';
+import IconBox from '~/components/sections/IconBox.astro';
+import ImageCarousel from '~/components/sections/ImageCarousel.astro';
+import CardCTA from '~/components/sections/CardCTA.astro';
+
+import img4m1 from '~/assets/images/pages/4manos-1.webp';
+import img4m2 from '~/assets/images/pages/4manos-2.webp';
+import img4m3 from '~/assets/images/pages/4manos-3.webp';
+import img4m4 from '~/assets/images/pages/4manos-4.webp';
+import img4m5 from '~/assets/images/pages/4manos-5.webp';
+import img4mParav from '~/assets/images/pages/4manos-paravertebrales.webp';
+
+import imgAnabel from '~/assets/images/pages/anabel-2.webp';
+
+import imgCtaCalifo from '~/assets/images/pages/relajante-1.webp';
+import imgCtaPareja from '~/assets/images/pages/parados-arena.webp';
+import imgCtaVale from '~/assets/images/pages/regalo-corazon.webp';
+
+const carousel = [
+  { src: img4m1, alt: 'Pase largo por hombros, nuca y paravertebrales en un masaje a cuatro manos boca abajo.' },
+  { src: img4m2, alt: 'Dos masajistas haciendo un masaje a cuatro manos en la palma de los pies. Cada terapeuta hace un masaje en un pie.' },
+  { src: img4m3, alt: 'Pase circular por el vientre en un masaje a cuatro manos boca arriba. Los masajistas se coordinan con las cuatro manos para hacer un masaje circular alrededor del ombligo.' },
+  { src: img4m4, alt: 'Pase largo en un masaje a cuatro manos boca abajo de forma cruzada. Cada masajista hace un pase largo en un lado de la camilla de forma opuesta.' },
+  { src: img4m5, alt: 'Pase largo boca arriba en un masaje a cuatro manos donde los masajistas empiezan en crestas iliacas anterosuperiores, pasando por vientre y finalizando en pectorales y hombros.' },
+];
+
+const base = import.meta.env.BASE_URL;
+const b = base.replace(/\/$/, '');
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  serviceType: 'Masaje Californiano a Cuatro Manos',
+  name: 'Masaje a Cuatro Manos',
+  provider: { '@type': 'LocalBusiness', name: 'Voramà Terapias' },
+  areaServed: 'Barcelona',
+  offers: [
+    { '@type': 'Offer', name: '60 minutos', price: '100', priceCurrency: 'EUR' },
+    { '@type': 'Offer', name: '90 minutos', price: '130', priceCurrency: 'EUR' },
+  ],
+};
+---
+
+<BaseLayout
+  title="Masaje a Cuatro Manos en Barcelona — Voramà Terapias"
+  description="Masaje californiano a cuatro manos en Barcelona. Dos terapeutas sincronizados para una experiencia inmersiva. Reserva online."
+  jsonLd={jsonLd}
+>
+  <PageHeader kicker="Servicio — Masaje Californiano" title="Masaje a Cuatro Manos" />
+
+  <!-- ── §2: heading + carrusel + lead ───────────────────────── -->
+  <Section variant="default" ariaLabel="Sobre el servicio">
+    <h2 class="section-heading">
+      Doble fluidez, doble bienestar: la sincronía perfecta para una relajación incomparable
+    </h2>
+
+    <div class="carousel-wrap">
+      <ImageCarousel images={carousel} id="cuatromanos-carrusel" />
+    </div>
+
+    <div class="prose">
+      <p>
+        El masaje a 4 manos es una experiencia única y excepcional. Dos terapeutas trabajan en
+        perfecta sincronía, aplicando movimientos envolventes y fluidos sobre tu cuerpo, creando una
+        sensación de bienestar profundo. Durante 60 minutos, las cuatro manos se mueven de forma
+        coordinada, haciendo que el flujo del masaje sea continuo y armónico. Este tratamiento
+        amplifica los beneficios del masaje californiano, llevando tu mente y cuerpo a un estado de
+        relajación que no se puede experimentar con un masaje tradicional.
+      </p>
+      <p>
+        La sincronización de dos terapeutas te permite dejarte llevar por la sensación de equilibrio
+        y descanso, liberando tensiones de una manera más rápida y efectiva. Este masaje es perfecto
+        para quienes buscan una experiencia profundamente envolvente, donde cada parte del cuerpo es
+        atendida de manera simultánea, logrando una desconexión total del mundo exterior.
+      </p>
+    </div>
+  </Section>
+
+  <!-- ── §3: 3 IconBoxes ─────────────────────────────────────── -->
+  <Section variant="muted" ariaLabel="Beneficios">
+    <div class="benefits-grid">
+      <IconBox icon="check" title="Relajación profunda en menos tiempo" description="Al recibir un masaje de doble efectividad en 60 minutos, se consigue una relajación total en menor tiempo." />
+      <IconBox icon="star" title="Sincronía total" description="Los movimientos simultáneos generan una experiencia fluida y armoniosa, cubriendo todo el cuerpo de manera equilibrada." />
+      <IconBox icon="clock" title="Experiencia intensificada" description="La acción coordinada de dos terapeutas multiplica la sensación de bienestar y relajación profunda." />
+    </div>
+  </Section>
+
+  <!-- ── §4: Reserva — 2 cards image + h5 ────────────────────── -->
+  <Section variant="default" ariaLabel="Reserva tu sesión" id="reserva">
+    <h2 class="section-heading">Reserva tu sesión</h2>
+    <div class="reserva-grid">
+      <button type="button" class="reserva-card" data-dialog="dialog-calendly" aria-label="Reservar sesión de 60 minutos">
+        <Image src={img4m1} alt="Pase largo por hombros, nuca y paravertebrales en un masaje a cuatro manos boca abajo." class="reserva-card__img" widths={[400, 600]} sizes="(max-width: 800px) 100vw, 50vw" />
+        <span class="reserva-card__price">Sesión de 60 minutos · 100€</span>
+      </button>
+      <button type="button" class="reserva-card" data-dialog="dialog-calendly" aria-label="Reservar sesión de 90 minutos">
+        <Image src={img4mParav} alt="Pase largo por paravertebrales de forma cruzada en un masaje a cuatro manos boca arriba." class="reserva-card__img" widths={[400, 600]} sizes="(max-width: 800px) 100vw, 50vw" />
+        <span class="reserva-card__price">Sesión de 90 minutos · 130€</span>
+      </button>
+    </div>
+  </Section>
+
+  <!-- ── §5: Anabel — image LEFT / text RIGHT ────────────────── -->
+  <Section variant="muted" ariaLabel="Colaboración con Anabel">
+    <div class="anabel">
+      <figure class="anabel__media">
+        <Image src={imgAnabel} alt="Anabel, socia de masaje a cuatro manos haciendo un masaje californiano en un domo." widths={[400, 600]} sizes="(max-width: 800px) 100vw, 40vw" />
+      </figure>
+      <div class="anabel__text">
+        <h3>Colaboración con Anabel: una sinergia de talento</h3>
+        <p>
+          En las sesiones de <strong>masaje en pareja</strong> y <strong>masaje a 4 manos</strong>,
+          cuento con la valiosa colaboración de Anabel, una terapeuta con una gran experiencia en
+          masaje californiano. Trabajamos en perfecta sincronía para ofrecer una experiencia única
+          y profundamente reconfortante.
+        </p>
+        <p>
+          Cuando damos un <strong>masaje a 4 manos</strong>, Anabel y yo unimos nuestras habilidades
+          para crear una danza fluida y armoniosa sobre tu cuerpo. Esta técnica potencia los
+          beneficios del masaje al proporcionar una sensación envolvente y simultánea que maximiza
+          la relajación.
+        </p>
+        <p>
+          Nuestra complicidad y experiencia hacen que cada sesión sea única, asegurando que cada
+          cliente sienta que está en manos de dos profesionales perfectamente alineados en su
+          objetivo de bienestar integral.
+        </p>
+      </div>
+    </div>
+    <div class="anabel-link">
+      <h4>Te invito a conocerla en:</h4>
+      <a href="https://www.samatayogastudio.com/masaje-californiano" target="_blank" rel="noopener noreferrer" class="anabel-link__url">
+        samatayogastudio.com/masaje-californiano
+      </a>
+    </div>
+  </Section>
+
+  <!-- ── §6: Otras ofertas ───────────────────────────────────── -->
+  <Section variant="default" ariaLabel="Otras ofertas">
+    <h2 class="section-heading">Conoce otras ofertas de masaje</h2>
+    <div class="cards-grid">
+      <CardCTA
+        title="Masaje Californiano"
+        cta={{ label: 'Quiero probar este masaje', href: `${b}/masaje-californiano-relajante/` }}
+        image={imgCtaCalifo}
+        imageAlt="Manos del terapeuta haciendo un Masaje Californiano sobre omoplato y hombro."
+      />
+      <CardCTA
+        title="Masaje en Pareja"
+        cta={{ label: 'Quiero probar este masaje', href: `${b}/masaje-californiano-para-dos/` }}
+        image={imgCtaPareja}
+        imageAlt="Dos camillas de Masaje Californiano sobre la arena frente el mar, preparadas para un masaje en pareja."
+      />
+      <CardCTA
+        title="Vale Regalo Masaje"
+        cta={{ label: 'Quiero mi vale para regalar', href: `${b}/regala-masaje/` }}
+        image={imgCtaVale}
+        imageAlt="Regalo sobre una camilla de masaje californiano junto a un corazón de mimbre."
+      />
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .section-heading {
+    text-align: center;
+    color: var(--vrm-color-primary);
+    max-width: 900px;
+    margin: 0 auto var(--vrm-space-lg);
+  }
+
+  .carousel-wrap {
+    max-width: 1024px;
+    margin: 0 auto var(--vrm-space-xl);
+  }
+
+  .prose {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+
+  .prose p {
+    line-height: var(--vrm-line-height-relaxed);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--vrm-space-lg);
+  }
+
+  /* ── Reserva ─────────────────────────────────────────────── */
+  .reserva-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--vrm-space-lg);
+    max-width: 900px;
+    margin-inline: auto;
+
+    @media (max-width: 700px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .reserva-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vrm-space-sm);
+    padding: 0;
+    background: var(--vrm-color-bg);
+    border: 2px solid var(--vrm-color-border);
+    border-radius: var(--vrm-radius-lg);
+    overflow: hidden;
+    cursor: pointer;
+    font-family: var(--vrm-font-body);
+    box-shadow: var(--vrm-shadow-sm);
+    transition: transform var(--vrm-transition-fast), box-shadow var(--vrm-transition-fast), border-color var(--vrm-transition-fast);
+  }
+
+  .reserva-card:hover,
+  .reserva-card:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: var(--vrm-shadow-md);
+    border-color: var(--vrm-color-accent);
+  }
+
+  .reserva-card__img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+  }
+
+  .reserva-card__price {
+    padding: var(--vrm-space-md);
+    font-size: var(--vrm-font-size-lg);
+    font-weight: var(--vrm-font-weight-semibold);
+    color: var(--vrm-color-primary);
+    text-align: center;
+  }
+
+  /* ── Anabel ──────────────────────────────────────────────── */
+  .anabel {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: var(--vrm-space-xl);
+    align-items: center;
+    max-width: 1100px;
+    margin-inline: auto;
+  }
+
+  .anabel__media {
+    margin: 0;
+  }
+
+  .anabel__media img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--vrm-radius-lg);
+    box-shadow: var(--vrm-shadow-md);
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+  }
+
+  .anabel__text h3 {
+    color: var(--vrm-color-primary);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  .anabel__text p {
+    line-height: var(--vrm-line-height-relaxed);
+    margin-bottom: var(--vrm-space-md);
+  }
+
+  .anabel-link {
+    text-align: center;
+    margin-top: var(--vrm-space-xl);
+  }
+
+  .anabel-link h4 {
+    color: var(--vrm-color-primary);
+    margin-bottom: var(--vrm-space-sm);
+  }
+
+  .anabel-link__url {
+    font-size: var(--vrm-font-size-lg);
+    color: var(--vrm-color-primary);
+    font-weight: var(--vrm-font-weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--vrm-space-lg);
+  }
+
+  @media (max-width: 800px) {
+    .anabel {
+      grid-template-columns: 1fr;
+      gap: var(--vrm-space-lg);
+    }
+  }
+</style>

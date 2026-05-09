@@ -1,0 +1,147 @@
+---
+import Dialog from './Dialog.astro';
+
+interface Props {
+  /** URL directa del evento de Calendly (sin parámetros — se añaden aquí) */
+  url?: string;
+}
+
+const { url = 'https://calendly.com/vorama/sesion-masaje-120' } = Astro.props;
+
+// Parámetros para el widget embebido:
+// - embed_type=Inline   → oculta la barra de navegación de Calendly
+// - hide_gdpr_banner=1  → oculta el banner de cookies de Calendly
+// - background_color    → fondo blanco (sin #)
+// - text_color          → coincide con --vrm-color-text (sin #)
+// - primary_color       → coincide con --vrm-color-primary (sin #)
+const embedUrl = `${url}?embed_type=Inline&hide_gdpr_banner=1&background_color=ffffff&text_color=161513&primary_color=205b4f`;
+---
+
+<Dialog id="dialog-calendly" title="Reservar sesión">
+  <div class="calendly-wrap">
+    <!--
+      IMPORTANTE: NO usamos la clase "calendly-inline-widget" porque widget.js
+      la busca automáticamente al cargarse e intenta leer data-url (null → crash).
+      Usamos "vrm-calendly-embed" y llamamos initInlineWidget() explícitamente.
+    -->
+    <div
+      class="vrm-calendly-embed"
+      data-cal-url={embedUrl}
+    ></div>
+    <p class="calendly-wrap__note">
+      Si prefieres, también puedes escribirnos por
+      <a href="https://wa.me/34623941891" target="_blank" rel="noopener noreferrer">WhatsApp</a>.
+    </p>
+  </div>
+</Dialog>
+
+<style>
+  /* Ampliar el diálogo de Calendly respecto al Dialog base (640px → 900px) */
+  :global(#dialog-calendly .vrm-dialog__inner) {
+    max-width: 900px;
+    height: min(720px, 90dvh);
+  }
+
+  :global(#dialog-calendly .vrm-dialog__body) {
+    padding: 0;
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Wrap interior ───────────────────────────────────────── */
+
+  .calendly-wrap {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* Contenedor donde initInlineWidget inyecta el iframe */
+  .vrm-calendly-embed {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+  }
+
+  /* El iframe que Calendly inyecta debe ocupar todo el contenedor */
+  :global(#dialog-calendly .vrm-calendly-embed iframe) {
+    width: 100% !important;
+    height: 100% !important;
+    border: none;
+    display: block;
+  }
+
+  /* ── Nota inferior ───────────────────────────────────────── */
+
+  .calendly-wrap__note {
+    font-size: var(--vrm-font-size-xs);
+    color: var(--vrm-color-text-muted);
+    text-align: center;
+    padding: var(--vrm-space-sm) var(--vrm-space-lg);
+    margin: 0;
+    border-top: 1px solid var(--vrm-color-border);
+    flex-shrink: 0;
+
+    & a {
+      color: var(--vrm-color-primary);
+      font-weight: var(--vrm-font-weight-semibold);
+    }
+  }
+</style>
+
+<script>
+  // ── Tipos mínimos para window.Calendly ─────────────────────
+  declare global {
+    interface Window {
+      Calendly?: {
+        initInlineWidget: (opts: {
+          url: string;
+          parentElement: Element;
+          prefill?: Record<string, unknown>;
+          utm?: Record<string, unknown>;
+        }) => void;
+      };
+    }
+  }
+
+  // ── Referencias DOM ────────────────────────────────────────
+  const dialog    = document.getElementById('dialog-calendly');
+  const container = dialog?.querySelector<HTMLElement>('.vrm-calendly-embed');
+  const calUrl    = container?.dataset.calUrl ?? '';
+
+  let scriptLoaded = false;
+  let initialized  = false;
+
+  // ── Inicializar widget (solo si Calendly ya está disponible) ─
+  function initWidget(): void {
+    if (initialized || !container || !window.Calendly) return;
+    initialized = true;
+    window.Calendly.initInlineWidget({
+      url:           calUrl,
+      parentElement: container,
+    });
+  }
+
+  // ── Cargar script y luego inicializar ──────────────────────
+  function loadAndInit(): void {
+    if (window.Calendly) {
+      // Script ya disponible (segunda apertura del dialog)
+      initWidget();
+      return;
+    }
+    if (scriptLoaded) return; // Script en tránsito — onload llamará a initWidget
+    scriptLoaded = true;
+
+    const script  = document.createElement('script');
+    script.src    = 'https://assets.calendly.com/assets/external/widget.js';
+    script.async  = true;
+    script.onload = initWidget;
+    document.head.appendChild(script);
+  }
+
+  // Escucha el evento personalizado que Dialog.astro dispara al abrir
+  dialog?.addEventListener('vrm:dialog-open', loadAndInit);
+</script>
