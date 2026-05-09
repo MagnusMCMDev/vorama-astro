@@ -232,15 +232,22 @@ function isParentActive(item: NavItem): boolean {
     position: sticky;
     top: 0;
     z-index: 100;
-    background-color: var(--vrm-color-bg);
-    border-bottom: 1px solid transparent;
-    transition:
-      border-color var(--vrm-transition-base),
-      box-shadow var(--vrm-transition-base);
+    /* Degradado de blanco arriba a transparente abajo:
+       el último 30% deja ver lo que haya bajo el header,
+       suavizando la transición a cualquier color de sección. */
+    background: linear-gradient(
+      to bottom,
+      var(--vrm-color-bg) 0%,
+      var(--vrm-color-bg) 65%,
+      rgb(255 255 255 / 0) 100%
+    );
+    /* Pequeño "padding" extra abajo para que el degradado tenga aire */
+    padding-bottom: 12px;
+    margin-bottom: -12px;
+    transition: box-shadow var(--vrm-transition-base);
 
     &.is-stuck {
-      border-color: var(--vrm-color-border);
-      box-shadow: var(--vrm-shadow-sm);
+      box-shadow: 0 6px 16px -8px rgb(0 0 0 / 0.08);
     }
   }
 
