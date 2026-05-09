@@ -22,18 +22,45 @@ const { kicker, title, lead } = Astro.props;
 
 <style>
   .page-header {
-    background: linear-gradient(
-      135deg,
-      #14463c 0%,
-      var(--vrm-color-primary) 50%,
-      var(--vrm-color-primary-light) 100%
-    );
+    /* Doble capa: radial cálido emergiendo desde abajo-derecha
+       (efecto "sol naciente") + degradado base diagonal. */
+    background:
+      radial-gradient(
+        ellipse 80% 100% at 100% 110%,
+        rgb(140 220 200 / 0.85) 0%,
+        rgb(83 162 146 / 0.4) 35%,
+        transparent 70%
+      ),
+      linear-gradient(
+        135deg,
+        #0a3027 0%,
+        #14463c 35%,
+        var(--vrm-color-primary) 70%,
+        #2d7a6b 100%
+      );
     color: var(--vrm-color-text-inverted);
     padding-block: var(--vrm-space-2xl);
     text-align: center;
+    position: relative;
+  }
+
+  /* Capa sutil que asegura legibilidad del título sobre el gradient
+     cálido del bottom-right (donde el verde se aclara más). */
+  .page-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse 60% 70% at 50% 50%,
+      rgb(0 0 0 / 0.18) 0%,
+      transparent 80%
+    );
+    pointer-events: none;
   }
 
   .page-header__inner {
+    position: relative;
+    z-index: 1;
     max-width: var(--vrm-container-width);
     margin-inline: auto;
     padding-inline: var(--vrm-space-lg);
@@ -54,6 +81,7 @@ const { kicker, title, lead } = Astro.props;
     font-size: clamp(var(--vrm-font-size-2xl), 4.5vw, var(--vrm-font-size-4xl));
     line-height: var(--vrm-line-height-tight);
     margin-bottom: var(--vrm-space-sm);
+    text-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
   }
 
   .page-header__lead {
