@@ -1,0 +1,169 @@
+---
+/**
+ * Página de prueba visual — SOLO para desarrollo.
+ * Eliminar o excluir en B9 antes de producción.
+ * URL: /vorama-astro/_dev/components/
+ */
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Section from '~/components/sections/Section.astro';
+import HeroBanner from '~/components/sections/HeroBanner.astro';
+import PriceCard from '~/components/sections/PriceCard.astro';
+import CardCTA from '~/components/sections/CardCTA.astro';
+import IconBox from '~/components/sections/IconBox.astro';
+import AccordionFAQ from '~/components/sections/AccordionFAQ.astro';
+import Reviews from '~/components/sections/Reviews.astro';
+import ImageCarousel from '~/components/sections/ImageCarousel.astro';
+
+// Datos de prueba
+import relajanteImg from '~/assets/images/services/relajante-hero.webp';
+import cuatroManosImg from '~/assets/images/services/cuatro-manos-hero.webp';
+import parasDosImg from '~/assets/images/services/para-dos-hero.webp';
+import eventosImg from '~/assets/images/services/eventos-hero.webp';
+
+const faqItems = [
+  {
+    question: '¿Cuáles son los beneficios del masaje californiano?',
+    answer: 'Relajación profunda, alivio de tensiones musculares, mejora de la circulación y bienestar general.',
+  },
+  {
+    question: '¿Quién puede recibir un masaje californiano?',
+    answer: 'Apto para la mayoría de personas. Consulta si tienes condiciones médicas específicas.',
+  },
+  {
+    question: '¿Se necesita preparación previa?',
+    answer: 'No. Solo evita comidas copiosas justo antes de la sesión.',
+  },
+];
+
+const carouselImages = [
+  { src: relajanteImg, alt: 'Masaje californiano relajante' },
+  { src: cuatroManosImg, alt: 'Masaje californiano a cuatro manos' },
+  { src: parasDosImg, alt: 'Masaje californiano para dos' },
+  { src: eventosImg, alt: 'Masaje para eventos y negocios' },
+];
+---
+
+<BaseLayout title="Dev — Catálogo de componentes" description="Página de prueba interna">
+
+  <!-- ── HeroBanner cover ─────────────────────────────────── -->
+  <HeroBanner
+    variant="cover"
+    kicker="Bienvenido a Voramà"
+    title="Masaje Californiano en Barcelona"
+    lead="Movimientos envolventes para una relajación profunda del cuerpo y la mente."
+    cta={{ label: 'Reservar sesión', href: '#' }}
+    image={relajanteImg}
+    imageAlt="Terapeuta realizando masaje californiano"
+  />
+
+  <!-- ── HeroBanner split ──────────────────────────────────── -->
+  <Section variant="muted" padding="sm">
+    <p style="font-family:monospace;font-size:0.8rem;color:#888;">HeroBanner variant="split"</p>
+  </Section>
+  <HeroBanner
+    variant="split"
+    kicker="Experiencia única"
+    title="Masaje a Cuatro Manos"
+    lead="Dos terapeutas sincronizados para una inmersión sensorial sin igual."
+    cta={{ label: 'Más información', href: '#' }}
+    image={cuatroManosImg}
+    imageAlt="Masaje californiano a cuatro manos"
+  />
+
+  <!-- ── Section variantes ─────────────────────────────────── -->
+  <Section variant="default" padding="md">
+    <p style="font-family:monospace;font-size:0.8rem;color:#888;">Section — variantes de fondo</p>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1rem">
+      <div style="padding:1rem;background:var(--vrm-color-bg);border:1px solid var(--vrm-color-border);">default</div>
+      <div style="padding:1rem;background:var(--vrm-color-bg-alt);border:1px solid var(--vrm-color-border);">muted</div>
+      <div style="padding:1rem;background:var(--vrm-color-bg-subtle);border:1px solid var(--vrm-color-border);">accent</div>
+      <div style="padding:1rem;background:var(--vrm-color-primary);color:white">dark</div>
+    </div>
+  </Section>
+
+  <!-- ── PriceCard ─────────────────────────────────────────── -->
+  <Section variant="muted" ariaLabel="Precios">
+    <h2 style="margin-bottom:2rem">PriceCard</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.5rem">
+      <PriceCard
+        title="Masaje Relajante"
+        duration="90 min"
+        price="60€"
+        bullets={['Sesión individual', 'Movimientos envolventes', 'Aceites naturales']}
+        cta={{ label: 'Reservar', href: '#' }}
+      />
+      <PriceCard
+        title="Masaje Relajante"
+        duration="120 min"
+        price="80€"
+        highlighted={true}
+        bullets={['Sesión extendida', 'Trabajo más detallado', 'Relajación profunda']}
+        cta={{ label: 'Reservar', href: '#' }}
+      />
+      <PriceCard
+        title="Cuatro Manos"
+        duration="60 min"
+        price="100€"
+        bullets={['Dos terapeutas', 'Cobertura total', 'Experiencia única']}
+        cta={{ label: 'Reservar', href: '#' }}
+      />
+    </div>
+  </Section>
+
+  <!-- ── CardCTA ───────────────────────────────────────────── -->
+  <Section variant="default" ariaLabel="Cards CTA">
+    <h2 style="margin-bottom:2rem">CardCTA</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem">
+      <CardCTA
+        title="Masaje Relajante"
+        cta={{ label: 'Ver sesiones', href: '#' }}
+        image={relajanteImg}
+        imageAlt="Masaje californiano relajante"
+      />
+      <CardCTA
+        title="Masaje a Cuatro Manos"
+        cta={{ label: 'Ver sesiones', href: '#' }}
+        image={cuatroManosImg}
+        imageAlt="Masaje a cuatro manos"
+      />
+      <CardCTA
+        title="Masaje para Dos"
+        cta={{ label: 'Ver sesiones', href: '#' }}
+        image={parasDosImg}
+        imageAlt="Masaje en pareja"
+      />
+    </div>
+  </Section>
+
+  <!-- ── IconBox ───────────────────────────────────────────── -->
+  <Section variant="accent" ariaLabel="IconBox">
+    <h2 style="margin-bottom:2rem">IconBox</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem">
+      <IconBox icon="check" title="Relajación profunda" description="Libera tensiones acumuladas del día a día" />
+      <IconBox icon="star" title="Alta valoración" description="5 estrellas en Google Reviews" />
+      <IconBox icon="clock" title="Flexibilidad horaria" description="Lunes a sábado, 9:00–20:00" />
+      <IconBox icon="location" title="Barcelona, Gràcia" description="Carrer de Sant Antoni Maria Claret, 51" href="https://maps.google.com" />
+      <IconBox icon="whatsapp" title="WhatsApp directo" description="+34 623 94 18 91" href="https://wa.me/34623941891" />
+      <IconBox icon="instagram" title="@vorama.terapias" href="https://instagram.com/vorama.terapias" />
+    </div>
+  </Section>
+
+  <!-- ── AccordionFAQ ──────────────────────────────────────── -->
+  <Section variant="default" ariaLabel="FAQs">
+    <h2 style="margin-bottom:2rem">AccordionFAQ</h2>
+    <AccordionFAQ items={faqItems} />
+  </Section>
+
+  <!-- ── Reviews ───────────────────────────────────────────── -->
+  <Section variant="muted" ariaLabel="Reseñas">
+    <h2 style="margin-bottom:2rem">Reviews (variant=bubble, initialCount=3)</h2>
+    <Reviews initialCount={3} />
+  </Section>
+
+  <!-- ── ImageCarousel ─────────────────────────────────────── -->
+  <Section variant="default" ariaLabel="Carrusel">
+    <h2 style="margin-bottom:2rem">ImageCarousel</h2>
+    <ImageCarousel images={carouselImages} id="dev-carousel" />
+  </Section>
+
+</BaseLayout>

@@ -1,0 +1,138 @@
+---
+interface Props {
+  title: string;
+  price: string;
+  duration: string;
+  bullets: string[];
+  cta: { label: string; href: string };
+  highlighted?: boolean;
+}
+
+const { title, price, duration, bullets, cta, highlighted = false } = Astro.props;
+---
+
+<article class:list={['price-card', highlighted && 'price-card--featured']}>
+  <header class="price-card__header">
+    <h3 class="price-card__title">{title}</h3>
+    <p class="price-card__duration">{duration}</p>
+  </header>
+
+  <p class="price-card__price">{price}</p>
+
+  <ul class="price-card__list" role="list">
+    {bullets.map((b) => (
+      <li class="price-card__item">
+        <span class="price-card__check" aria-hidden="true">✓</span>
+        {b}
+      </li>
+    ))}
+  </ul>
+
+  <a href={cta.href} class="price-card__cta">
+    {cta.label}
+  </a>
+</article>
+
+<style>
+  .price-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vrm-space-md);
+    padding: var(--vrm-space-lg);
+    background-color: var(--vrm-color-bg);
+    border: 1px solid var(--vrm-color-border);
+    border-radius: var(--vrm-radius-lg);
+    box-shadow: var(--vrm-shadow-sm);
+    transition: box-shadow var(--vrm-transition-base);
+
+    &:hover {
+      box-shadow: var(--vrm-shadow-md);
+    }
+
+    &.price-card--featured {
+      border-color: var(--vrm-color-primary);
+      border-width: 2px;
+      box-shadow: var(--vrm-shadow-md);
+    }
+  }
+
+  .price-card__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vrm-space-xs);
+  }
+
+  .price-card__title {
+    font-size: var(--vrm-font-size-xl);
+    color: var(--vrm-color-primary);
+    margin-bottom: 0;
+  }
+
+  .price-card__duration {
+    font-size: var(--vrm-font-size-sm);
+    color: var(--vrm-color-text-muted);
+    margin-bottom: 0;
+  }
+
+  .price-card__price {
+    font-family: var(--vrm-font-display);
+    font-size: var(--vrm-font-size-3xl);
+    font-weight: var(--vrm-font-weight-semibold);
+    color: var(--vrm-color-primary);
+    margin-bottom: 0;
+    line-height: 1;
+  }
+
+  .price-card__list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--vrm-space-sm);
+    flex: 1;
+  }
+
+  .price-card__item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--vrm-space-sm);
+    font-size: var(--vrm-font-size-sm);
+    color: var(--vrm-color-text);
+  }
+
+  .price-card__check {
+    color: var(--vrm-color-primary-light);
+    font-weight: var(--vrm-font-weight-semibold);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .price-card__cta {
+    display: block;
+    text-align: center;
+    padding: var(--vrm-space-sm) var(--vrm-space-md);
+    background-color: var(--vrm-color-primary);
+    color: var(--vrm-color-text-inverted);
+    font-weight: var(--vrm-font-weight-semibold);
+    border-radius: var(--vrm-radius-full);
+    text-decoration: none;
+    transition: background-color var(--vrm-transition-fast);
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--vrm-color-primary-light);
+      color: var(--vrm-color-text-inverted);
+      text-decoration: none;
+    }
+  }
+
+  .price-card--featured .price-card__cta {
+    background-color: var(--vrm-color-accent);
+    color: var(--vrm-color-text);
+
+    &:hover,
+    &:focus-visible {
+      background-color: #b8906d;
+      color: var(--vrm-color-text);
+    }
+  }
+</style>

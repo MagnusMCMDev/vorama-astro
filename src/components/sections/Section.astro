@@ -1,0 +1,81 @@
+---
+interface Props {
+  variant?: 'default' | 'muted' | 'dark' | 'accent';
+  padding?: 'sm' | 'md' | 'lg' | 'xl';
+  id?: string | undefined;
+  ariaLabel?: string | undefined;
+  class?: string | undefined;
+}
+
+const {
+  variant = 'default',
+  padding = 'lg',
+  id,
+  ariaLabel,
+  class: className,
+} = Astro.props;
+---
+
+<section
+  class:list={['section', `section--${variant}`, `section--p-${padding}`, className]}
+  id={id}
+  aria-label={ariaLabel}
+>
+  <div class="section__inner">
+    <slot />
+  </div>
+</section>
+
+<style>
+  /* ── Contenedor ──────────────────────────────────────────── */
+
+  .section__inner {
+    max-width: var(--vrm-container-width);
+    margin-inline: auto;
+    padding-inline: var(--vrm-space-lg);
+  }
+
+  /* ── Padding ─────────────────────────────────────────────── */
+
+  .section--p-sm  { padding-block: var(--vrm-space-md); }
+  .section--p-md  { padding-block: var(--vrm-space-lg); }
+  .section--p-lg  { padding-block: var(--vrm-space-xl); }
+  .section--p-xl  { padding-block: var(--vrm-space-2xl); }
+
+  /* ── Variantes de fondo ──────────────────────────────────── */
+
+  .section--default { background-color: var(--vrm-color-bg); }
+  .section--muted   { background-color: var(--vrm-color-bg-alt); }
+  .section--accent  { background-color: var(--vrm-color-bg-subtle); }
+
+  .section--dark {
+    background-color: var(--vrm-color-primary);
+    color: var(--vrm-color-text-inverted);
+
+    & :global(h1),
+    & :global(h2),
+    & :global(h3),
+    & :global(h4) {
+      color: var(--vrm-color-text-inverted);
+    }
+
+    & :global(a) {
+      color: var(--vrm-color-accent);
+
+      &:hover {
+        color: #e8c5ab;
+      }
+    }
+  }
+
+  /* ── Responsive ──────────────────────────────────────────── */
+
+  @media (max-width: 600px) {
+    .section__inner {
+      padding-inline: var(--vrm-space-md);
+    }
+
+    .section--p-xl { padding-block: var(--vrm-space-xl); }
+    .section--p-lg { padding-block: var(--vrm-space-lg); }
+  }
+</style>

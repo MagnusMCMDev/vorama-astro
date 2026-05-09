@@ -1,0 +1,227 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+  variant?: 'bubble' | 'fill';
+  initialCount?: number;
+}
+
+const { variant = 'bubble', initialCount = 5 } = Astro.props;
+
+const allReviews = await getCollection('reviews');
+// Ordenar por fecha descendente (más recientes primero)
+const reviews = allReviews.sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+);
+
+const visible = reviews.slice(0, initialCount);
+const hidden  = reviews.slice(initialCount);
+
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString('es-ES', {
+    year: 'numeric',
+    month: 'long',
+  });
+}
+
+function stars(n: number): string {
+  return '★'.repeat(n) + '☆'.repeat(5 - n);
+}
+---
+
+<div class:list={['reviews', `reviews--${variant}`]}>
+  <!-- Reseñas visibles -->
+  <div class="reviews__grid">
+    {visible.map((r) => (
+      <article class="review-card">
+        <header class="review-card__header">
+          <div class="review-card__avatar" aria-hidden="true">
+            {r.data.author.charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <p class="review-card__author">{r.data.author}</p>
+            <p class="review-card__date">
+              <time datetime={r.data.date}>{formatDate(r.data.date)}</time>
+            </p>
+          </div>
+        </header>
+        <p class="review-card__stars" aria-label={`${r.data.rating} de 5 estrellas`}>
+          {stars(r.data.rating)}
+        </p>
+        <blockquote class="review-card__text">
+          <p>{r.data.text}</p>
+        </blockquote>
+        <p class="review-card__source">Google Reviews</p>
+      </article>
+    ))}
+  </div>
+
+  <!-- Reseñas ocultas (hidden hasta pulsar "ver más") -->
+  {hidden.length > 0 && (
+    <div class="reviews__grid reviews__grid--hidden" id="reviews-extra" hidden>
+      {hidden.map((r) => (
+        <article class="review-card">
+          <header class="review-card__header">
+            <div class="review-card__avatar" aria-hidden="true">
+              {r.data.author.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <p class="review-card__author">{r.data.author}</p>
+              <p class="review-card__date">
+                <time datetime={r.data.date}>{formatDate(r.data.date)}</time>
+              </p>
+            </div>
+          </header>
+          <p class="review-card__stars" aria-label={`${r.data.rating} de 5 estrellas`}>
+            {stars(r.data.rating)}
+          </p>
+          <blockquote class="review-card__text">
+            <p>{r.data.text}</p>
+          </blockquote>
+          <p class="review-card__source">Google Reviews</p>
+        </article>
+      ))}
+    </div>
+
+    <div class="reviews__more">
+      <button type="button" class="reviews__toggle" id="reviews-toggle" aria-expanded="false" aria-controls="reviews-extra">
+        Ver más reseñas ({hidden.length})
+      </button>
+    </div>
+  )}
+</div>
+
+<style>
+  /* ── Grid ────────────────────────────────────────────────── */
+
+  .reviews__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--vrm-space-md);
+  }
+
+  .reviews__more {
+    margin-top: var(--vrm-space-lg);
+    text-align: center;
+  }
+
+  /* ── Tarjeta ─────────────────────────────────────────────── */
+
+  .review-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vrm-space-sm);
+    padding: var(--vrm-space-lg);
+    border-radius: var(--vrm-radius-lg);
+    background-color: var(--vrm-color-bg);
+    border: 1px solid var(--vrm-color-border);
+    box-shadow: var(--vrm-shadow-sm);
+  }
+
+  /* Variante fill: fondo de color */
+  .reviews--fill .review-card {
+    background-color: var(--vrm-color-bg-alt);
+    border-color: transparent;
+  }
+
+  .review-card__header {
+    display: flex;
+    align-items: center;
+    gap: var(--vrm-space-sm);
+  }
+
+  .review-card__avatar {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--vrm-color-primary);
+    color: var(--vrm-color-text-inverted);
+    font-weight: var(--vrm-font-weight-semibold);
+    font-size: var(--vrm-font-size-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .review-card__author {
+    font-weight: var(--vrm-font-weight-semibold);
+    font-size: var(--vrm-font-size-sm);
+    color: var(--vrm-color-text);
+    margin-bottom: 0;
+  }
+
+  .review-card__date {
+    font-size: var(--vrm-font-size-xs);
+    color: var(--vrm-color-text-muted);
+    margin-bottom: 0;
+  }
+
+  .review-card__stars {
+    color: #f59e0b;
+    font-size: var(--vrm-font-size-md);
+    letter-spacing: 0.05em;
+    margin-bottom: 0;
+  }
+
+  .review-card__text {
+    flex: 1;
+    margin: 0;
+
+    & p {
+      font-style: italic;
+      font-size: var(--vrm-font-size-sm);
+      color: var(--vrm-color-text);
+      line-height: var(--vrm-line-height-relaxed);
+      margin-bottom: 0;
+      /* Limitar a 5 líneas con ellipsis si es muy largo */
+      display: -webkit-box;
+      -webkit-line-clamp: 6;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+
+  .review-card__source {
+    font-size: var(--vrm-font-size-xs);
+    color: var(--vrm-color-text-muted);
+    margin-bottom: 0;
+  }
+
+  /* ── Toggle ──────────────────────────────────────────────── */
+
+  .reviews__toggle {
+    background: none;
+    border: 1px solid var(--vrm-color-primary);
+    color: var(--vrm-color-primary);
+    font-size: var(--vrm-font-size-sm);
+    font-weight: var(--vrm-font-weight-semibold);
+    padding: var(--vrm-space-sm) var(--vrm-space-lg);
+    border-radius: var(--vrm-radius-full);
+    cursor: pointer;
+    transition: background-color var(--vrm-transition-fast), color var(--vrm-transition-fast);
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--vrm-color-primary);
+      color: var(--vrm-color-text-inverted);
+    }
+  }
+</style>
+
+<script>
+  const toggle = document.getElementById('reviews-toggle') as HTMLButtonElement | null;
+  const extra  = document.getElementById('reviews-extra') as HTMLDivElement | null;
+
+  toggle?.addEventListener('click', () => {
+    const expanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!expanded));
+    if (expanded) {
+      extra?.setAttribute('hidden', '');
+      toggle.textContent = toggle.textContent?.replace('Ocultar', 'Ver más') ?? toggle.textContent;
+    } else {
+      extra?.removeAttribute('hidden');
+      toggle.textContent = 'Ocultar reseñas';
+    }
+  });
+</script>

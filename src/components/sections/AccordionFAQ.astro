@@ -1,0 +1,123 @@
+---
+interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+interface Props {
+  items: FaqItem[];
+  /** Si true, solo un item abierto a la vez (requiere JS mínimo) */
+  exclusive?: boolean;
+}
+
+const { items, exclusive = false } = Astro.props;
+---
+
+<div class="accordion-faq" data-exclusive={exclusive ? 'true' : undefined}>
+  {items.map((item) => (
+    <details class="accordion-faq__item" name={exclusive ? 'faq-group' : undefined}>
+      <summary class="accordion-faq__question">
+        <span>{item.question}</span>
+        <!-- Indicador visual animado -->
+        <span class="accordion-faq__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </span>
+      </summary>
+      <div class="accordion-faq__answer">
+        <p>{item.answer}</p>
+      </div>
+    </details>
+  ))}
+</div>
+
+<style>
+  .accordion-faq {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vrm-space-sm);
+  }
+
+  /* ── Item ────────────────────────────────────────────────── */
+
+  .accordion-faq__item {
+    border: 1px solid var(--vrm-color-border);
+    border-radius: var(--vrm-radius-md);
+    overflow: hidden;
+    background-color: var(--vrm-color-bg);
+    transition: box-shadow var(--vrm-transition-fast);
+
+    &[open] {
+      box-shadow: var(--vrm-shadow-sm);
+    }
+  }
+
+  /* ── Summary / pregunta ──────────────────────────────────── */
+
+  .accordion-faq__question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--vrm-space-md);
+    padding: var(--vrm-space-md) var(--vrm-space-lg);
+    cursor: pointer;
+    font-weight: var(--vrm-font-weight-semibold);
+    font-size: var(--vrm-font-size-md);
+    color: var(--vrm-color-primary);
+    list-style: none;
+    user-select: none;
+    transition: background-color var(--vrm-transition-fast);
+
+    /* Eliminar triángulo nativo del browser */
+    &::-webkit-details-marker { display: none; }
+    &::marker { display: none; }
+
+    &:hover {
+      background-color: var(--vrm-color-bg-subtle);
+    }
+  }
+
+  /* ── Icono chevron ───────────────────────────────────────── */
+
+  .accordion-faq__icon {
+    flex-shrink: 0;
+    display: flex;
+    color: var(--vrm-color-primary-light);
+    transition: transform var(--vrm-transition-base);
+  }
+
+  .accordion-faq__item[open] .accordion-faq__icon {
+    transform: rotate(180deg);
+  }
+
+  /* ── Respuesta ───────────────────────────────────────────── */
+
+  .accordion-faq__answer {
+    padding: 0 var(--vrm-space-lg) var(--vrm-space-md);
+    color: var(--vrm-color-text);
+
+    & p {
+      font-size: var(--vrm-font-size-base);
+      line-height: var(--vrm-line-height-relaxed);
+      margin-bottom: 0;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .accordion-faq__question {
+      padding: var(--vrm-space-md);
+      font-size: var(--vrm-font-size-base);
+    }
+
+    .accordion-faq__answer {
+      padding: 0 var(--vrm-space-md) var(--vrm-space-md);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .accordion-faq__icon {
+      transition: none;
+    }
+  }
+</style>
