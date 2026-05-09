@@ -26,25 +26,22 @@ const year = new Date().getFullYear();
 <footer class="site-footer">
   <div class="site-footer__inner">
 
-    <!-- Col 1: Logo + tagline -->
+    <!-- Col 1: Loto + tagline + redes -->
     <div class="site-footer__brand">
-      <a href={base} aria-label="Voramà Terapias — inicio">
-        <img
-          src={`${base}logo.svg`}
-          alt="Voramà Terapias"
-          width="56"
-          height="67"
-          loading="lazy"
-        />
+      <a href={base} class="site-footer__lotus" aria-label="Voramà Terapias — inicio">
+        <!-- Loto FontAwesome (e-fas-spa) — coherente con los iconboxes de las páginas -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="56" height="56" aria-hidden="true" focusable="false">
+          <path fill="currentColor" d="M568.25 192c-29.04.13-135.01 6.16-213.84 83-33.12 29.63-53.36 63.3-66.41 94.86-13.05-31.56-33.29-65.23-66.41-94.86-78.83-76.84-184.8-82.87-213.84-83-4.41-.02-7.79 3.4-7.75 7.82.23 27.92 7.14 126.14 88.77 199.3C172.79 480.94 256 480 288 480s115.19.95 199.23-80.88c81.64-73.17 88.54-171.38 88.77-199.3.04-4.42-3.34-7.84-7.75-7.82zM287.98 302.6c12.82-18.85 27.6-35.78 44.09-50.52 19.09-18.61 39.58-33.3 60.26-45.18-16.44-70.5-51.72-133.05-96.73-172.22-4.11-3.58-11.02-3.58-15.14 0-44.99 39.14-80.27 101.63-96.74 172.07 20.37 11.7 40.5 26.14 59.22 44.39a282.768 282.768 0 0 1 45.04 51.46z"/>
+        </svg>
       </a>
       <p class="site-footer__tagline">
-        La tranquilidad exterior comienza con la serenidad interior
+        La tranquilidad exterior comienza<br />con la serenidad interior
       </p>
       <div class="site-footer__socials">
         {SITE_CONFIG.social.instagram && (
           <a
             href={SITE_CONFIG.social.instagram}
-            class="site-footer__social"
+            class="site-footer__social-icon"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram de Voramà Terapias"
@@ -54,13 +51,12 @@ const year = new Date().getFullYear();
               <circle cx="12" cy="12" r="4"/>
               <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
             </svg>
-            <span>@vorama.terapias</span>
           </a>
         )}
         {SITE_CONFIG.social.facebook && (
           <a
             href={SITE_CONFIG.social.facebook}
-            class="site-footer__social"
+            class="site-footer__social-icon"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Facebook de Voramà Terapias"
@@ -68,7 +64,6 @@ const year = new Date().getFullYear();
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46H15.19c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V21.88C18.343 21.128 22 16.99 22 12Z"/>
             </svg>
-            <span>Facebook</span>
           </a>
         )}
       </div>
@@ -158,39 +153,66 @@ const year = new Date().getFullYear();
   .site-footer__brand {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    text-align: center;
     gap: var(--vrm-space-md);
+  }
 
-    & a:first-child:hover img {
-      opacity: 0.85;
+  .site-footer__lotus {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--vrm-color-primary-light);
+    transition: color var(--vrm-transition-fast), transform var(--vrm-transition-base);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--vrm-color-accent);
+      transform: translateY(-2px);
+      text-decoration: none;
+    }
+
+    & svg {
+      width: 56px;
+      height: 56px;
+      display: block;
     }
   }
 
   .site-footer__tagline {
+    font-family: var(--vrm-font-display);
     font-style: italic;
     color: var(--vrm-color-text-muted);
-    font-size: var(--vrm-font-size-sm);
+    font-size: var(--vrm-font-size-md);
     line-height: var(--vrm-line-height-relaxed);
     margin-bottom: 0;
+    max-width: 32ch;
   }
 
   .site-footer__socials {
     display: flex;
-    flex-direction: column;
-    gap: var(--vrm-space-xs);
+    gap: var(--vrm-space-sm);
+    justify-content: center;
   }
 
-  .site-footer__social {
+  .site-footer__social-icon {
     display: inline-flex;
     align-items: center;
-    gap: var(--vrm-space-sm);
-    color: var(--vrm-color-text-muted);
-    font-size: var(--vrm-font-size-sm);
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: var(--vrm-color-primary-light);
+    background-color: transparent;
+    border: 1px solid var(--vrm-color-border);
     text-decoration: none;
-    transition: color var(--vrm-transition-fast);
+    transition: color var(--vrm-transition-fast), border-color var(--vrm-transition-fast), background-color var(--vrm-transition-fast);
 
     &:hover,
     &:focus-visible {
-      color: var(--vrm-color-primary);
+      color: var(--vrm-color-text-inverted);
+      background-color: var(--vrm-color-primary);
+      border-color: var(--vrm-color-primary);
       text-decoration: none;
     }
   }
