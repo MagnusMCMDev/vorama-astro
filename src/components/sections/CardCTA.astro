@@ -4,12 +4,13 @@ import type { ImageMetadata } from 'astro';
 
 interface Props {
   title: string;
+  description?: string | undefined;
   cta: { label: string; href: string };
   image: ImageMetadata;
   imageAlt: string;
 }
 
-const { title, cta, image, imageAlt } = Astro.props;
+const { title, description, cta, image, imageAlt } = Astro.props;
 ---
 
 <article class="card-cta">
@@ -24,6 +25,7 @@ const { title, cta, image, imageAlt } = Astro.props;
   <div class="card-cta__overlay" aria-hidden="true"></div>
   <div class="card-cta__content">
     <h3 class="card-cta__title">{title}</h3>
+    {description && <p class="card-cta__desc">{description}</p>}
     <a href={cta.href} class="card-cta__btn">
       {cta.label}
     </a>
@@ -35,11 +37,12 @@ const { title, cta, image, imageAlt } = Astro.props;
     position: relative;
     overflow: hidden;
     border-radius: var(--vrm-radius-lg);
-    min-height: 320px;
+    min-height: 380px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+    box-shadow: var(--vrm-shadow-md);
   }
 
   .card-cta__bg {
@@ -82,7 +85,16 @@ const { title, cta, image, imageAlt } = Astro.props;
     font-size: var(--vrm-font-size-xl);
     color: var(--vrm-color-text-inverted);
     margin-bottom: 0;
-    text-shadow: 0 1px 3px rgb(0 0 0 / 0.4);
+    text-shadow: 0 1px 3px rgb(0 0 0 / 0.5);
+  }
+
+  .card-cta__desc {
+    color: rgb(255 255 255 / 0.94);
+    font-size: var(--vrm-font-size-sm);
+    line-height: var(--vrm-line-height-relaxed);
+    margin: 0;
+    max-width: 32ch;
+    text-shadow: 0 1px 3px rgb(0 0 0 / 0.55);
   }
 
   .card-cta__btn {
