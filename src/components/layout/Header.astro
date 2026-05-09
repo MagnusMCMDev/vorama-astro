@@ -184,30 +184,40 @@ function isParentActive(item: NavItem): boolean {
     hidden
   >
     <ul role="list">
-      {navItems.map((item) => (
+      {navItems.map((item, index) => (
         <li>
           {item.children ? (
-            <details class="site-header__mobile-group">
-              <summary>
-                <span>{item.label}</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <polyline points="6 9 12 15 18 9"/>
-                </svg>
-              </summary>
-              <ul role="list" class="site-header__mobile-sub">
-                <li>
-                  <a href={`${b}${item.href}`} class="site-header__mobile-overview">
-                    Ver página principal
-                  </a>
-                </li>
+            <div class="site-header__mobile-group">
+              <div class="site-header__mobile-row">
+                <a
+                  href={`${b}${item.href}`}
+                  class="site-header__mobile-link"
+                  aria-current={isActive(item.href) ? 'page' : undefined}
+                >
+                  {item.label}
+                </a>
+                <button
+                  type="button"
+                  class="site-header__mobile-toggle"
+                  aria-expanded="false"
+                  aria-controls={`mobile-sub-${index}`}
+                  aria-label={`Mostrar submenú de ${item.label}`}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </button>
+              </div>
+              <ul role="list" class="site-header__mobile-sub" id={`mobile-sub-${index}`} hidden>
                 {item.children.map((sub) => (
                   <li><a href={`${b}${sub.href}`}>{sub.label}</a></li>
                 ))}
               </ul>
-            </details>
+            </div>
           ) : (
             <a
               href={`${b}${item.href}`}
+              class="site-header__mobile-link"
               aria-current={isActive(item.href) ? 'page' : undefined}
             >
               {item.label}
@@ -485,51 +495,74 @@ function isParentActive(item: NavItem): boolean {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: var(--vrm-space-xs);
-    }
-
-    & > ul > li > a {
-      display: block;
-      padding-block: var(--vrm-space-sm);
-      font-size: var(--vrm-font-size-md);
-      color: var(--vrm-color-text);
-      text-decoration: none;
-      border-bottom: 1px solid var(--vrm-color-border);
-
-      &:hover {
-        color: var(--vrm-color-primary);
-      }
-
-      &[aria-current='page'] {
-        color: var(--vrm-color-primary);
-        font-weight: var(--vrm-font-weight-semibold);
-      }
+      gap: 0;
     }
   }
 
-  .site-header__mobile-group {
+  /* Enlace simple (sin submenú) */
+  .site-header__mobile-link {
+    display: block;
+    padding-block: var(--vrm-space-sm);
+    font-size: var(--vrm-font-size-md);
+    color: var(--vrm-color-text);
+    text-decoration: none;
     border-bottom: 1px solid var(--vrm-color-border);
 
-    & > summary {
-      list-style: none;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-block: var(--vrm-space-sm);
-      font-size: var(--vrm-font-size-md);
-      cursor: pointer;
-      color: var(--vrm-color-text);
-
-      &::-webkit-details-marker { display: none; }
-      &::marker { display: none; }
+    &:hover,
+    &:focus-visible {
+      color: var(--vrm-color-primary);
+      text-decoration: none;
     }
 
-    &[open] > summary svg {
-      transform: rotate(180deg);
+    &[aria-current='page'] {
+      color: var(--vrm-color-primary);
+      font-weight: var(--vrm-font-weight-semibold);
+    }
+  }
+
+  /* Grupo con submenú: enlace + botón en la misma fila */
+  .site-header__mobile-group {
+    border-bottom: 1px solid var(--vrm-color-border);
+  }
+
+  .site-header__mobile-row {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: var(--vrm-space-sm);
+  }
+
+  .site-header__mobile-row .site-header__mobile-link {
+    flex: 1;
+    border-bottom: none;
+  }
+
+  .site-header__mobile-toggle {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    background: none;
+    border: none;
+    border-left: 1px solid var(--vrm-color-border);
+    cursor: pointer;
+    color: var(--vrm-color-text);
+    transition: color var(--vrm-transition-fast), background-color var(--vrm-transition-fast);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--vrm-color-primary);
+      background-color: var(--vrm-color-bg-subtle);
+      outline: none;
     }
 
     & svg {
-      transition: transform var(--vrm-transition-fast);
+      transition: transform var(--vrm-transition-base);
+    }
+
+    &[aria-expanded='true'] svg {
+      transform: rotate(180deg);
     }
   }
 
@@ -545,14 +578,12 @@ function isParentActive(item: NavItem): boolean {
       color: var(--vrm-color-text-muted);
       text-decoration: none;
 
-      &:hover {
+      &:hover,
+      &:focus-visible {
         color: var(--vrm-color-primary);
+        text-decoration: none;
       }
     }
-  }
-
-  .site-header__mobile-overview {
-    font-style: italic;
   }
 
   .site-header__cta--mobile {
@@ -615,11 +646,27 @@ function isParentActive(item: NavItem): boolean {
     }
   });
 
-  // Cerrar drawer al pulsar un enlace (no aplicar a <summary>)
+  // Cerrar drawer al pulsar un enlace (no afecta a los toggles de submenú)
   mobileMenu?.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', () => {
       toggle?.setAttribute('aria-expanded', 'false');
       mobileMenu.setAttribute('hidden', '');
+    });
+  });
+
+  // Toggle de submenús dentro del drawer móvil
+  mobileMenu?.querySelectorAll<HTMLButtonElement>('.site-header__mobile-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!expanded));
+      const targetId = btn.getAttribute('aria-controls');
+      if (!targetId) return;
+      const sub = document.getElementById(targetId);
+      if (expanded) {
+        sub?.setAttribute('hidden', '');
+      } else {
+        sub?.removeAttribute('hidden');
+      }
     });
   });
 </script>
