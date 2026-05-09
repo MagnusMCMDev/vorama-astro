@@ -126,13 +126,14 @@ const { title, price, duration, bullets, cta, highlighted = false } = Astro.prop
   }
 
   .price-card--featured .price-card__cta {
-    background-color: var(--vrm-color-accent);
-    color: var(--vrm-color-text);
+    background-color: var(--vrm-color-primary);
+    color: var(--vrm-color-text-inverted);
+    box-shadow: 0 4px 12px rgb(32 91 79 / 0.25);
 
     &:hover,
     &:focus-visible {
-      background-color: #b8906d;
-      color: var(--vrm-color-text);
+      background-color: var(--vrm-color-primary-light);
+      color: var(--vrm-color-text-inverted);
     }
   }
 </style>

@@ -166,20 +166,24 @@ import filosofia from '~/assets/images/pages/filosofia.webp';
     display: inline-flex;
     align-items: center;
     padding: var(--vrm-space-sm) var(--vrm-space-lg);
-    background-color: var(--vrm-color-accent);
-    color: var(--vrm-color-text);
+    background-color: var(--vrm-color-primary);
+    color: var(--vrm-color-text-inverted);
     font-family: var(--vrm-font-body);
     font-size: var(--vrm-font-size-base);
     font-weight: var(--vrm-font-weight-semibold);
     border: none;
     border-radius: var(--vrm-radius-full);
     cursor: pointer;
-    transition: background-color var(--vrm-transition-fast);
+    box-shadow: 0 4px 12px rgb(32 91 79 / 0.2);
+    transition: background-color var(--vrm-transition-fast), transform var(--vrm-transition-fast), box-shadow var(--vrm-transition-fast);
   }
 
   .btn-cta:hover,
   .btn-cta:focus-visible {
-    background-color: #b8906d;
+    background-color: var(--vrm-color-primary-light);
+    color: var(--vrm-color-text-inverted);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgb(32 91 79 / 0.3);
   }
 
   @media (max-width: 800px) {

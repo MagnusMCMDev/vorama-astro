@@ -1,227 +1,310 @@
 ---
 import { getCollection } from 'astro:content';
+import { SITE_CONFIG } from '~/config/site';
 
 interface Props {
+  /** Número de reseñas a mostrar (3 home, 2 regala) */
+  count?: number;
+  /** 'bubble' (3 cols con globo) | 'fill' (2 cols compactas) */
   variant?: 'bubble' | 'fill';
-  initialCount?: number;
+  /** Si true muestra cabecera de negocio (logo + nombre + rating + dirección) */
+  showHeader?: boolean;
 }
 
-const { variant = 'bubble', initialCount = 5 } = Astro.props;
+const { count = 3, variant = 'bubble', showHeader = true } = Astro.props;
 
 const allReviews = await getCollection('reviews');
-// Ordenar por fecha descendente (más recientes primero)
-const reviews = allReviews.sort(
-  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
-);
+const reviews = allReviews
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, count);
 
-const visible = reviews.slice(0, initialCount);
-const hidden  = reviews.slice(initialCount);
+const base = import.meta.env.BASE_URL;
 
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'long',
-  });
+function relativeTime(iso: string): string {
+  const diffMs = Date.now() - new Date(iso).getTime();
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  if (days < 30) return `hace ${days} días`;
+  const months = Math.floor(days / 30);
+  if (months < 12) return `hace ${months} mes${months === 1 ? '' : 'es'}`;
+  const years = Math.floor(months / 12);
+  return `hace ${years} año${years === 1 ? '' : 's'}`;
+}
+
+function avatarColor(seed: string): string {
+  // Color estable a partir del nombre (paleta cálida cohesionada)
+  const palette = ['#205b4f', '#53a292', '#cba590', '#a87b5c', '#7b9e90', '#3d6b5e'];
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+  return palette[Math.abs(hash) % palette.length] ?? palette[0]!;
 }
 
 function stars(n: number): string {
   return '★'.repeat(n) + '☆'.repeat(5 - n);
 }
+
+function fmtRating(n: number): string {
+  return n.toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+}
+
+const rating = SITE_CONFIG.googleBusiness?.rating ?? 4.9;
+const reviewCount = SITE_CONFIG.googleBusiness?.count ?? 80;
 ---
 
-<div class:list={['reviews', `reviews--${variant}`]}>
-  <!-- Reseñas visibles -->
-  <div class="reviews__grid">
-    {visible.map((r) => (
-      <article class="review-card">
-        <header class="review-card__header">
-          <div class="review-card__avatar" aria-hidden="true">
-            {r.data.author.charAt(0).toUpperCase()}
-          </div>
-          <div>
-            <p class="review-card__author">{r.data.author}</p>
-            <p class="review-card__date">
-              <time datetime={r.data.date}>{formatDate(r.data.date)}</time>
-            </p>
-          </div>
-        </header>
-        <p class="review-card__stars" aria-label={`${r.data.rating} de 5 estrellas`}>
-          {stars(r.data.rating)}
-        </p>
-        <blockquote class="review-card__text">
-          <p>{r.data.text}</p>
-        </blockquote>
-        <p class="review-card__source">Google Reviews</p>
-      </article>
-    ))}
-  </div>
-
-  <!-- Reseñas ocultas (hidden hasta pulsar "ver más") -->
-  {hidden.length > 0 && (
-    <div class="reviews__grid reviews__grid--hidden" id="reviews-extra" hidden>
-      {hidden.map((r) => (
-        <article class="review-card">
-          <header class="review-card__header">
-            <div class="review-card__avatar" aria-hidden="true">
-              {r.data.author.charAt(0).toUpperCase()}
-            </div>
-            <div>
-              <p class="review-card__author">{r.data.author}</p>
-              <p class="review-card__date">
-                <time datetime={r.data.date}>{formatDate(r.data.date)}</time>
-              </p>
-            </div>
-          </header>
-          <p class="review-card__stars" aria-label={`${r.data.rating} de 5 estrellas`}>
-            {stars(r.data.rating)}
-          </p>
-          <blockquote class="review-card__text">
-            <p>{r.data.text}</p>
-          </blockquote>
-          <p class="review-card__source">Google Reviews</p>
-        </article>
-      ))}
-    </div>
-
-    <div class="reviews__more">
-      <button type="button" class="reviews__toggle" id="reviews-toggle" aria-expanded="false" aria-controls="reviews-extra">
-        Ver más reseñas ({hidden.length})
-      </button>
-    </div>
+<div class:list={['gbr', `gbr--${variant}`]}>
+  {showHeader && (
+    <header class="gbr__heading">
+      <div class="gbr__heading-row">
+        <img src={`${base}logo.svg`} alt="Voramà" class="gbr__heading-logo" width="40" height="48" />
+        <h3 class="gbr__heading-name">Masaje Californiano | Voramà</h3>
+      </div>
+      <p class="gbr__vicinity">
+        {SITE_CONFIG.address.street}, {SITE_CONFIG.address.locality}
+      </p>
+      <div class="gbr__rating">
+        <span class="gbr__rating-number">{fmtRating(rating)}</span>
+        <span class="gbr__rating-stars" aria-label={`${rating} de 5 estrellas`}>{stars(Math.round(rating))}</span>
+        <span class="gbr__rating-count">{reviewCount} reseñas</span>
+      </div>
+    </header>
   )}
+
+  <ul class="gbr__listing" role="list">
+    {reviews.map((r) => (
+      <li class="gbr__item">
+        <div class="gbr__avatar" style={`background-color:${avatarColor(r.data.author)}`} aria-hidden="true">
+          {r.data.author.charAt(0).toUpperCase()}
+        </div>
+        <p class="gbr__author">{r.data.author}</p>
+
+        {variant === 'bubble' ? (
+          <>
+            <blockquote class="gbr__bubble">
+              <p>{r.data.text}</p>
+            </blockquote>
+            <p class="gbr__meta">
+              <span class="gbr__stars" aria-label={`${r.data.rating} de 5`}>{stars(r.data.rating)}</span>
+              <span class="gbr__time">{relativeTime(r.data.date)}</span>
+            </p>
+          </>
+        ) : (
+          <>
+            <p class="gbr__meta">
+              <span class="gbr__stars" aria-label={`${r.data.rating} de 5`}>{stars(r.data.rating)}</span>
+              <span class="gbr__time">{relativeTime(r.data.date)}</span>
+            </p>
+            <p class="gbr__text">{r.data.text}</p>
+          </>
+        )}
+      </li>
+    ))}
+  </ul>
+
+  <p class="gbr__attribution">Reseñas de Google</p>
 </div>
 
 <style>
-  /* ── Grid ────────────────────────────────────────────────── */
-
-  .reviews__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: var(--vrm-space-md);
-  }
-
-  .reviews__more {
-    margin-top: var(--vrm-space-lg);
+  .gbr {
+    max-width: 1100px;
+    margin-inline: auto;
     text-align: center;
   }
 
-  /* ── Tarjeta ─────────────────────────────────────────────── */
-
-  .review-card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--vrm-space-sm);
-    padding: var(--vrm-space-lg);
-    border-radius: var(--vrm-radius-lg);
-    background-color: var(--vrm-color-bg);
-    border: 1px solid var(--vrm-color-border);
-    box-shadow: var(--vrm-shadow-sm);
+  /* ── Heading ─────────────────────────────────────────────── */
+  .gbr__heading {
+    margin-bottom: var(--vrm-space-xl);
   }
 
-  /* Variante fill: fondo de color */
-  .reviews--fill .review-card {
-    background-color: var(--vrm-color-bg-alt);
-    border-color: transparent;
-  }
-
-  .review-card__header {
-    display: flex;
-    align-items: center;
-    gap: var(--vrm-space-sm);
-  }
-
-  .review-card__avatar {
-    flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: var(--vrm-color-primary);
-    color: var(--vrm-color-text-inverted);
-    font-weight: var(--vrm-font-weight-semibold);
-    font-size: var(--vrm-font-size-md);
+  .gbr__heading-row {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: var(--vrm-space-sm);
+    margin-bottom: var(--vrm-space-xs);
   }
 
-  .review-card__author {
-    font-weight: var(--vrm-font-weight-semibold);
-    font-size: var(--vrm-font-size-sm);
-    color: var(--vrm-color-text);
-    margin-bottom: 0;
+  .gbr__heading-logo {
+    width: 40px;
+    height: auto;
   }
 
-  .review-card__date {
-    font-size: var(--vrm-font-size-xs);
-    color: var(--vrm-color-text-muted);
-    margin-bottom: 0;
-  }
-
-  .review-card__stars {
-    color: #f59e0b;
-    font-size: var(--vrm-font-size-md);
-    letter-spacing: 0.05em;
-    margin-bottom: 0;
-  }
-
-  .review-card__text {
-    flex: 1;
-    margin: 0;
-
-    & p {
-      font-style: italic;
-      font-size: var(--vrm-font-size-sm);
-      color: var(--vrm-color-text);
-      line-height: var(--vrm-line-height-relaxed);
-      margin-bottom: 0;
-      /* Limitar a 5 líneas con ellipsis si es muy largo */
-      display: -webkit-box;
-      -webkit-line-clamp: 6;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-  }
-
-  .review-card__source {
-    font-size: var(--vrm-font-size-xs);
-    color: var(--vrm-color-text-muted);
-    margin-bottom: 0;
-  }
-
-  /* ── Toggle ──────────────────────────────────────────────── */
-
-  .reviews__toggle {
-    background: none;
-    border: 1px solid var(--vrm-color-primary);
+  .gbr__heading-name {
+    font-size: var(--vrm-font-size-xl);
     color: var(--vrm-color-primary);
-    font-size: var(--vrm-font-size-sm);
-    font-weight: var(--vrm-font-weight-semibold);
-    padding: var(--vrm-space-sm) var(--vrm-space-lg);
-    border-radius: var(--vrm-radius-full);
-    cursor: pointer;
-    transition: background-color var(--vrm-transition-fast), color var(--vrm-transition-fast);
+    margin: 0;
+  }
 
-    &:hover,
-    &:focus-visible {
-      background-color: var(--vrm-color-primary);
-      color: var(--vrm-color-text-inverted);
+  .gbr__vicinity {
+    color: var(--vrm-color-text-muted);
+    font-size: var(--vrm-font-size-sm);
+    margin-bottom: var(--vrm-space-sm);
+  }
+
+  .gbr__rating {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--vrm-space-sm);
+    font-size: var(--vrm-font-size-base);
+    color: var(--vrm-color-text);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .gbr__rating-number {
+    font-size: var(--vrm-font-size-2xl);
+    font-weight: var(--vrm-font-weight-semibold);
+    color: var(--vrm-color-primary);
+    line-height: 1;
+  }
+
+  .gbr__rating-stars {
+    color: #fbbc04;
+    font-size: var(--vrm-font-size-lg);
+    letter-spacing: 1px;
+  }
+
+  .gbr__rating-count {
+    color: var(--vrm-color-text-muted);
+    font-size: var(--vrm-font-size-sm);
+  }
+
+  /* ── Listing grid ────────────────────────────────────────── */
+  .gbr__listing {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--vrm-space-lg);
+  }
+
+  .gbr--bubble .gbr__listing {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .gbr--fill .gbr__listing {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 900px) {
+    .gbr--bubble .gbr__listing {
+      grid-template-columns: repeat(2, 1fr);
     }
+  }
+
+  @media (max-width: 600px) {
+    .gbr--bubble .gbr__listing,
+    .gbr--fill .gbr__listing {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ── Avatar + nombre ─────────────────────────────────────── */
+  .gbr__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .gbr__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    color: #fff;
+    font-weight: var(--vrm-font-weight-semibold);
+    font-size: var(--vrm-font-size-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--vrm-space-xs);
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+  }
+
+  .gbr__author {
+    font-weight: var(--vrm-font-weight-semibold);
+    color: var(--vrm-color-text);
+    margin-bottom: var(--vrm-space-sm);
+    font-size: var(--vrm-font-size-base);
+  }
+
+  /* ── Bubble (variant) ────────────────────────────────────── */
+  .gbr__bubble {
+    margin: 0 0 var(--vrm-space-sm);
+    padding: var(--vrm-space-md) var(--vrm-space-md);
+    border: 1px solid var(--vrm-color-border);
+    border-radius: var(--vrm-radius-md);
+    background: var(--vrm-color-bg);
+    position: relative;
+    text-align: left;
+    box-shadow: var(--vrm-shadow-sm);
+  }
+
+  .gbr__bubble::before {
+    content: '';
+    position: absolute;
+    top: -7px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 12px;
+    height: 12px;
+    background: var(--vrm-color-bg);
+    border-left: 1px solid var(--vrm-color-border);
+    border-top: 1px solid var(--vrm-color-border);
+  }
+
+  .gbr__bubble p {
+    font-size: var(--vrm-font-size-sm);
+    line-height: var(--vrm-line-height-relaxed);
+    color: var(--vrm-color-text);
+    margin: 0;
+    /* Limita a 8 líneas con ellipsis */
+    display: -webkit-box;
+    -webkit-line-clamp: 8;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ── Fill (variant) ──────────────────────────────────────── */
+  .gbr--fill .gbr__item {
+    background-color: var(--vrm-color-bg);
+    border: 1px solid var(--vrm-color-border);
+    border-radius: var(--vrm-radius-md);
+    padding: var(--vrm-space-lg);
+    align-items: flex-start;
+    text-align: left;
+    box-shadow: var(--vrm-shadow-sm);
+  }
+
+  .gbr__text {
+    font-size: var(--vrm-font-size-sm);
+    line-height: var(--vrm-line-height-relaxed);
+    color: var(--vrm-color-text);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 8;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ── Stars + tiempo ──────────────────────────────────────── */
+  .gbr__meta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--vrm-space-sm);
+    font-size: var(--vrm-font-size-xs);
+    color: var(--vrm-color-text-muted);
+    margin: 0 0 var(--vrm-space-xs);
+  }
+
+  .gbr__stars {
+    color: #fbbc04;
+    letter-spacing: 1px;
+    font-size: var(--vrm-font-size-sm);
+  }
+
+  /* ── Attribution ─────────────────────────────────────────── */
+  .gbr__attribution {
+    margin-top: var(--vrm-space-lg);
+    color: var(--vrm-color-text-muted);
+    font-size: var(--vrm-font-size-xs);
   }
 </style>
-
-<script>
-  const toggle = document.getElementById('reviews-toggle') as HTMLButtonElement | null;
-  const extra  = document.getElementById('reviews-extra') as HTMLDivElement | null;
-
-  toggle?.addEventListener('click', () => {
-    const expanded = toggle.getAttribute('aria-expanded') === 'true';
-    toggle.setAttribute('aria-expanded', String(!expanded));
-    if (expanded) {
-      extra?.setAttribute('hidden', '');
-      toggle.textContent = toggle.textContent?.replace('Ocultar', 'Ver más') ?? toggle.textContent;
-    } else {
-      extra?.removeAttribute('hidden');
-      toggle.textContent = 'Ocultar reseñas';
-    }
-  });
-</script>

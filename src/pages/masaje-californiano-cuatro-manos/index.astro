@@ -5,6 +5,7 @@ import PageHeader from '~/components/sections/PageHeader.astro';
 import Section from '~/components/sections/Section.astro';
 import IconBox from '~/components/sections/IconBox.astro';
 import ImageCarousel from '~/components/sections/ImageCarousel.astro';
+import ReservaCard from '~/components/sections/ReservaCard.astro';
 import CardCTA from '~/components/sections/CardCTA.astro';
 
 import img4m1 from '~/assets/images/pages/4manos-1.webp';
@@ -83,9 +84,9 @@ const jsonLd = {
   <!-- ── §3: 3 IconBoxes ─────────────────────────────────────── -->
   <Section variant="muted" ariaLabel="Beneficios">
     <div class="benefits-grid">
-      <IconBox icon="check" title="Relajación profunda en menos tiempo" description="Al recibir un masaje de doble efectividad en 60 minutos, se consigue una relajación total en menor tiempo." />
-      <IconBox icon="star" title="Sincronía total" description="Los movimientos simultáneos generan una experiencia fluida y armoniosa, cubriendo todo el cuerpo de manera equilibrada." />
-      <IconBox icon="clock" title="Experiencia intensificada" description="La acción coordinada de dos terapeutas multiplica la sensación de bienestar y relajación profunda." />
+      <IconBox icon="leaf" title="Relajación profunda en menos tiempo" description="Al recibir un masaje de doble efectividad en 60 minutos, se consigue una relajación total en menor tiempo." />
+      <IconBox icon="people-carry" title="Sincronía total" description="Los movimientos simultáneos generan una experiencia fluida y armoniosa, cubriendo todo el cuerpo de manera equilibrada." />
+      <IconBox icon="hands" title="Experiencia intensificada" description="La acción coordinada de dos terapeutas multiplica la sensación de bienestar y relajación profunda." />
     </div>
   </Section>
 
@@ -93,14 +94,18 @@ const jsonLd = {
   <Section variant="default" ariaLabel="Reserva tu sesión" id="reserva">
     <h2 class="section-heading">Reserva tu sesión</h2>
     <div class="reserva-grid">
-      <button type="button" class="reserva-card" data-dialog="dialog-calendly" aria-label="Reservar sesión de 60 minutos">
-        <Image src={img4m1} alt="Pase largo por hombros, nuca y paravertebrales en un masaje a cuatro manos boca abajo." class="reserva-card__img" widths={[400, 600]} sizes="(max-width: 800px) 100vw, 50vw" />
-        <span class="reserva-card__price">Sesión de 60 minutos · 100€</span>
-      </button>
-      <button type="button" class="reserva-card" data-dialog="dialog-calendly" aria-label="Reservar sesión de 90 minutos">
-        <Image src={img4mParav} alt="Pase largo por paravertebrales de forma cruzada en un masaje a cuatro manos boca arriba." class="reserva-card__img" widths={[400, 600]} sizes="(max-width: 800px) 100vw, 50vw" />
-        <span class="reserva-card__price">Sesión de 90 minutos · 130€</span>
-      </button>
+      <ReservaCard
+        image={img4m1}
+        imageAlt="Pase largo por hombros, nuca y paravertebrales en un masaje a cuatro manos boca abajo."
+        duration="60 minutos"
+        price="100€"
+      />
+      <ReservaCard
+        image={img4mParav}
+        imageAlt="Pase largo por paravertebrales de forma cruzada en un masaje a cuatro manos boca arriba."
+        duration="90 minutos"
+        price="130€"
+      />
     </div>
   </Section>
 
@@ -194,54 +199,14 @@ const jsonLd = {
     gap: var(--vrm-space-lg);
   }
 
-  /* ── Reserva ─────────────────────────────────────────────── */
+  /* ── Reserva grid ────────────────────────────────────────── */
   .reserva-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--vrm-space-lg);
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--vrm-space-xl);
     max-width: 900px;
     margin-inline: auto;
-
-    @media (max-width: 700px) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .reserva-card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--vrm-space-sm);
-    padding: 0;
-    background: var(--vrm-color-bg);
-    border: 2px solid var(--vrm-color-border);
-    border-radius: var(--vrm-radius-lg);
-    overflow: hidden;
-    cursor: pointer;
-    font-family: var(--vrm-font-body);
-    box-shadow: var(--vrm-shadow-sm);
-    transition: transform var(--vrm-transition-fast), box-shadow var(--vrm-transition-fast), border-color var(--vrm-transition-fast);
-  }
-
-  .reserva-card:hover,
-  .reserva-card:focus-visible {
-    transform: translateY(-3px);
-    box-shadow: var(--vrm-shadow-md);
-    border-color: var(--vrm-color-accent);
-  }
-
-  .reserva-card__img {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    display: block;
-  }
-
-  .reserva-card__price {
-    padding: var(--vrm-space-md);
-    font-size: var(--vrm-font-size-lg);
-    font-weight: var(--vrm-font-weight-semibold);
-    color: var(--vrm-color-primary);
-    text-align: center;
   }
 
   /* ── Anabel ──────────────────────────────────────────────── */

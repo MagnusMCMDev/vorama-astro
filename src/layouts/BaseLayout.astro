@@ -2,6 +2,9 @@
 // Tokens y estilos base — globales para toda la página
 import '~/styles/theme.css';
 import '~/styles/globals.css';
+// Fuentes self-hosted — para <link rel="preload">
+import interFontUrl from '~/assets/fonts/inter-latin.woff2?url';
+import brygadaFontUrl from '~/assets/fonts/brygada1918-latin.woff2?url';
 // Componentes de layout presentes en todas las páginas
 import Header from '~/components/layout/Header.astro';
 import Footer from '~/components/layout/Footer.astro';
@@ -9,6 +12,7 @@ import WhatsAppFloating from '~/components/layout/WhatsAppFloating.astro';
 // Diálogos interactivos — disponibles en todas las páginas
 import LegalDialog from '~/components/interactive/LegalDialog.astro';
 import CalendlyDialog from '~/components/interactive/CalendlyDialog.astro';
+import type { ImageMetadata } from 'astro';
 
 interface Props {
   /** <title> de la página. Debe ser único por página. */
@@ -23,6 +27,8 @@ interface Props {
   jsonLd?: object | object[] | undefined;
   /** Clase extra para <body>, por si alguna página necesita override. */
   bodyClass?: string | undefined;
+  /** Imagen LCP de la página. Si se provee, se inyecta <link rel="preload" as="image">. */
+  lcpImage?: ImageMetadata | undefined;
 }
 
 const {
@@ -32,6 +38,7 @@ const {
   ogImage,
   jsonLd,
   bodyClass,
+  lcpImage,
 } = Astro.props;
 
 // Imagen OG: si no se pasa, usa og-default.webp relativo al site
@@ -77,6 +84,15 @@ const base = import.meta.env.BASE_URL;
     {jsonLdSchemas.map((schema) => (
       <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
     ))}
+
+    <!-- Preload de fuentes críticas (Inter + Brygada 1918) -->
+    <link rel="preload" as="font" type="font/woff2" href={interFontUrl} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={brygadaFontUrl} crossorigin />
+
+    <!-- Preload de imagen LCP por página (opcional) -->
+    {lcpImage && (
+      <link rel="preload" as="image" href={lcpImage.src} />
+    )}
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href={`${base}favicon.ico`} />

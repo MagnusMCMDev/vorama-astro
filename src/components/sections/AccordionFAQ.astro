@@ -6,16 +6,19 @@ interface FaqItem {
 
 interface Props {
   items: FaqItem[];
-  /** Si true, solo un item abierto a la vez (requiere JS mínimo) */
+  /** Si true, solo un item abierto a la vez */
   exclusive?: boolean;
+  /** Nombre del grupo (para aislar acordeones en la misma página). Auto-generado si no se pasa. */
+  groupName?: string;
 }
 
-const { items, exclusive = false } = Astro.props;
+const { items, exclusive = false, groupName } = Astro.props;
+const autoGroup = groupName ?? `faq-group-${Math.random().toString(36).slice(2, 9)}`;
 ---
 
 <div class="accordion-faq" data-exclusive={exclusive ? 'true' : undefined}>
   {items.map((item) => (
-    <details class="accordion-faq__item" name={exclusive ? 'faq-group' : undefined}>
+    <details class="accordion-faq__item" name={exclusive ? autoGroup : undefined}>
       <summary class="accordion-faq__question">
         <span>{item.question}</span>
         <!-- Indicador visual animado -->

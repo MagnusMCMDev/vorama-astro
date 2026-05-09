@@ -5,6 +5,7 @@ import PageHeader from '~/components/sections/PageHeader.astro';
 import Section from '~/components/sections/Section.astro';
 import IconBox from '~/components/sections/IconBox.astro';
 import ImageCarousel from '~/components/sections/ImageCarousel.astro';
+import ReservaCard from '~/components/sections/ReservaCard.astro';
 import CardCTA from '~/components/sections/CardCTA.astro';
 
 import imgPd1 from '~/assets/images/pages/parados-1.webp';
@@ -81,23 +82,27 @@ const jsonLd = {
 
   <Section variant="muted" ariaLabel="Beneficios">
     <div class="benefits-grid">
-      <IconBox icon="check" title="Conexión y complicidad" description="Al compartir esta experiencia, la pareja refuerza su vínculo emocional y aumenta la complicidad mutua." />
-      <IconBox icon="star" title="Relajación sincronizada" description="Ambos disfrutan de un estado de relajación profunda al mismo tiempo, mejorando la armonía en la relación." />
-      <IconBox icon="clock" title="Experiencia compartida de bienestar" description="Al recibir el masaje juntos, la pareja experimenta una sensación conjunta de bienestar físico y emocional, creando recuerdos especiales." />
+      <IconBox icon="praying-hands" title="Conexión y complicidad" description="Al compartir esta experiencia, la pareja refuerza su vínculo emocional y aumenta la complicidad mutua." />
+      <IconBox icon="om" title="Relajación sincronizada" description="Ambos disfrutan de un estado de relajación profunda al mismo tiempo, mejorando la armonía en la relación." />
+      <IconBox icon="glass-cheers" title="Experiencia compartida de bienestar" description="Al recibir el masaje juntos, la pareja experimenta una sensación conjunta de bienestar físico y emocional, creando recuerdos especiales." />
     </div>
   </Section>
 
   <Section variant="default" ariaLabel="Reserva tu sesión" id="reserva">
     <h2 class="section-heading">Reserva tu sesión</h2>
     <div class="reserva-grid">
-      <button type="button" class="reserva-card" data-dialog="dialog-calendly" aria-label="Reservar sesión de 60 minutos">
-        <Image src={imgPd2} alt="Una pareja frente el mar estirados sobre dos camillas de Masaje Californiano. Se están cogiendo de la mano antes de recibir un masaje en pareja." class="reserva-card__img" widths={[400, 600]} sizes="(max-width: 800px) 100vw, 50vw" />
-        <span class="reserva-card__price">Sesión de 60 minutos · 100€</span>
-      </button>
-      <button type="button" class="reserva-card" data-dialog="dialog-calendly" aria-label="Reservar sesión de 90 minutos">
-        <Image src={imgPd5Chiringuito} alt="Chiringuito en la playa, frente el mar. Hay dos camillas preparadas para ofrecer un masaje en pareja." class="reserva-card__img" widths={[400, 600]} sizes="(max-width: 800px) 100vw, 50vw" />
-        <span class="reserva-card__price">Sesión de 90 minutos · 130€</span>
-      </button>
+      <ReservaCard
+        image={imgPd2}
+        imageAlt="Una pareja frente el mar estirados sobre dos camillas de Masaje Californiano. Se están cogiendo de la mano antes de recibir un masaje en pareja."
+        duration="60 minutos"
+        price="100€"
+      />
+      <ReservaCard
+        image={imgPd5Chiringuito}
+        imageAlt="Chiringuito en la playa, frente el mar. Hay dos camillas preparadas para ofrecer un masaje en pareja."
+        duration="90 minutos"
+        price="130€"
+      />
     </div>
   </Section>
 
@@ -191,52 +196,12 @@ const jsonLd = {
   }
 
   .reserva-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--vrm-space-lg);
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--vrm-space-xl);
     max-width: 900px;
     margin-inline: auto;
-
-    @media (max-width: 700px) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .reserva-card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--vrm-space-sm);
-    padding: 0;
-    background: var(--vrm-color-bg);
-    border: 2px solid var(--vrm-color-border);
-    border-radius: var(--vrm-radius-lg);
-    overflow: hidden;
-    cursor: pointer;
-    font-family: var(--vrm-font-body);
-    box-shadow: var(--vrm-shadow-sm);
-    transition: transform var(--vrm-transition-fast), box-shadow var(--vrm-transition-fast), border-color var(--vrm-transition-fast);
-  }
-
-  .reserva-card:hover,
-  .reserva-card:focus-visible {
-    transform: translateY(-3px);
-    box-shadow: var(--vrm-shadow-md);
-    border-color: var(--vrm-color-accent);
-  }
-
-  .reserva-card__img {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    display: block;
-  }
-
-  .reserva-card__price {
-    padding: var(--vrm-space-md);
-    font-size: var(--vrm-font-size-lg);
-    font-weight: var(--vrm-font-weight-semibold);
-    color: var(--vrm-color-primary);
-    text-align: center;
   }
 
   .anabel {

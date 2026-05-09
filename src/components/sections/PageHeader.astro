@@ -24,7 +24,8 @@ const { kicker, title, lead } = Astro.props;
   .page-header {
     background: linear-gradient(
       135deg,
-      var(--vrm-color-primary) 0%,
+      #14463c 0%,
+      var(--vrm-color-primary) 50%,
       var(--vrm-color-primary-light) 100%
     );
     color: var(--vrm-color-text-inverted);
@@ -44,7 +45,7 @@ const { kicker, title, lead } = Astro.props;
     font-weight: var(--vrm-font-weight-semibold);
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--vrm-color-accent);
+    color: rgb(255 255 255 / 0.85);
     margin-bottom: var(--vrm-space-sm);
   }
 
