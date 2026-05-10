@@ -334,12 +334,34 @@ const year = new Date().getFullYear();
     .site-footer__inner {
       grid-template-columns: 1fr;
       padding-inline: var(--vrm-space-md);
+      text-align: center;
+    }
+
+    /* Centrar todas las columnas (nav + contacto) en mobile */
+    .site-footer__nav,
+    .site-footer__contact {
+      align-items: center;
+    }
+
+    .site-footer__nav ul,
+    .site-footer__address {
+      align-items: center;
+    }
+
+    .site-footer__contact {
+      display: flex;
+      flex-direction: column;
     }
 
     .site-footer__bottom {
       flex-direction: column;
-      align-items: flex-start;
+      align-items: center;
+      text-align: center;
       padding-inline: var(--vrm-space-md);
+    }
+
+    .site-footer__legal {
+      justify-content: center;
     }
   }
 </style>
