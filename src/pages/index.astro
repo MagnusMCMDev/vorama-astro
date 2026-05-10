@@ -91,12 +91,11 @@ const jsonLd = {
     </header>
 
     <div class="video-wrap">
-      <a
-        href="https://www.youtube.com/watch?v=uNqInMsaS4Y"
-        target="_blank"
-        rel="noopener noreferrer"
+      <button
+        type="button"
         class="video"
-        aria-label="Ver video de presentación del Masaje Californiano en YouTube"
+        data-video-id="uNqInMsaS4Y"
+        aria-label="Reproducir video de presentación del Masaje Californiano"
       >
         <Image
           src={videoPoster}
@@ -110,7 +109,7 @@ const jsonLd = {
             <path d="M8 5v14l11-7z"/>
           </svg>
         </span>
-      </a>
+      </button>
     </div>
 
     <div class="benefits-grid">
@@ -333,10 +332,25 @@ const jsonLd = {
   .video {
     position: relative;
     display: block;
+    width: 100%;
     border-radius: var(--vrm-radius-lg);
     overflow: hidden;
     box-shadow: var(--vrm-shadow-md);
     aspect-ratio: 16 / 9;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  /* iframe que reemplaza al poster cuando el usuario pulsa play */
+  .video__iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
   }
 
   .video__poster {
@@ -597,3 +611,30 @@ const jsonLd = {
        texto + CTA arriba, imagen debajo. */
   }
 </style>
+
+<script>
+  // YouTube facade: al pulsar el poster, se reemplaza por un iframe
+  // que reproduce el video sin sacar al usuario de la web.
+  // Esto mantiene la página ligera (no carga el iframe de YT hasta
+  // que el usuario lo solicita).
+  document.querySelectorAll<HTMLButtonElement>('.video[data-video-id]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.videoId;
+      if (!id) return;
+      // Iframe con autoplay + dominio nocookie (privacy-enhanced).
+      const iframe = document.createElement('iframe');
+      iframe.className = 'video__iframe';
+      iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+      iframe.title = 'Video de presentación de Voramà — Masaje Californiano';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.setAttribute('allowfullscreen', '');
+      iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+      // Envolvemos el iframe en un div con la misma clase .video
+      // para preservar aspect-ratio, border-radius y shadow.
+      const wrapper = document.createElement('div');
+      wrapper.className = 'video';
+      wrapper.appendChild(iframe);
+      btn.replaceWith(wrapper);
+    });
+  });
+</script>
