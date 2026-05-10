@@ -412,11 +412,14 @@ const jsonLd = {
     height: 100%;
     object-fit: cover;
     z-index: 0;
-    transition: transform var(--vrm-transition-slow);
+    /* Zoom largo y suave: 1.6s con curva ease-out (igual que CardCTA). */
+    transition: transform 1600ms cubic-bezier(0.22, 0.61, 0.36, 1);
   }
 
-  .offer-card:hover .offer-card__bg {
-    transform: scale(1.05);
+  .offer-card:hover .offer-card__bg,
+  .offer-card:focus-within .offer-card__bg,
+  .offer-card:active .offer-card__bg {
+    transform: scale(1.14);
   }
 
   .offer-card__overlay {
