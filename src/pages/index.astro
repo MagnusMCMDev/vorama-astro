@@ -62,10 +62,6 @@ const jsonLd = {
       <div class="hero__content">
         <p class="hero__kicker">Bienvenido a Voramà Terapias</p>
         <h1 class="hero__title">Reconecta cuerpo y alma</h1>
-        <p class="hero__lead">
-          Masaje californiano en Barcelona. Movimientos largos y envolventes para una relajación
-          profunda del cuerpo y la mente.
-        </p>
         <a class="hero__cta" href={`${b}/servicios-masaje-californiano/#oferta-masaje`}>
           Reserva tu masaje ahora
         </a>
@@ -81,6 +77,10 @@ const jsonLd = {
           fetchpriority="high"
         />
       </figure>
+      <p class="hero__lead">
+        Masaje californiano en Barcelona. Movimientos largos y envolventes para una relajación
+        profunda del cuerpo y la mente.
+      </p>
     </div>
   </section>
 
@@ -260,12 +260,17 @@ const jsonLd = {
   }
 
   .hero__lead {
-    font-size: var(--vrm-font-size-md);
-    line-height: var(--vrm-line-height-relaxed);
-    margin: 0 auto var(--vrm-space-lg);
-    max-width: 38ch;
+    /* Texto secundario (SEO). Va debajo del contenido principal,
+       cruzando las dos columnas del grid en desktop. */
+    grid-column: 1 / -1;
+    margin: var(--vrm-space-lg) auto 0;
+    max-width: 60ch;
+    text-align: center;
     text-wrap: balance;
+    font-size: var(--vrm-font-size-xs);
+    line-height: var(--vrm-line-height-relaxed);
     color: var(--vrm-color-text-muted);
+    font-style: italic;
   }
 
   .hero__cta {
