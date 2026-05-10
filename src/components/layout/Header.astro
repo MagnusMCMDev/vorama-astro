@@ -242,30 +242,19 @@ function isParentActive(item: NavItem): boolean {
     position: sticky;
     top: 0;
     z-index: 100;
-    pointer-events: none; /* deja pasar clicks en la zona transparente */
-    /* Degradado generoso: blanco el primer 50% (donde está el nav)
-       y se desvanece a transparente en los siguientes 50px.
-       La sección siguiente sube por debajo de la zona desvanecida
-       (negative margin-bottom) para que se vea el blend. */
     background: linear-gradient(
       to bottom,
       var(--vrm-color-bg) 0%,
-      var(--vrm-color-bg) 50%,
+      var(--vrm-color-bg) 65%,
       rgb(255 255 255 / 0) 100%
     );
-    padding-bottom: 50px;
-    margin-bottom: -50px;
+    padding-bottom: 12px;
+    margin-bottom: -12px;
     transition: box-shadow var(--vrm-transition-base);
 
     &.is-stuck {
-      box-shadow: 0 8px 24px -10px rgb(0 0 0 / 0.10);
+      box-shadow: 0 6px 16px -8px rgb(0 0 0 / 0.08);
     }
-  }
-
-  /* Reactivamos eventos sólo en los hijos visibles del header */
-  .site-header__inner,
-  .site-header__mobile {
-    pointer-events: auto;
   }
 
   #header-sentinel {
