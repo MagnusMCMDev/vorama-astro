@@ -1,0 +1,112 @@
+---
+/**
+ * Botón flotante "volver arriba".
+ * Visible sólo cuando el usuario ha hecho scroll una pantalla.
+ * Se posiciona debajo del botón flotante de WhatsApp.
+ */
+---
+
+<button
+  type="button"
+  class="back-to-top"
+  aria-label="Volver al principio de la página"
+  hidden
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="22"
+    height="22"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+
+<style>
+  .back-to-top {
+    position: fixed;
+    /* Se posiciona justo debajo del WhatsApp (bottom + alto + gap) */
+    bottom: calc(var(--vrm-space-lg) + 60px + var(--vrm-space-sm));
+    right: var(--vrm-space-lg);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background-color: var(--vrm-color-primary);
+    color: var(--vrm-color-text-inverted);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: var(--vrm-shadow-md);
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition:
+      opacity var(--vrm-transition-base),
+      transform var(--vrm-transition-base),
+      background-color var(--vrm-transition-fast);
+
+    &.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--vrm-color-primary-light);
+      transform: translateY(-2px);
+      box-shadow: var(--vrm-shadow-lg);
+      outline: none;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .back-to-top {
+      bottom: calc(var(--vrm-space-md) + 56px + var(--vrm-space-sm));
+      right: var(--vrm-space-md);
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .back-to-top {
+      transition: opacity var(--vrm-transition-fast);
+      transform: none !important;
+    }
+  }
+</style>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.back-to-top');
+  if (btn) {
+    btn.removeAttribute('hidden');
+    const threshold = 400; // píxeles de scroll antes de mostrar
+
+    function update(): void {
+      if (window.scrollY > threshold) {
+        btn?.classList.add('is-visible');
+      } else {
+        btn?.classList.remove('is-visible');
+      }
+    }
+
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+
+    btn.addEventListener('click', () => {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    });
+  }
+</script>

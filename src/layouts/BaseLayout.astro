@@ -9,6 +9,7 @@ import brygadaFontUrl from '~/assets/fonts/brygada1918-latin.woff2?url';
 import Header from '~/components/layout/Header.astro';
 import Footer from '~/components/layout/Footer.astro';
 import WhatsAppFloating from '~/components/layout/WhatsAppFloating.astro';
+import BackToTop from '~/components/layout/BackToTop.astro';
 // Diálogos interactivos — disponibles en todas las páginas
 import LegalDialog from '~/components/interactive/LegalDialog.astro';
 import CalendlyDialog from '~/components/interactive/CalendlyDialog.astro';
@@ -106,6 +107,7 @@ const base = import.meta.env.BASE_URL;
     </main>
     <Footer />
     <WhatsAppFloating />
+    <BackToTop />
     <!-- ── Diálogos globales ────────────────────────────────── -->
     <LegalDialog slug="privacidad" />
     <LegalDialog slug="cookies" />

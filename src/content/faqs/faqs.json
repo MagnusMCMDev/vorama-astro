@@ -1,50 +1,145 @@
 [
   {
-    "question": "¿Cuáles son los beneficios del masaje californiano?",
-    "answer": "Relajación y alivio físico. El masaje californiano ofrece numerosos beneficios, como la reducción del estrés, el alivio de tensiones musculares y contracturas, y la mejora de la circulación. Es una técnica que relaja profundamente tanto el cuerpo como la mente, ayudando a combatir el insomnio y la ansiedad. Además, su enfoque integral puede favorecer una sensación de bienestar general y promover una mejor recuperación física tras jornadas exigentes o actividades intensas.",
+    "id": "califo-1",
+    "group": "californiano",
     "order": 1,
-    "id": "faq-1"
+    "question": "¿Cuáles son los beneficios del masaje californiano?",
+    "answer": "Relajación y alivio físico. El masaje californiano ofrece numerosos beneficios, como la reducción del estrés, el alivio de tensiones musculares y contracturas, y la mejora de la circulación. Es una técnica que relaja profundamente tanto el cuerpo como la mente, ayudando a combatir el insomnio y la ansiedad. Además, su enfoque integral puede favorecer una sensación de bienestar general y promover una mejor recuperación física tras jornadas exigentes o actividades intensas."
   },
   {
-    "question": "¿Quién puede recibir un masaje californiano?",
-    "answer": "Apto para casi todos. El masaje californiano es adecuado para personas de todas las edades que buscan relajación, alivio de tensiones musculares o una mejora en su bienestar general. No obstante, si tienes condiciones médicas específicas, como lesiones recientes, infecciones en la piel o cualquier otra dolencia, se recomienda consultar previamente con un profesional de la salud antes de recibirlo.",
+    "id": "califo-2",
+    "group": "californiano",
     "order": 2,
-    "id": "faq-2"
+    "question": "¿Quién puede recibir un masaje californiano?",
+    "answer": "Apto para casi todos. El masaje californiano es adecuado para personas de todas las edades que buscan relajación, alivio de tensiones musculares o una mejora en su bienestar general. No obstante, si tienes condiciones médicas específicas, como lesiones recientes, infecciones en la piel o cualquier otra dolencia, se recomienda consultar previamente con un profesional de la salud antes de recibirlo."
   },
   {
-    "question": "¿Qué diferencia al masaje californiano de otros tipos de masajes y por qué elegirlo?",
-    "answer": "Técnica fluida y holística. Lo que distingue al masaje californiano son sus movimientos largos, envolventes y uniformes, que trabajan todo el cuerpo de manera fluida. A diferencia de técnicas más focalizadas, el masaje californiano combina relajación profunda con efectos terapéuticos, como el alivio de contracturas y la reducción de dolores musculares. Es ideal para quienes buscan no solo relajarse, sino también tratar molestias físicas de manera suave y efectiva. Por su enfoque integral y reconfortante, es una excelente elección frente a masajes más intensos o específicos.",
+    "id": "califo-3",
+    "group": "californiano",
     "order": 3,
-    "id": "faq-3"
+    "question": "¿Qué diferencia al masaje californiano de otros tipos de masajes y por qué elegirlo?",
+    "answer": "Técnica fluida y holística. Lo que distingue al masaje californiano son sus movimientos largos, envolventes y uniformes, que trabajan todo el cuerpo de manera fluida. A diferencia de técnicas más focalizadas, el masaje californiano combina relajación profunda con efectos terapéuticos, como el alivio de contracturas y la reducción de dolores musculares. Es ideal para quienes buscan no solo relajarse, sino también tratar molestias físicas de manera suave y efectiva. Por su enfoque integral y reconfortante, es una excelente elección frente a masajes más intensos o específicos."
   },
   {
-    "question": "¿Se necesita algún tipo de preparación antes del masaje californiano?",
-    "answer": "No. No es necesaria una preparación específica. Se recomienda evitar comidas copiosas antes del masaje y no beber líquidos en exceso. El terapeuta proporcionará el entorno adecuado para que te sientas a gusto y disfrutes plenamente de la experiencia.",
+    "id": "califo-4",
+    "group": "californiano",
     "order": 4,
-    "id": "faq-4"
+    "question": "¿Se necesita algún tipo de preparación antes del masaje californiano?",
+    "answer": "No. No es necesaria una preparación específica. Se recomienda evitar comidas copiosas antes del masaje y no beber líquidos en exceso. El terapeuta proporcionará el entorno adecuado para que te sientas a gusto y disfrutes plenamente de la experiencia."
   },
   {
-    "question": "¿Puedo hacer ejercicio después de recibir un masaje californiano?",
-    "answer": "Mejor esperar unas horas. Aunque es posible realizar ejercicio después de un masaje californiano, se recomienda esperar al menos 24 horas para permitir que los beneficios del tratamiento se asienten en el cuerpo. Esto es especialmente importante si el masaje ha sido profundo, ya que los músculos y tejidos necesitan tiempo para recuperarse y aprovechar los efectos relajantes y reparadores del masaje.",
+    "id": "califo-5",
+    "group": "californiano",
     "order": 5,
-    "id": "faq-5"
+    "question": "¿Puedo hacer ejercicio después de recibir un masaje californiano?",
+    "answer": "Mejor esperar unas horas. Aunque es posible realizar ejercicio después de un masaje californiano, se recomienda esperar al menos 24 horas para permitir que los beneficios del tratamiento se asienten en el cuerpo. Esto es especialmente importante si el masaje ha sido profundo, ya que los músculos y tejidos necesitan tiempo para recuperarse y aprovechar los efectos relajantes y reparadores del masaje."
   },
+
   {
+    "id": "pareja-1",
+    "group": "pareja",
+    "order": 1,
     "question": "¿Ambos recibimos el masaje al mismo tiempo?",
-    "answer": "Sí. Ambos reciben el masaje al mismo tiempo, en la misma sala, cada terapeuta da el masaje a uno de los dos.",
-    "order": 6,
-    "id": "faq-6"
+    "answer": "Sí. Ambos reciben el masaje al mismo tiempo, en la misma sala, cada terapeuta da el masaje a uno de los dos."
   },
   {
+    "id": "pareja-2",
+    "group": "pareja",
+    "order": 2,
     "question": "¿El masaje en pareja tiene los mismos beneficios que el individual?",
-    "answer": "Sí, pero compartidos. El masaje en pareja ofrece los mismos beneficios terapéuticos que el individual, como relajación muscular y alivio del estrés, pero añade la oportunidad de compartir esta experiencia con alguien especial, fortaleciendo el vínculo emocional.",
-    "order": 7,
-    "id": "faq-7"
+    "answer": "Sí, pero compartidos. El masaje en pareja ofrece los mismos beneficios terapéuticos que el individual, como relajación muscular y alivio del estrés, pero añade la oportunidad de compartir esta experiencia con alguien especial, fortaleciendo el vínculo emocional."
   },
   {
+    "id": "pareja-3",
+    "group": "pareja",
+    "order": 3,
+    "question": "¿Dónde se realiza el masaje en pareja?",
+    "answer": "Próximamente disponible. Mientras tanto, escríbenos por WhatsApp y resolvemos tu duda al momento."
+  },
+  {
+    "id": "pareja-4",
+    "group": "pareja",
+    "order": 4,
     "question": "¿Se pueden trabajar necesidades específicas de cada persona durante el masaje?",
-    "answer": "Sí. Aunque el masaje en pareja se sincroniza para ambos, los terapeutas pueden adaptar las técnicas a las necesidades específicas de cada persona, garantizando que cada uno reciba la atención que requiere.",
-    "order": 8,
-    "id": "faq-8"
+    "answer": "Sí. Aunque el masaje en pareja se sincroniza para ambos, los terapeutas pueden adaptar las técnicas a las necesidades específicas de cada persona, garantizando que cada uno reciba la atención que requiere."
+  },
+  {
+    "id": "pareja-5",
+    "group": "pareja",
+    "order": 5,
+    "question": "¿Cómo se sincronizan los terapeutas durante el masaje en pareja?",
+    "answer": "Próximamente disponible. Mientras tanto, escríbenos por WhatsApp y resolvemos tu duda al momento."
+  },
+
+  {
+    "id": "cuatromanos-1",
+    "group": "cuatro-manos",
+    "order": 1,
+    "question": "¿Cuáles son los beneficios del masaje a cuatro manos?",
+    "answer": "Próximamente disponible. Mientras tanto, escríbenos por WhatsApp y resolvemos tu duda al momento."
+  },
+  {
+    "id": "cuatromanos-2",
+    "group": "cuatro-manos",
+    "order": 2,
+    "question": "¿Qué diferencia al masaje a cuatro manos de un masaje tradicional?",
+    "answer": "Próximamente disponible. Mientras tanto, escríbenos por WhatsApp y resolvemos tu duda al momento."
+  },
+  {
+    "id": "cuatromanos-3",
+    "group": "cuatro-manos",
+    "order": 3,
+    "question": "¿Cómo se coordinan los dos terapeutas durante el masaje?",
+    "answer": "Próximamente disponible. Mientras tanto, escríbenos por WhatsApp y resolvemos tu duda al momento."
+  },
+  {
+    "id": "cuatromanos-4",
+    "group": "cuatro-manos",
+    "order": 4,
+    "question": "¿Es más intenso un masaje a cuatro manos?",
+    "answer": "Próximamente disponible. Mientras tanto, escríbenos por WhatsApp y resolvemos tu duda al momento."
+  },
+  {
+    "id": "cuatromanos-5",
+    "group": "cuatro-manos",
+    "order": 5,
+    "question": "¿Es adecuado para personas con dolencias físicas específicas?",
+    "answer": "Próximamente disponible. Mientras tanto, escríbenos por WhatsApp y resolvemos tu duda al momento."
+  },
+
+  {
+    "id": "regala-1",
+    "group": "regala",
+    "order": 1,
+    "question": "¿Cómo funciona el sistema de vale regalo?",
+    "answer": "Próximamente disponible. Mientras tanto, escríbenos por WhatsApp y resolvemos tu duda al momento."
+  },
+  {
+    "id": "regala-2",
+    "group": "regala",
+    "order": 2,
+    "question": "¿Cuánto tiempo tiene de validez el vale regalo?",
+    "answer": "Próximamente disponible. Mientras tanto, escríbenos por WhatsApp y resolvemos tu duda al momento."
+  },
+  {
+    "id": "regala-3",
+    "group": "regala",
+    "order": 3,
+    "question": "¿Cómo se entrega el vale regalo?",
+    "answer": "Próximamente disponible. Mientras tanto, escríbenos por WhatsApp y resolvemos tu duda al momento."
+  },
+  {
+    "id": "regala-4",
+    "group": "regala",
+    "order": 4,
+    "question": "¿El vale regalo es transferible a otra persona?",
+    "answer": "Próximamente disponible. Mientras tanto, escríbenos por WhatsApp y resolvemos tu duda al momento."
+  },
+  {
+    "id": "regala-5",
+    "group": "regala",
+    "order": 5,
+    "question": "¿Puedo incluir un mensaje especial en el vale regalo?",
+    "answer": "Próximamente disponible. Mientras tanto, escríbenos por WhatsApp y resolvemos tu duda al momento."
   }
 ]
