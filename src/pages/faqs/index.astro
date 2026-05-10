@@ -7,14 +7,18 @@ import AccordionFAQ from '~/components/sections/AccordionFAQ.astro';
 
 const allFaqs = (await getCollection('faqs')).sort((a, b) => a.data.order - b.data.order);
 
-// faqs.json: orders 1-5 son sobre el masaje californiano; 6-8 sobre masaje en pareja.
-const faqsCalifo = allFaqs
-  .filter((f) => f.data.order <= 5)
-  .map((f) => ({ question: f.data.question, answer: f.data.answer }));
+type Group = 'californiano' | 'pareja' | 'cuatro-manos' | 'regala';
 
-const faqsPareja = allFaqs
-  .filter((f) => f.data.order >= 6)
-  .map((f) => ({ question: f.data.question, answer: f.data.answer }));
+function pick(group: Group) {
+  return allFaqs
+    .filter((f) => f.data.group === group)
+    .map((f) => ({ question: f.data.question, answer: f.data.answer }));
+}
+
+const faqsCalifo = pick('californiano');
+const faqsPareja = pick('pareja');
+const faqs4Manos = pick('cuatro-manos');
+const faqsRegala = pick('regala');
 
 // JSON-LD FAQPage para SEO
 const faqJsonLd = {
@@ -33,7 +37,7 @@ const faqJsonLd = {
 
 <BaseLayout
   title="Preguntas Frecuentes — Voramà Terapias"
-  description="Resolvemos tus dudas sobre el masaje californiano: beneficios, contraindicaciones, sesiones individuales y en pareja."
+  description="Resolvemos tus dudas sobre el masaje californiano: beneficios, contraindicaciones, sesiones individuales, en pareja, a cuatro manos y vales regalo."
   jsonLd={faqJsonLd}
 >
   <PageHeader title="Preguntas Frecuentes" />
@@ -49,6 +53,20 @@ const faqJsonLd = {
     <div class="faqs-wrap">
       <h2>Masaje en Pareja</h2>
       <AccordionFAQ items={faqsPareja} exclusive={true} />
+    </div>
+  </Section>
+
+  <Section variant="default" ariaLabel="FAQs masaje a cuatro manos">
+    <div class="faqs-wrap">
+      <h2>Masaje a Cuatro Manos</h2>
+      <AccordionFAQ items={faqs4Manos} exclusive={true} />
+    </div>
+  </Section>
+
+  <Section variant="muted" ariaLabel="FAQs regala masaje">
+    <div class="faqs-wrap">
+      <h2>Regala Masaje</h2>
+      <AccordionFAQ items={faqsRegala} exclusive={true} />
     </div>
   </Section>
 </BaseLayout>

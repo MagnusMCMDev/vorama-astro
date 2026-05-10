@@ -35,6 +35,7 @@ const faqsCollection = defineCollection({
     question: z.string(),
     answer: z.string(),
     order: z.number().int().positive(),
+    group: z.enum(['californiano', 'pareja', 'cuatro-manos', 'regala']),
   }),
 });
 
