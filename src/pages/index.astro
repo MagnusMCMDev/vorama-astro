@@ -631,7 +631,14 @@ const jsonLd = {
       iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
       // Envolvemos el iframe en un div con la misma clase .video
       // para preservar aspect-ratio, border-radius y shadow.
+      // Copiamos los atributos data-astro-cid-* del botón original para
+      // que el CSS scoped de Astro siga aplicando al nuevo elemento.
       const wrapper = document.createElement('div');
+      for (const { name, value } of Array.from(btn.attributes)) {
+        if (name.startsWith('data-astro-cid-')) {
+          wrapper.setAttribute(name, value);
+        }
+      }
       wrapper.className = 'video';
       wrapper.appendChild(iframe);
       btn.replaceWith(wrapper);
