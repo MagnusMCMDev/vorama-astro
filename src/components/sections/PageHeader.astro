@@ -39,7 +39,12 @@ const { kicker, title, lead } = Astro.props;
         #2d7a6b 100%
       );
     color: var(--vrm-color-text-inverted);
-    padding-block: var(--vrm-space-2xl);
+    /* La sección sube bajo el header translúcido: su fondo se
+       blurrea por detrás integrándose con el header. El padding-top
+       extra clarea el contenido del título debajo del header. */
+    margin-top: calc(var(--vrm-header-height) * -1);
+    padding-top: calc(var(--vrm-space-2xl) + var(--vrm-header-height));
+    padding-bottom: var(--vrm-space-2xl);
     text-align: center;
     position: relative;
   }

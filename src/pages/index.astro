@@ -216,7 +216,11 @@ const jsonLd = {
   /* ── Hero 2-column ───────────────────────────────────────── */
   .hero {
     background: linear-gradient(135deg, var(--vrm-color-bg-subtle) 0%, var(--vrm-color-bg-alt) 100%);
-    padding-block: var(--vrm-space-2xl);
+    /* Sube bajo el header translúcido para que su fondo cremoso
+       se blurree por detrás en lugar de ver una franja blanca. */
+    margin-top: calc(var(--vrm-header-height) * -1);
+    padding-top: calc(var(--vrm-space-2xl) + var(--vrm-header-height));
+    padding-bottom: var(--vrm-space-2xl);
   }
 
   .hero__inner {

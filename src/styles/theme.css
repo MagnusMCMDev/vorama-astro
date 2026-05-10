@@ -67,6 +67,7 @@
   --vrm-container-width:   1200px;
   --vrm-container-narrow:  750px;
   --vrm-section-padding-y: var(--vrm-space-xl);
+  --vrm-header-height:     72px;
 
   /* ── Radios ──────────────────────────────────────────────── */
 
