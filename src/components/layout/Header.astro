@@ -246,9 +246,9 @@ function isParentActive(item: NavItem): boolean {
        de modo que el color de la sección que pasa por debajo
        (cream del hero, verde del PageHeader, foto del banner…)
        se trasluce y se integra. */
-    background-color: rgb(255 255 255 / 0.55);
-    -webkit-backdrop-filter: blur(14px) saturate(1.4);
-    backdrop-filter: blur(14px) saturate(1.4);
+    background-color: rgb(255 255 255 / 0.25);
+    -webkit-backdrop-filter: blur(18px) saturate(1.5);
+    backdrop-filter: blur(18px) saturate(1.5);
     transition:
       background-color var(--vrm-transition-base),
       box-shadow var(--vrm-transition-base);
@@ -256,7 +256,7 @@ function isParentActive(item: NavItem): boolean {
     &.is-stuck {
       /* Al hacer scroll, opacidad ligeramente mayor + sombra
          suave para reforzar la separación sin perder el blend. */
-      background-color: rgb(255 255 255 / 0.78);
+      background-color: rgb(255 255 255 / 0.55);
       box-shadow: 0 6px 24px -10px rgb(0 0 0 / 0.10);
     }
   }
@@ -265,7 +265,7 @@ function isParentActive(item: NavItem): boolean {
      bg semi-opaco que sigue siendo agradable. */
   @supports not (backdrop-filter: blur(1px)) {
     .site-header {
-      background-color: rgb(255 255 255 / 0.92);
+      background-color: rgb(255 255 255 / 0.85);
     }
   }
 
