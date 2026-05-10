@@ -242,33 +242,35 @@ function isParentActive(item: NavItem): boolean {
     position: sticky;
     top: 0;
     z-index: 100;
-    /* Vidrio esmerilado: el header es translúcido con blur,
-       de modo que el color de la sección que pasa por debajo
-       (cream del hero, verde del PageHeader, foto del banner…)
-       se trasluce y se integra. */
-    background-color: rgb(255 255 255 / 0.45);
-    -webkit-backdrop-filter: blur(20px) saturate(1.6);
-    backdrop-filter: blur(20px) saturate(1.6);
-    /* Borde inferior sutil para definir el header incluso cuando
-       el degradado de la página es muy luminoso (ej. PageHeader). */
-    box-shadow: 0 1px 0 0 rgb(255 255 255 / 0.35);
+    /* Estado inicial (top de la página): completamente transparente,
+       sin blur. El color que toque del page-header / hero se ve sin
+       interferencia y el header solo muestra logo + nav + iconos. */
+    background-color: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
     transition:
       background-color var(--vrm-transition-base),
+      backdrop-filter var(--vrm-transition-base),
+      -webkit-backdrop-filter var(--vrm-transition-base),
       box-shadow var(--vrm-transition-base);
 
+    /* Al hacer scroll, el header gana presencia: vidrio esmerilado
+       + sombra suave hacia abajo para definirlo sobre el contenido
+       que va pasando por debajo. */
     &.is-stuck {
-      /* Al hacer scroll, opacidad ligeramente mayor + sombra
-         suave para reforzar la separación sin perder el blend. */
       background-color: rgb(255 255 255 / 0.7);
+      -webkit-backdrop-filter: blur(20px) saturate(1.6);
+      backdrop-filter: blur(20px) saturate(1.6);
       box-shadow: 0 6px 24px -10px rgb(0 0 0 / 0.12);
     }
   }
 
-  /* Fallback para navegadores sin backdrop-filter:
-     bg semi-opaco que sigue siendo agradable. */
+  /* Fallback para navegadores sin backdrop-filter: en scrolled
+     usamos blanco más sólido para mantener legibilidad. */
   @supports not (backdrop-filter: blur(1px)) {
-    .site-header {
-      background-color: rgb(255 255 255 / 0.9);
+    .site-header.is-stuck {
+      background-color: rgb(255 255 255 / 0.95);
     }
   }
 
