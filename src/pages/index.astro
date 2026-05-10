@@ -622,24 +622,23 @@ const jsonLd = {
       const id = btn.dataset.videoId;
       if (!id) return;
       // Iframe con autoplay + dominio nocookie (privacy-enhanced).
+      // Estilos en línea para garantizar que ocupe todo el wrapper
+      // independientemente del scoping CSS de Astro (los selectores
+      // .video / .video__iframe se compilan con data-astro-cid-XXX).
       const iframe = document.createElement('iframe');
-      iframe.className = 'video__iframe';
       iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
       iframe.title = 'Video de presentación de Voramà — Masaje Californiano';
       iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
       iframe.setAttribute('allowfullscreen', '');
       iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
-      // Envolvemos el iframe en un div con la misma clase .video
-      // para preservar aspect-ratio, border-radius y shadow.
-      // Copiamos los atributos data-astro-cid-* del botón original para
-      // que el CSS scoped de Astro siga aplicando al nuevo elemento.
+      iframe.style.cssText =
+        'position:absolute;inset:0;width:100%;height:100%;border:0;display:block;';
+
+      // Envolvemos el iframe en un div del mismo tamaño/forma que el
+      // botón anterior. Inline styles para no depender del CSS scoped.
       const wrapper = document.createElement('div');
-      for (const { name, value } of Array.from(btn.attributes)) {
-        if (name.startsWith('data-astro-cid-')) {
-          wrapper.setAttribute(name, value);
-        }
-      }
-      wrapper.className = 'video';
+      wrapper.style.cssText =
+        'position:relative;width:100%;aspect-ratio:16/9;border-radius:var(--vrm-radius-lg);overflow:hidden;box-shadow:var(--vrm-shadow-md);';
       wrapper.appendChild(iframe);
       btn.replaceWith(wrapper);
     });
