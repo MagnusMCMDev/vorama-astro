@@ -22,25 +22,23 @@ const { kicker, title, lead } = Astro.props;
 
 <style>
   .page-header {
-    /* Doble capa:
-       1. Halo claro saliendo de la esquina superior izquierda
-          (donde está el header translúcido — para que destaque).
-       2. Degradado diagonal que va de verde claro (TL) a verde
-          muy oscuro (BR), con contraste acusado. */
+    /* Paleta verde clara: halo TL muy claro y degradado que termina
+       en el verde primary (no más oscuro) para evitar tonos casi
+       negros. Mantiene el contraste de claridad TL → BR. */
     background:
       radial-gradient(
         ellipse 90% 110% at 0% -10%,
-        rgb(190 235 218 / 0.85) 0%,
-        rgb(120 200 178 / 0.45) 30%,
+        rgb(210 240 225 / 0.9) 0%,
+        rgb(150 215 195 / 0.5) 30%,
         transparent 65%
       ),
       linear-gradient(
         135deg,
-        #5aa896 0%,
-        #3a8675 22%,
-        var(--vrm-color-primary) 55%,
-        #14463c 82%,
-        #08231d 100%
+        #8fcab8 0%,
+        #6fb6a1 22%,
+        var(--vrm-color-primary-light) 55%,
+        #3d8473 82%,
+        var(--vrm-color-primary) 100%
       );
     color: var(--vrm-color-text-inverted);
     /* La sección sube bajo el header translúcido: su fondo se
