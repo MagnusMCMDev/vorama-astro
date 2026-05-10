@@ -60,18 +60,15 @@ const { image, imageAlt, duration, price, ariaLabel } = Astro.props;
 
   .reserva-card__circle {
     display: block;
-    width: 240px;
-    height: 240px;
+    /* Tamaño responsive: mínimo 280px en mobile, fluido por viewport
+       (36vw) y máximo 380px en pantallas grandes. */
+    width: clamp(280px, 36vw, 380px);
+    height: clamp(280px, 36vw, 380px);
     border-radius: 50%;
     overflow: hidden;
     box-shadow: var(--vrm-shadow-md);
     border: 6px solid var(--vrm-color-bg);
     transition: box-shadow var(--vrm-transition-base);
-
-    @media (max-width: 600px) {
-      width: 200px;
-      height: 200px;
-    }
   }
 
   .reserva-card:hover .reserva-card__circle {
