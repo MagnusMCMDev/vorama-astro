@@ -91,16 +91,14 @@ const { images, id = 'carousel', autoplayMs = 5000 } = Astro.props;
     scroll-snap-align: start;
     margin: 0;
     aspect-ratio: 16 / 10;
-    background-color: var(--vrm-color-bg-alt);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    overflow: hidden;
   }
 
   .carousel__img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
+    object-position: center;
     display: block;
   }
 
@@ -114,25 +112,27 @@ const { images, id = 'carousel', autoplayMs = 5000 } = Astro.props;
     justify-content: center;
     width: 44px;
     height: 44px;
-    background-color: rgb(255 255 255 / 0.85);
-    color: var(--vrm-color-primary);
-    border: none;
+    background-color: rgb(255 255 255 / 0.4);
+    color: #fff;
+    border: 1px solid rgb(255 255 255 / 0.4);
     border-radius: 50%;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+    box-shadow: 0 2px 10px rgb(0 0 0 / 0.18);
     cursor: pointer;
     z-index: 2;
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(8px) saturate(1.4);
+    backdrop-filter: blur(8px) saturate(1.4);
     transition:
       background-color var(--vrm-transition-fast),
+      color var(--vrm-transition-fast),
       transform var(--vrm-transition-fast),
       box-shadow var(--vrm-transition-fast);
   }
 
   .carousel__arrow:hover,
   .carousel__arrow:focus-visible {
-    background-color: var(--vrm-color-primary);
-    color: var(--vrm-color-text-inverted);
+    background-color: rgb(255 255 255 / 0.85);
+    color: var(--vrm-color-primary);
+    border-color: rgb(255 255 255 / 0.85);
     box-shadow: 0 4px 14px rgb(0 0 0 / 0.25);
     outline: none;
   }
