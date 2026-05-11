@@ -1,0 +1,400 @@
+---
+/**
+ * BookingDialog — diálogo global de reservas.
+ * Incluir una sola vez en BaseLayout.astro.
+ *
+ * MODO DIRECTO — botones en páginas de servicio:
+ *   data-dialog="booking"
+ *   data-service-id="californiano-90"
+ *   data-duration-min="90"
+ *   → abre directamente en el calendario para ese servicio.
+ *
+ * MODO HUB — botón "Reserva" del header y CTAs genéricos:
+ *   data-dialog="booking"
+ *   data-service-type="californiano"   (opcional; si se omite muestra todos)
+ *   → muestra primero el selector de duración.
+ */
+import Dialog from '~/components/interactive/Dialog.astro';
+---
+
+<Dialog id="booking" title="Reservar sesión">
+  <div id="bw-mount" class="bw-mount" aria-live="polite"></div>
+</Dialog>
+
+<style is:global>
+/* ── Variables locales del widget ───────────────────────────────────────── */
+.bw-mount {
+  min-height: 200px;
+}
+
+/* ── Paso 0: hub completo (3 tipos) ─────────────────────────────────────── */
+.bw-hub {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vrm-space-lg);
+}
+.bw-hub__divider {
+  border: none;
+  border-top: 1px solid var(--vrm-color-border);
+  margin: 0;
+}
+.bw-hub__type-label {
+  font-size: var(--vrm-font-size-md);
+  font-weight: var(--vrm-font-weight-semibold);
+  color: var(--vrm-color-primary);
+  text-align: center;
+  margin-bottom: 2px;
+}
+.bw-hub__type {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vrm-space-xs);
+}
+
+/* ── Paso 0: selector de duración ───────────────────────────────────────── */
+.bw-dur__desc {
+  font-size: var(--vrm-font-size-sm);
+  color: var(--vrm-color-text-muted);
+  text-align: center;
+  margin-bottom: var(--vrm-space-md);
+  line-height: var(--vrm-line-height-relaxed);
+}
+.bw-dur__grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--vrm-space-sm);
+  margin-top: var(--vrm-space-xs);
+}
+.bw-dur__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: var(--vrm-space-md) var(--vrm-space-lg);
+  background: var(--vrm-color-bg-subtle);
+  border: 2px solid var(--vrm-color-border);
+  border-radius: var(--vrm-radius-md);
+  cursor: pointer;
+  transition: border-color var(--vrm-transition-fast), background-color var(--vrm-transition-fast);
+  &:hover, &:focus-visible {
+    border-color: var(--vrm-color-primary);
+    background: color-mix(in srgb, var(--vrm-color-primary) 8%, var(--vrm-color-bg));
+  }
+  &:focus-visible { outline: 2px solid var(--vrm-color-primary); outline-offset: 2px; }
+}
+.bw-dur__min {
+  font-size: var(--vrm-font-size-lg);
+  font-weight: var(--vrm-font-weight-semibold);
+  color: var(--vrm-color-text);
+}
+.bw-dur__price {
+  font-size: var(--vrm-font-size-md);
+  color: var(--vrm-color-primary);
+  font-weight: var(--vrm-font-weight-semibold);
+}
+
+/* ── Etiqueta de servicio ────────────────────────────────────────────────── */
+.bw-svc-label {
+  font-size: var(--vrm-font-size-sm);
+  font-weight: var(--vrm-font-weight-semibold);
+  color: var(--vrm-color-primary);
+  text-align: center;
+  margin-bottom: var(--vrm-space-md);
+}
+
+/* ── Navegación de mes ───────────────────────────────────────────────────── */
+.bw-cal__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vrm-space-sm);
+  margin-bottom: var(--vrm-space-sm);
+}
+.bw-cal__month {
+  font-weight: var(--vrm-font-weight-semibold);
+  font-size: var(--vrm-font-size-md);
+  color: var(--vrm-color-text);
+  text-align: center;
+  min-width: 160px;
+}
+.bw-cal__nav-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px;
+  background: none;
+  border: 1px solid var(--vrm-color-border);
+  border-radius: var(--vrm-radius-sm);
+  color: var(--vrm-color-text-muted);
+  cursor: pointer;
+  transition: background-color var(--vrm-transition-fast), color var(--vrm-transition-fast);
+  &:hover, &:focus-visible { background: var(--vrm-color-bg-subtle); color: var(--vrm-color-text); }
+  &:focus-visible { outline: 2px solid var(--vrm-color-primary); outline-offset: 2px; }
+}
+
+/* ── Grid del calendario ─────────────────────────────────────────────────── */
+.bw-cal__grid {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin-bottom: var(--vrm-space-md);
+}
+.bw-cal__grid thead th {
+  font-size: var(--vrm-font-size-xs);
+  font-weight: var(--vrm-font-weight-semibold);
+  color: var(--vrm-color-text-muted);
+  text-align: center;
+  padding-block: var(--vrm-space-xs);
+}
+.bw-cal__cell {
+  text-align: center;
+  padding: 2px;
+  height: 44px;
+}
+.bw-cal__cell--empty {
+  background: none;
+}
+.bw-cal__btn {
+  width: 100%; height: 100%;
+  min-height: 40px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--vrm-radius-sm);
+  font-size: var(--vrm-font-size-sm);
+  color: var(--vrm-color-text);
+  cursor: pointer;
+  transition: background-color var(--vrm-transition-fast), color var(--vrm-transition-fast);
+  &:hover { background: var(--vrm-color-bg-subtle); }
+  &:focus-visible { outline: 2px solid var(--vrm-color-primary); outline-offset: 1px; }
+}
+.bw-cal__cell--today .bw-cal__btn {
+  font-weight: var(--vrm-font-weight-semibold);
+  border-color: var(--vrm-color-primary-light);
+}
+.bw-cal__cell--selected .bw-cal__btn {
+  background: var(--vrm-color-primary);
+  color: var(--vrm-color-text-inverted);
+  border-color: var(--vrm-color-primary);
+}
+.bw-cal__cell--disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+.bw-cal--loading .bw-cal__grid {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ── Loading spinner ─────────────────────────────────────────────────────── */
+.bw-loading { text-align: center; padding-block: var(--vrm-space-sm); }
+.bw-spinner {
+  display: inline-block;
+  width: 22px; height: 22px;
+  border: 3px solid var(--vrm-color-border);
+  border-top-color: var(--vrm-color-primary);
+  border-radius: 50%;
+  animation: bw-spin 0.7s linear infinite;
+}
+.bw-spinner--sm { width: 14px; height: 14px; border-width: 2px; vertical-align: middle; }
+@keyframes bw-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .bw-spinner { animation: none; border-top-color: var(--vrm-color-primary); }
+}
+
+/* ── Lista de slots ──────────────────────────────────────────────────────── */
+.bw-slots-section { margin-top: var(--vrm-space-md); }
+.bw-slots {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: var(--vrm-space-xs);
+  margin-bottom: var(--vrm-space-md);
+}
+.bw-slot__btn {
+  width: 100%;
+  padding-block: var(--vrm-space-sm);
+  background: var(--vrm-color-bg-subtle);
+  border: 1px solid var(--vrm-color-border);
+  border-radius: var(--vrm-radius-sm);
+  font-size: var(--vrm-font-size-sm);
+  font-weight: var(--vrm-font-weight-semibold);
+  color: var(--vrm-color-text);
+  cursor: pointer;
+  transition: background-color var(--vrm-transition-fast), color var(--vrm-transition-fast), border-color var(--vrm-transition-fast);
+  &:hover { background: var(--vrm-color-primary-light); border-color: var(--vrm-color-primary); }
+  &:focus-visible { outline: 2px solid var(--vrm-color-primary); outline-offset: 2px; }
+}
+.bw-slot--selected .bw-slot__btn {
+  background: var(--vrm-color-primary);
+  color: var(--vrm-color-text-inverted);
+  border-color: var(--vrm-color-primary);
+}
+.bw-empty {
+  color: var(--vrm-color-text-muted);
+  font-size: var(--vrm-font-size-sm);
+  text-align: center;
+  padding-block: var(--vrm-space-md);
+}
+
+/* ── Formulario ──────────────────────────────────────────────────────────── */
+.bw-slot-recap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vrm-space-xs) var(--vrm-space-md);
+  align-items: baseline;
+  padding: var(--vrm-space-sm) var(--vrm-space-md);
+  background: var(--vrm-color-bg-subtle);
+  border-radius: var(--vrm-radius-md);
+  margin-bottom: var(--vrm-space-md);
+  font-size: var(--vrm-font-size-sm);
+}
+.bw-slot-recap__time { font-weight: var(--vrm-font-weight-semibold); color: var(--vrm-color-primary); font-size: var(--vrm-font-size-md); }
+.bw-slot-recap__date { color: var(--vrm-color-text); }
+.bw-slot-recap__svc { color: var(--vrm-color-text-muted); }
+
+.bw-form { display: flex; flex-direction: column; gap: var(--vrm-space-md); }
+.bw-honeypot { display: none !important; }
+.bw-field { display: flex; flex-direction: column; gap: 4px; }
+.bw-field__label {
+  font-size: var(--vrm-font-size-sm);
+  font-weight: var(--vrm-font-weight-semibold);
+  color: var(--vrm-color-text);
+}
+.bw-field__optional { font-weight: 400; color: var(--vrm-color-text-muted); }
+.bw-field__input {
+  padding: var(--vrm-space-sm) var(--vrm-space-md);
+  border: 1px solid var(--vrm-color-border);
+  border-radius: var(--vrm-radius-sm);
+  font-size: var(--vrm-font-size-md);
+  font-family: var(--vrm-font-body);
+  color: var(--vrm-color-text);
+  background: var(--vrm-color-bg);
+  width: 100%;
+  transition: border-color var(--vrm-transition-fast), box-shadow var(--vrm-transition-fast);
+  &:focus { outline: none; border-color: var(--vrm-color-primary); box-shadow: 0 0 0 3px rgb(from var(--vrm-color-primary) r g b / 0.15); }
+}
+.bw-field__input--error { border-color: #c0392b; }
+.bw-field__textarea { resize: vertical; min-height: 80px; }
+.bw-field__error { font-size: var(--vrm-font-size-xs); color: #c0392b; }
+.bw-field--check { flex-direction: row; align-items: flex-start; gap: var(--vrm-space-sm); }
+.bw-field__check-label { display: flex; align-items: flex-start; gap: var(--vrm-space-sm); font-size: var(--vrm-font-size-sm); cursor: pointer; line-height: 1.4; }
+.bw-field__checkbox { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; accent-color: var(--vrm-color-primary); }
+.bw-link { color: var(--vrm-color-primary); text-decoration: underline; }
+
+/* ── Summary ─────────────────────────────────────────────────────────────── */
+.bw-summary__title { font-size: var(--vrm-font-size-lg); color: var(--vrm-color-primary); margin: 0 0 var(--vrm-space-md); }
+.bw-summary__list { margin: 0 0 var(--vrm-space-md); padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.bw-summary__row { display: flex; gap: var(--vrm-space-sm); font-size: var(--vrm-font-size-sm); padding: var(--vrm-space-xs) 0; border-bottom: 1px solid var(--vrm-color-border); }
+.bw-summary__row dt { width: 80px; flex-shrink: 0; font-weight: var(--vrm-font-weight-semibold); color: var(--vrm-color-text-muted); }
+.bw-summary__row dd { margin: 0; color: var(--vrm-color-text); }
+.bw-summary__notice {
+  font-size: var(--vrm-font-size-sm);
+  color: var(--vrm-color-text-muted);
+  background: var(--vrm-color-bg-subtle);
+  border-radius: var(--vrm-radius-md);
+  padding: var(--vrm-space-sm) var(--vrm-space-md);
+  margin-bottom: var(--vrm-space-md);
+  line-height: var(--vrm-line-height-relaxed);
+}
+
+/* ── Actions ─────────────────────────────────────────────────────────────── */
+.bw-form__actions {
+  display: flex;
+  gap: var(--vrm-space-sm);
+  align-items: center;
+  flex-wrap: wrap;
+  padding-top: var(--vrm-space-xs);
+  &.bw-form__actions--right { justify-content: flex-end; }
+  &.bw-form__actions--center { justify-content: center; }
+}
+.bw-btn {
+  display: inline-flex; align-items: center; gap: var(--vrm-space-xs);
+  padding: var(--vrm-space-sm) var(--vrm-space-lg);
+  border-radius: var(--vrm-radius-full);
+  font-size: var(--vrm-font-size-sm);
+  font-weight: var(--vrm-font-weight-semibold);
+  cursor: pointer;
+  transition: background-color var(--vrm-transition-fast), color var(--vrm-transition-fast);
+  text-decoration: none;
+  &:focus-visible { outline: 2px solid var(--vrm-color-primary); outline-offset: 2px; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+.bw-btn--primary {
+  background: var(--vrm-color-primary);
+  color: var(--vrm-color-text-inverted);
+  border: none;
+  &:hover:not(:disabled) { background: color-mix(in srgb, var(--vrm-color-primary) 85%, black); }
+}
+.bw-btn--ghost {
+  background: none;
+  color: var(--vrm-color-text-muted);
+  border: 1px solid var(--vrm-color-border);
+  &:hover { background: var(--vrm-color-bg-subtle); color: var(--vrm-color-text); }
+}
+.bw-btn--wa {
+  background: #25d366;
+  color: #fff;
+  border: none;
+  &:hover { background: #1ebe5d; }
+}
+
+/* ── Fin: Success / Error ────────────────────────────────────────────────── */
+.bw-end {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; gap: var(--vrm-space-md);
+  padding-block: var(--vrm-space-xl);
+}
+.bw-end__icon {
+  width: 56px; height: 56px;
+  color: var(--vrm-color-primary);
+  stroke-width: 1.5;
+}
+.bw-end__icon--error { color: #c0392b; }
+.bw-end__title { font-size: var(--vrm-font-size-xl); color: var(--vrm-color-primary); margin: 0; }
+.bw-end--error .bw-end__title { color: #c0392b; }
+.bw-end__text { font-size: var(--vrm-font-size-sm); color: var(--vrm-color-text-muted); max-width: 36ch; line-height: var(--vrm-line-height-relaxed); margin: 0; }
+
+/* ── Utilidades ──────────────────────────────────────────────────────────── */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border-width: 0; }
+</style>
+
+<script>
+import type { ServiceId, ServiceType, MountOptions } from '~/lib/booking/types.ts';
+import { mountWidget } from '~/lib/booking/widget-state.ts';
+
+const dlg = document.getElementById('booking') as HTMLDialogElement | null;
+const mount = document.getElementById('bw-mount');
+if (!dlg || !mount) throw new Error('[BookingDialog] elementos no encontrados');
+
+let lastOptions: MountOptions = { mode: 'hub' };
+
+// Captura el contexto del botón que abre el dialog (fase capture, antes que Dialog.astro)
+document.addEventListener('click', (e) => {
+  const opener = (e.target as Element).closest<HTMLElement>('[data-dialog="booking"]');
+  if (!opener) return;
+
+  const serviceId = opener.dataset.serviceId as ServiceId | undefined;
+  const durationMin = Number(opener.dataset.durationMin) || 0;
+
+  if (serviceId && durationMin) {
+    // Modo directo: el botón ya sabe qué servicio y duración
+    lastOptions = { mode: 'direct', serviceId, durationMin };
+  } else {
+    // Modo hub: mostrar selector de duración (con o sin tipo prefijado)
+    const serviceType = opener.dataset.serviceType as ServiceType | undefined;
+    lastOptions = { mode: 'hub', serviceType };
+  }
+}, true);
+
+// Cuando el dialog abre, monta el widget con las opciones correctas
+dlg.addEventListener('vrm:dialog-open', () => {
+  mountWidget(mount, lastOptions);
+});
+
+// Al cerrar el dialog, limpia el contenido para el próximo uso
+dlg.addEventListener('close', () => {
+  mount.innerHTML = '';
+});
+</script>

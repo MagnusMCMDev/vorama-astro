@@ -63,9 +63,53 @@ const legalCollection = defineCollection({
   }),
 });
 
+// ── booking/services ──────────────────────────────────────────
+// Catálogo de servicios reservables. src/content/booking/services.json
+const bookingServicesCollection = defineCollection({
+  loader: file('./src/content/booking/services.json'),
+  schema: z.object({
+    id:          z.enum([
+      'californiano-90',
+      'californiano-120',
+      'cuatro-manos-60',
+      'cuatro-manos-90',
+      'para-dos-60',
+      'para-dos-90',
+    ]),
+    name:        z.string().min(1),
+    durationMin: z.number().int().positive(),
+    priceEur:    z.number().int().nonnegative(),
+  }),
+});
+
+// ── booking/availability-rules ────────────────────────────────
+// Franjas horarias semanales por servicio. src/content/booking/availability-rules.json
+const bookingAvailabilityRulesCollection = defineCollection({
+  loader: file('./src/content/booking/availability-rules.json'),
+  schema: z.object({
+    serviceId: z.enum([
+      'californiano-90',
+      'californiano-120',
+      'cuatro-manos-60',
+      'cuatro-manos-90',
+      'para-dos-60',
+      'para-dos-90',
+    ]),
+    weekly: z.record(
+      z.enum(['0', '1', '2', '3', '4', '5', '6']),
+      z.array(z.object({
+        start: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
+        end:   z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
+      }))
+    ),
+  }),
+});
+
 export const collections = {
-  services: servicesCollection,
-  faqs: faqsCollection,
-  reviews: reviewsCollection,
-  legal: legalCollection,
+  services:                 servicesCollection,
+  faqs:                     faqsCollection,
+  reviews:                  reviewsCollection,
+  legal:                    legalCollection,
+  bookingServices:          bookingServicesCollection,
+  bookingAvailabilityRules: bookingAvailabilityRulesCollection,
 };

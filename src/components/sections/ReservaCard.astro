@@ -1,23 +1,30 @@
 ---
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import type { ServiceId } from '~/lib/booking/types.ts';
 
 interface Props {
   image: ImageMetadata;
   imageAlt: string;
   duration: string;
   price: string;
+  /** ID del servicio concreto (ej. "californiano-90"). Abre el widget en modo directo. */
+  serviceId: ServiceId;
+  /** Duración en minutos, debe coincidir con el serviceId. */
+  durationMin: number;
   /** Si se proporciona, se usa como aria-label del botón. */
   ariaLabel?: string;
 }
 
-const { image, imageAlt, duration, price, ariaLabel } = Astro.props;
+const { image, imageAlt, duration, price, serviceId, durationMin, ariaLabel } = Astro.props;
 ---
 
 <button
   type="button"
   class="reserva-card"
-  data-dialog="dialog-calendly"
+  data-dialog="booking"
+  data-service-id={serviceId}
+  data-duration-min={durationMin}
   aria-label={ariaLabel ?? `Reservar sesión de ${duration}`}
 >
   <span class="reserva-card__circle">

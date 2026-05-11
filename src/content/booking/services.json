@@ -1,0 +1,38 @@
+[
+  {
+    "id": "californiano-90",
+    "name": "Masaje Californiano 90 min",
+    "durationMin": 90,
+    "priceEur": 60
+  },
+  {
+    "id": "californiano-120",
+    "name": "Masaje Californiano 120 min",
+    "durationMin": 120,
+    "priceEur": 80
+  },
+  {
+    "id": "cuatro-manos-60",
+    "name": "Masaje Cuatro Manos 60 min",
+    "durationMin": 60,
+    "priceEur": 100
+  },
+  {
+    "id": "cuatro-manos-90",
+    "name": "Masaje Cuatro Manos 90 min",
+    "durationMin": 90,
+    "priceEur": 130
+  },
+  {
+    "id": "para-dos-60",
+    "name": "Masaje Para Dos 60 min",
+    "durationMin": 60,
+    "priceEur": 100
+  },
+  {
+    "id": "para-dos-90",
+    "name": "Masaje Para Dos 90 min",
+    "durationMin": 90,
+    "priceEur": 130
+  }
+]

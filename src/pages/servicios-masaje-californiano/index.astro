@@ -49,10 +49,10 @@ const b = base.replace(/\/$/, '');
         </p>
         <div class="offer__ctas">
           <a class="btn-secondary" href={`${b}/masaje-californiano-relajante/`}>Información</a>
-          <button type="button" class="btn-primary" data-dialog="dialog-calendly">
+          <button type="button" class="btn-primary" data-dialog="booking" data-service-id="californiano-90" data-duration-min="90">
             Reserva sesión 90 min — 60€
           </button>
-          <button type="button" class="btn-primary" data-dialog="dialog-calendly">
+          <button type="button" class="btn-primary" data-dialog="booking" data-service-id="californiano-120" data-duration-min="120">
             Reserva sesión 120 min — 80€
           </button>
         </div>
@@ -70,10 +70,10 @@ const b = base.replace(/\/$/, '');
         </p>
         <div class="offer__ctas">
           <a class="btn-secondary" href={`${b}/masaje-californiano-cuatro-manos/`}>Información</a>
-          <button type="button" class="btn-primary" data-dialog="dialog-calendly">
+          <button type="button" class="btn-primary" data-dialog="booking" data-service-id="cuatro-manos-60" data-duration-min="60">
             Reserva sesión 60 min — 100€
           </button>
-          <button type="button" class="btn-primary" data-dialog="dialog-calendly">
+          <button type="button" class="btn-primary" data-dialog="booking" data-service-id="cuatro-manos-90" data-duration-min="90">
             Reserva sesión 90 min — 130€
           </button>
         </div>
@@ -107,10 +107,10 @@ const b = base.replace(/\/$/, '');
         </p>
         <div class="offer__ctas">
           <a class="btn-secondary" href={`${b}/masaje-californiano-para-dos/`}>Información</a>
-          <button type="button" class="btn-primary" data-dialog="dialog-calendly">
+          <button type="button" class="btn-primary" data-dialog="booking" data-service-id="para-dos-60" data-duration-min="60">
             Reserva sesión 60 min — 100€
           </button>
-          <button type="button" class="btn-primary" data-dialog="dialog-calendly">
+          <button type="button" class="btn-primary" data-dialog="booking" data-service-id="para-dos-90" data-duration-min="90">
             Reserva sesión 90 min — 130€
           </button>
         </div>
@@ -279,7 +279,7 @@ const b = base.replace(/\/$/, '');
     position: absolute;
     inset: 0;
     z-index: 1;
-    background: linear-gradient(to bottom, rgb(0 0 0 / 0.25) 0%, rgb(0 0 0 / 0.55) 100%);
+    background: linear-gradient(to bottom, rgb(0 0 0 / 0.1) 0%, rgb(0 0 0 / 0.32) 100%);
   }
 
   .regala-banner__content {
@@ -289,7 +289,7 @@ const b = base.replace(/\/$/, '');
     color: #fff;
     text-align: center;
     max-width: 640px;
-    text-shadow: 0 1px 4px rgb(0 0 0 / 0.4);
+    text-shadow: 0 1px 4px rgb(0 0 0 / 0.7), 0 0 14px rgb(0 0 0 / 0.4);
   }
 
   .regala-banner__content h2 {

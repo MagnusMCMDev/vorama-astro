@@ -1,0 +1,131 @@
+---
+/**
+ * Página de desarrollo para probar el widget de reservas.
+ * URL: /vorama-astro/dev-booking/
+ * NO incluir en sitemap. Eliminar o proteger en C4.
+ */
+import BaseLayout from '~/layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Dev: Widget de Reservas"
+  description="Página de prueba del widget de reservas"
+>
+  <section style="max-width:800px;margin:6rem auto 4rem;padding-inline:var(--vrm-space-lg)">
+    <h1 style="margin-bottom:var(--vrm-space-xl);color:var(--vrm-color-primary)">
+      🧪 Test: Widget de Reservas
+    </h1>
+
+    <h2 style="margin-bottom:var(--vrm-space-md);font-size:var(--vrm-font-size-md);color:var(--vrm-color-text-muted)">
+      Modo directo — cada botón lleva directo al calendario
+    </h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--vrm-space-md);margin-bottom:var(--vrm-space-xl)">
+      <button
+        type="button"
+        data-dialog="booking"
+        data-service-id="californiano-90"
+        data-duration-min="90"
+        class="test-btn"
+      >
+        Californiano 90 min · 60€
+      </button>
+      <button
+        type="button"
+        data-dialog="booking"
+        data-service-id="californiano-120"
+        data-duration-min="120"
+        class="test-btn"
+      >
+        Californiano 120 min · 80€
+      </button>
+      <button
+        type="button"
+        data-dialog="booking"
+        data-service-id="cuatro-manos-60"
+        data-duration-min="60"
+        class="test-btn"
+      >
+        Cuatro Manos 60 min · 100€
+      </button>
+      <button
+        type="button"
+        data-dialog="booking"
+        data-service-id="cuatro-manos-90"
+        data-duration-min="90"
+        class="test-btn"
+      >
+        Cuatro Manos 90 min · 130€
+      </button>
+      <button
+        type="button"
+        data-dialog="booking"
+        data-service-id="para-dos-60"
+        data-duration-min="60"
+        class="test-btn"
+      >
+        Para Dos 60 min · 100€
+      </button>
+      <button
+        type="button"
+        data-dialog="booking"
+        data-service-id="para-dos-90"
+        data-duration-min="90"
+        class="test-btn"
+      >
+        Para Dos 90 min · 130€
+      </button>
+    </div>
+
+    <h2 style="margin-bottom:var(--vrm-space-md);font-size:var(--vrm-font-size-md);color:var(--vrm-color-text-muted)">
+      Modo hub — como el botón del header (muestra selector de duración)
+    </h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--vrm-space-md)">
+      <button
+        type="button"
+        data-dialog="booking"
+        data-service-type="californiano"
+        class="test-btn test-btn--hub"
+      >
+        Californiano (hub)
+      </button>
+      <button
+        type="button"
+        data-dialog="booking"
+        data-service-type="cuatro-manos"
+        class="test-btn test-btn--hub"
+      >
+        Cuatro Manos (hub)
+      </button>
+      <button
+        type="button"
+        data-dialog="booking"
+        data-service-type="para-dos"
+        class="test-btn test-btn--hub"
+      >
+        Para Dos (hub)
+      </button>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .test-btn {
+    padding: var(--vrm-space-md) var(--vrm-space-lg);
+    background: var(--vrm-color-primary);
+    color: var(--vrm-color-text-inverted);
+    border: none;
+    border-radius: var(--vrm-radius-md);
+    font-size: var(--vrm-font-size-sm);
+    font-weight: var(--vrm-font-weight-semibold);
+    cursor: pointer;
+    transition: background-color var(--vrm-transition-fast);
+    &:hover { background: color-mix(in srgb, var(--vrm-color-primary) 85%, black); }
+    &:focus-visible { outline: 2px solid var(--vrm-color-primary); outline-offset: 3px; }
+  }
+  .test-btn--hub {
+    background: none;
+    color: var(--vrm-color-primary);
+    border: 2px solid var(--vrm-color-primary);
+    &:hover { background: color-mix(in srgb, var(--vrm-color-primary) 10%, transparent); }
+  }
+</style>
