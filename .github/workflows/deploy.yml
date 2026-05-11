@@ -40,6 +40,10 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          PUBLIC_GCAL_API_KEY: ${{ secrets.PUBLIC_GCAL_API_KEY }}
+          PUBLIC_GCAL_CALENDAR_ID: ${{ secrets.PUBLIC_GCAL_CALENDAR_ID }}
+          PUBLIC_WEB3FORMS_KEY: ${{ secrets.PUBLIC_WEB3FORMS_KEY }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
