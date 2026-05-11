@@ -12,7 +12,7 @@ import WhatsAppFloating from '~/components/layout/WhatsAppFloating.astro';
 import BackToTop from '~/components/layout/BackToTop.astro';
 // Diálogos interactivos — disponibles en todas las páginas
 import LegalDialog from '~/components/interactive/LegalDialog.astro';
-import CalendlyDialog from '~/components/interactive/CalendlyDialog.astro';
+import BookingDialog from '~/components/booking/BookingDialog.astro';
 import type { ImageMetadata } from 'astro';
 
 interface Props {
@@ -112,6 +112,6 @@ const base = import.meta.env.BASE_URL;
     <LegalDialog slug="privacidad" />
     <LegalDialog slug="cookies" />
     <LegalDialog slug="aviso-legal" />
-    <CalendlyDialog />
+    <BookingDialog />
   </body>
 </html>
