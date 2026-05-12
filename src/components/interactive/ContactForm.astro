@@ -97,6 +97,82 @@ const accessKey = ACCESS_KEYS[variant];
       </div>
     </div>
 
+    <!-- Masaje + Duración (solo variante "regala") -->
+    {isRegala && <div class="cf-regala-fields">
+
+      <!-- Desplegable tipo de masaje -->
+      <div class="contact-form__field">
+        <label class="contact-form__label" for={`${id}-masaje`}>
+          Masaje a regalar <span class="contact-form__required" aria-hidden="true">*</span>
+        </label>
+        <select
+          class="contact-form__input contact-form__select"
+          id={`${id}-masaje`}
+          name="masaje"
+          data-masaje-select
+          required
+          aria-required="true"
+        >
+          <option value="">Selecciona un masaje...</option>
+          <option value="Masaje Californiano">Masaje Californiano</option>
+          <option value="Masaje a Cuatro Manos">Masaje a Cuatro Manos</option>
+          <option value="Masaje en Pareja">Masaje en Pareja</option>
+        </select>
+      </div>
+
+      <!-- Radio duración: Californiano -->
+      <div class="contact-form__field contact-form__dur-group" data-dur-group="Masaje Californiano" hidden>
+        <span class="contact-form__label">
+          Duración <span class="contact-form__required" aria-hidden="true">*</span>
+        </span>
+        <div class="contact-form__radios">
+          <label class="contact-form__radio-label">
+            <input type="radio" name="duracion" value="90 min — 60 €" class="contact-form__radio" />
+            <span>90 min — 60 €</span>
+          </label>
+          <label class="contact-form__radio-label">
+            <input type="radio" name="duracion" value="120 min — 80 €" class="contact-form__radio" />
+            <span>120 min — 80 €</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Radio duración: Cuatro Manos -->
+      <div class="contact-form__field contact-form__dur-group" data-dur-group="Masaje a Cuatro Manos" hidden>
+        <span class="contact-form__label">
+          Duración <span class="contact-form__required" aria-hidden="true">*</span>
+        </span>
+        <div class="contact-form__radios">
+          <label class="contact-form__radio-label">
+            <input type="radio" name="duracion" value="60 min — 100 €" class="contact-form__radio" />
+            <span>60 min — 100 €</span>
+          </label>
+          <label class="contact-form__radio-label">
+            <input type="radio" name="duracion" value="90 min — 130 €" class="contact-form__radio" />
+            <span>90 min — 130 €</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Radio duración: Masaje en Pareja -->
+      <div class="contact-form__field contact-form__dur-group" data-dur-group="Masaje en Pareja" hidden>
+        <span class="contact-form__label">
+          Duración <span class="contact-form__required" aria-hidden="true">*</span>
+        </span>
+        <div class="contact-form__radios">
+          <label class="contact-form__radio-label">
+            <input type="radio" name="duracion" value="60 min — 100 €" class="contact-form__radio" />
+            <span>60 min — 100 €</span>
+          </label>
+          <label class="contact-form__radio-label">
+            <input type="radio" name="duracion" value="90 min — 130 €" class="contact-form__radio" />
+            <span>90 min — 130 €</span>
+          </label>
+        </div>
+      </div>
+
+    </div>}
+
     <!-- Mensaje / Comentario -->
     <div class="contact-form__field">
       <label class="contact-form__label" for={`${id}-mensaje`}>
@@ -330,6 +406,55 @@ const accessKey = ACCESS_KEYS[variant];
     min-height: 96px;
   }
 
+  /* ── Select ──────────────────────────────────────────────── */
+  .contact-form__select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--vrm-space-md) center;
+    padding-right: calc(var(--vrm-space-md) * 2 + 16px);
+  }
+
+  /* ── Radio buttons duración ──────────────────────────────── */
+  .contact-form__radios {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--vrm-space-sm);
+    margin-top: var(--vrm-space-xs);
+  }
+
+  .contact-form__radio-label {
+    display: flex;
+    align-items: center;
+    gap: var(--vrm-space-xs);
+    padding: var(--vrm-space-xs) var(--vrm-space-md);
+    border: 2px solid var(--vrm-color-border);
+    border-radius: var(--vrm-radius-full);
+    cursor: pointer;
+    font-size: var(--vrm-font-size-sm);
+    font-weight: var(--vrm-font-weight-semibold);
+    color: var(--vrm-color-text);
+    transition: border-color var(--vrm-transition-fast), background-color var(--vrm-transition-fast);
+
+    &:hover {
+      border-color: var(--vrm-color-primary);
+    }
+
+    /* Opción seleccionada */
+    &:has(input:checked) {
+      border-color: var(--vrm-color-primary);
+      background-color: rgb(32 91 79 / 0.08);
+      color: var(--vrm-color-primary);
+    }
+  }
+
+  .contact-form__radio {
+    accent-color: var(--vrm-color-primary);
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
   /* ── Checkbox ────────────────────────────────────────────── */
   .contact-form__checkbox {
     flex-shrink: 0;
@@ -548,6 +673,24 @@ const accessKey = ACCESS_KEYS[variant];
       if (state === 'fail')    failEl?.focus();
     }
 
+    // ── Show/hide grupos de duración según el select ─────────
+    if (isRegala) {
+      const masajeSelect = form.querySelector<HTMLSelectElement>('[data-masaje-select]');
+      const durGroups    = form.querySelectorAll<HTMLElement>('[data-dur-group]');
+
+      masajeSelect?.addEventListener('change', () => {
+        const val = masajeSelect.value;
+        durGroups.forEach((g) => {
+          const match = g.dataset.durGroup === val;
+          g.hidden = !match;
+          // Limpiar radios del grupo que se oculta
+          if (!match) {
+            g.querySelectorAll<HTMLInputElement>('input[type="radio"]').forEach((r) => { r.checked = false; });
+          }
+        });
+      });
+    }
+
     // Botón "Intentar de nuevo" restaura el formulario
     failEl?.querySelector('[data-retry-btn]')?.addEventListener('click', () => {
       setState('form');
@@ -563,6 +706,8 @@ const accessKey = ACCESS_KEYS[variant];
       const telefono   = data.get('telefono')?.toString().trim()   ?? '';
       const mensaje    = data.get('mensaje')?.toString().trim()    ?? '';
       const privacidad = data.get('privacidad');
+      const masaje     = data.get('masaje')?.toString().trim()     ?? '';
+      const duracion   = data.get('duracion')?.toString().trim()   ?? '';
       const botcheck   = (form.querySelector<HTMLInputElement>('[name="botcheck"]'))?.checked ?? false;
 
       // Validación
@@ -576,6 +721,14 @@ const accessKey = ACCESS_KEYS[variant];
       }
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         showError('Por favor, introduce un correo electrónico válido.');
+        return;
+      }
+      if (isRegala && !masaje) {
+        showError('Por favor, selecciona el tipo de masaje que quieres regalar.');
+        return;
+      }
+      if (isRegala && !duracion) {
+        showError('Por favor, selecciona la duración del masaje.');
         return;
       }
       if (!privacidad) {
@@ -594,6 +747,8 @@ const accessKey = ACCESS_KEYS[variant];
         `Nombre: ${nombre} ${apellidos}`,
         `Email: ${email}`,
         telefono ? `Teléfono: ${telefono}` : null,
+        masaje   ? `Masaje: ${masaje}` : null,
+        duracion ? `Duración: ${duracion}` : null,
         mensaje  ? `\nMensaje:\n${mensaje}` : null,
       ].filter(Boolean).join('\n');
 
