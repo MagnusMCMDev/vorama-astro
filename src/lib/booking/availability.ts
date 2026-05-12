@@ -119,6 +119,10 @@ export function getMonthAvailability(
 
     const freeSlots: Slot[] = [];
 
+    // Límites del día en ms (medianoche Madrid → medianoche Madrid siguiente)
+    const dayStartMs = new Date(buildISO(year, month0, day, '00:00')).getTime();
+    const dayEndMs   = dayStartMs + 24 * 60 * 60 * 1000;
+
     for (const range of ranges) {
       let cursor = range.start;
       while (true) {
@@ -143,6 +147,11 @@ export function getMonthAvailability(
         const startMinOfDay = toMin(cursor);
         const endMinOfDay = toMin(slotEndHHmm);
         const blocked = busy.some((b) => {
+          const bStartMs = new Date(b.start).getTime();
+          const bEndMs   = new Date(b.end).getTime();
+          // Descartar si el evento de GCal no toca este día calendario (Madrid)
+          if (bEndMs <= dayStartMs || bStartMs >= dayEndMs) return false;
+
           const bStart = toMin(new Date(b.start).toLocaleTimeString('en-GB', {
             hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Madrid',
           }));
