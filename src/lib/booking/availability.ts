@@ -119,10 +119,6 @@ export function getMonthAvailability(
 
     const freeSlots: Slot[] = [];
 
-    // Límites del día en ms (medianoche Madrid → medianoche Madrid siguiente)
-    const dayStartMs = new Date(buildISO(year, month0, day, '00:00')).getTime();
-    const dayEndMs   = dayStartMs + 24 * 60 * 60 * 1000;
-
     for (const range of ranges) {
       let cursor = range.start;
       while (true) {
@@ -143,24 +139,15 @@ export function getMonthAvailability(
         // Filtrar demasiado futuro
         if (startMs > now + maxFutureMs) break;
 
-        // Filtrar conflictos con freebusy + buffer
-        const startMinOfDay = toMin(cursor);
-        const endMinOfDay = toMin(slotEndHHmm);
+        // Filtrar conflictos con freebusy + buffer.
+        // Comparación directa de timestamps en ms: funciona para eventos
+        // de cualquier tipo (con hora, todo el día, varios días, cruzando
+        // medianoche) sin conversiones intermedias de zona horaria.
+        const bufferMs = BUFFER_MIN * 60_000;
         const blocked = busy.some((b) => {
           const bStartMs = new Date(b.start).getTime();
           const bEndMs   = new Date(b.end).getTime();
-          // Descartar si el evento de GCal no toca este día calendario (Madrid)
-          if (bEndMs <= dayStartMs || bStartMs >= dayEndMs) return false;
-
-          const bStart = toMin(new Date(b.start).toLocaleTimeString('en-GB', {
-            hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Madrid',
-          }));
-          let bEnd = toMin(new Date(b.end).toLocaleTimeString('en-GB', {
-            hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Madrid',
-          }));
-          // Evento que cruza la medianoche: bEnd (0) < bStart → sumar 1440 min
-          if (bEnd <= bStart) bEnd += 1440;
-          return overlaps(startMinOfDay, endMinOfDay, bStart, bEnd, BUFFER_MIN);
+          return startMs < bEndMs + bufferMs && endMs > bStartMs - bufferMs;
         });
 
         if (!blocked) {
