@@ -146,9 +146,11 @@ export function getMonthAvailability(
           const bStart = toMin(new Date(b.start).toLocaleTimeString('en-GB', {
             hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Madrid',
           }));
-          const bEnd = toMin(new Date(b.end).toLocaleTimeString('en-GB', {
+          let bEnd = toMin(new Date(b.end).toLocaleTimeString('en-GB', {
             hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Madrid',
           }));
+          // Evento que cruza la medianoche: bEnd (0) < bStart → sumar 1440 min
+          if (bEnd <= bStart) bEnd += 1440;
           return overlaps(startMinOfDay, endMinOfDay, bStart, bEnd, BUFFER_MIN);
         });
 
