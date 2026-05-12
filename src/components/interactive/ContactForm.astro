@@ -228,6 +228,11 @@ const accessKey = ACCESS_KEYS[variant];
 </div>
 
 <style>
+  /* ── Forzar ocultación — algunos resets anulan [hidden] ─── */
+  .cf-wrap [hidden] {
+    display: none !important;
+  }
+
   /* ── Wrapper (gestiona visibilidad de estados) ───────────── */
   .cf-wrap {
     position: relative;
