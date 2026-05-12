@@ -8,152 +8,248 @@ interface Props {
 
 const { variant = 'contacto', id = 'contact-form' } = Astro.props;
 const isRegala = variant === 'regala';
+
+// Claves Web3Forms por variante
+const ACCESS_KEYS: Record<string, string> = {
+  contacto: '79f5b132-ba65-4e68-a6f7-cac85dedd3a2',
+  regala:   'fe240b7c-15b5-4bab-bb92-26f3065003a8',
+};
+const accessKey = ACCESS_KEYS[variant];
 ---
 
-<form
-  class="contact-form"
-  id={id}
-  novalidate
-  aria-label={isRegala ? 'Solicitar vale regalo' : 'Formulario de contacto'}
-  data-form-id={id}
-  data-is-regala={isRegala ? 'true' : undefined}
->
+<div class="cf-wrap" data-cf-wrap id={`${id}-wrap`}>
 
-  <!-- Nombre + Apellidos -->
-  <div class="contact-form__row">
+  <!-- ── Formulario ──────────────────────────────────────────── -->
+  <form
+    class="contact-form"
+    id={id}
+    novalidate
+    aria-label={isRegala ? 'Solicitar vale regalo' : 'Formulario de contacto'}
+    data-form-id={id}
+    data-access-key={accessKey}
+    data-is-regala={isRegala ? 'true' : undefined}
+  >
+
+    <!-- Honeypot anti-spam (Web3Forms lo detecta nativamente) -->
+    <input type="checkbox" name="botcheck" class="contact-form__botcheck" tabindex="-1" autocomplete="off" />
+
+    <!-- Nombre + Apellidos -->
+    <div class="contact-form__row">
+      <div class="contact-form__field">
+        <label class="contact-form__label" for={`${id}-nombre`}>
+          Nombre <span class="contact-form__required" aria-hidden="true">*</span>
+        </label>
+        <input
+          class="contact-form__input"
+          type="text"
+          id={`${id}-nombre`}
+          name="nombre"
+          required
+          autocomplete="given-name"
+          aria-required="true"
+        />
+      </div>
+      <div class="contact-form__field">
+        <label class="contact-form__label" for={`${id}-apellidos`}>
+          Apellidos <span class="contact-form__required" aria-hidden="true">*</span>
+        </label>
+        <input
+          class="contact-form__input"
+          type="text"
+          id={`${id}-apellidos`}
+          name="apellidos"
+          required
+          autocomplete="family-name"
+          aria-required="true"
+        />
+      </div>
+    </div>
+
+    <!-- Email + Teléfono -->
+    <div class="contact-form__row">
+      <div class="contact-form__field">
+        <label class="contact-form__label" for={`${id}-email`}>
+          Correo electrónico <span class="contact-form__required" aria-hidden="true">*</span>
+        </label>
+        <input
+          class="contact-form__input"
+          type="email"
+          id={`${id}-email`}
+          name="email"
+          required
+          autocomplete="email"
+          aria-required="true"
+          inputmode="email"
+        />
+      </div>
+      <div class="contact-form__field">
+        <label class="contact-form__label" for={`${id}-telefono`}>
+          Teléfono
+        </label>
+        <input
+          class="contact-form__input"
+          type="tel"
+          id={`${id}-telefono`}
+          name="telefono"
+          autocomplete="tel"
+          inputmode="tel"
+        />
+      </div>
+    </div>
+
+    <!-- Mensaje / Comentario -->
     <div class="contact-form__field">
-      <label class="contact-form__label" for={`${id}-nombre`}>
-        Nombre <span class="contact-form__required" aria-hidden="true">*</span>
+      <label class="contact-form__label" for={`${id}-mensaje`}>
+        {isRegala ? 'Mensaje para el destinatario (opcional)' : 'Comentario o pregunta'}
       </label>
+      <textarea
+        class="contact-form__input contact-form__textarea"
+        id={`${id}-mensaje`}
+        name="mensaje"
+        rows="4"
+      ></textarea>
+    </div>
+
+    <!-- Privacidad -->
+    <div class="contact-form__field contact-form__field--check">
       <input
-        class="contact-form__input"
-        type="text"
-        id={`${id}-nombre`}
-        name="nombre"
+        class="contact-form__checkbox"
+        type="checkbox"
+        id={`${id}-privacidad`}
+        name="privacidad"
         required
-        autocomplete="given-name"
         aria-required="true"
       />
-    </div>
-    <div class="contact-form__field">
-      <label class="contact-form__label" for={`${id}-apellidos`}>
-        Apellidos <span class="contact-form__required" aria-hidden="true">*</span>
+      <label class="contact-form__label contact-form__label--check" for={`${id}-privacidad`}>
+        He leído y acepto la
+        <button type="button" class="contact-form__link" data-dialog="dialog-privacidad">
+          política de privacidad
+        </button>
+        <span class="contact-form__required" aria-hidden="true">*</span>
       </label>
-      <input
-        class="contact-form__input"
-        type="text"
-        id={`${id}-apellidos`}
-        name="apellidos"
-        required
-        autocomplete="family-name"
-        aria-required="true"
-      />
     </div>
+
+    <!-- Error de validación -->
+    <div
+      class="contact-form__error"
+      id={`${id}-error`}
+      role="alert"
+      aria-live="assertive"
+      hidden
+    ></div>
+
+    <!-- Submit -->
+    <button type="submit" class="contact-form__submit" data-submit-btn>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M22 2L11 13" />
+        <path d="M22 2L15 22L11 13L2 9L22 2Z" />
+      </svg>
+      {isRegala ? 'Solicitar vale regalo' : 'Enviar mensaje'}
+    </button>
+
+    <p class="contact-form__note">
+      Recibirás respuesta en un máximo de 24 horas.
+    </p>
+  </form>
+
+  <!-- ── Estado: enviando ──────────────────────────────────────── -->
+  <div class="cf-feedback cf-feedback--sending" id={`${id}-sending`} hidden aria-live="polite">
+    <span class="cf-spinner" aria-hidden="true"></span>
+    <p>Enviando...</p>
   </div>
 
-  <!-- Email + Teléfono -->
-  <div class="contact-form__row">
-    <div class="contact-form__field">
-      <label class="contact-form__label" for={`${id}-email`}>
-        Correo electrónico <span class="contact-form__required" aria-hidden="true">*</span>
-      </label>
-      <input
-        class="contact-form__input"
-        type="email"
-        id={`${id}-email`}
-        name="email"
-        required
-        autocomplete="email"
-        aria-required="true"
-        inputmode="email"
-      />
-    </div>
-    <div class="contact-form__field">
-      <label class="contact-form__label" for={`${id}-telefono`}>
-        Teléfono
-      </label>
-      <input
-        class="contact-form__input"
-        type="tel"
-        id={`${id}-telefono`}
-        name="telefono"
-        autocomplete="tel"
-        inputmode="tel"
-      />
-    </div>
-  </div>
-
-  <!-- Mensaje / Comentario -->
-  <div class="contact-form__field">
-    <label class="contact-form__label" for={`${id}-mensaje`}>
-      {isRegala ? 'Mensaje para el destinatario' : 'Comentario o pregunta'}
-    </label>
-    <textarea
-      class="contact-form__input contact-form__textarea"
-      id={`${id}-mensaje`}
-      name="mensaje"
-      rows="4"
-    ></textarea>
-  </div>
-
-  <!-- Privacidad -->
-  <div class="contact-form__field contact-form__field--check">
-    <input
-      class="contact-form__checkbox"
-      type="checkbox"
-      id={`${id}-privacidad`}
-      name="privacidad"
-      required
-      aria-required="true"
-    />
-    <label class="contact-form__label contact-form__label--check" for={`${id}-privacidad`}>
-      He leído y acepto la
-      <button type="button" class="contact-form__link" data-dialog="dialog-privacidad">
-        política de privacidad
-      </button>
-      <span class="contact-form__required" aria-hidden="true">*</span>
-    </label>
-  </div>
-
-  <!-- Error de validación -->
-  <div
-    class="contact-form__error"
-    id={`${id}-error`}
-    role="alert"
-    aria-live="assertive"
-    hidden
-  ></div>
-
-  <!-- Submit -->
-  <button type="submit" class="contact-form__submit">
+  <!-- ── Estado: éxito ─────────────────────────────────────────── -->
+  <div class="cf-feedback cf-feedback--success" id={`${id}-success`} hidden aria-live="polite">
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="18"
-      height="18"
+      width="48"
+      height="48"
       viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
       aria-hidden="true"
-      focusable="false"
     >
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" fill="currentColor"/>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M9 12l2 2 4-4" />
     </svg>
-    {isRegala ? 'Solicitar vale regalo por WhatsApp' : 'Enviar por WhatsApp'}
-  </button>
+    <h3>¡Mensaje enviado!</h3>
+    <p>
+      {isRegala
+        ? 'Hemos recibido tu solicitud de vale regalo. Te contactaremos en menos de 24 horas para darte todos los detalles.'
+        : 'Hemos recibido tu mensaje. Te responderemos en menos de 24 horas.'}
+    </p>
+  </div>
 
-  <p class="contact-form__note">
-    Al pulsar el botón se abrirá WhatsApp con tu mensaje prellenado.
-    No guardamos datos en ningún servidor.
-  </p>
-</form>
+  <!-- ── Estado: error ─────────────────────────────────────────── -->
+  <div class="cf-feedback cf-feedback--error" id={`${id}-fail`} hidden>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="48"
+      height="48"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="12" />
+      <line x1="12" y1="16" x2="12.01" y2="16" />
+    </svg>
+    <h3>No se pudo enviar</h3>
+    <p>
+      Ha ocurrido un error. Por favor, inténtalo de nuevo o
+      <a href="https://wa.me/34623941891" target="_blank" rel="noopener noreferrer">
+        escríbenos por WhatsApp
+      </a>.
+    </p>
+    <button type="button" class="contact-form__retry" data-retry-btn>
+      Intentar de nuevo
+    </button>
+  </div>
+
+</div>
 
 <style>
+  /* ── Wrapper (gestiona visibilidad de estados) ───────────── */
+  .cf-wrap {
+    position: relative;
+  }
+
+  /* ── Formulario ──────────────────────────────────────────── */
   .contact-form {
     display: flex;
     flex-direction: column;
     gap: var(--vrm-space-md);
   }
 
-  /* ── Fila doble ──────────────────────────────────────────── */
+  /* Ocultar honeypot */
+  .contact-form__botcheck {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+    pointer-events: none;
+    tabindex: -1;
+  }
 
+  /* ── Fila doble ──────────────────────────────────────────── */
   .contact-form__row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -165,7 +261,6 @@ const isRegala = variant === 'regala';
   }
 
   /* ── Campo individual ────────────────────────────────────── */
-
   .contact-form__field {
     display: flex;
     flex-direction: column;
@@ -179,7 +274,6 @@ const isRegala = variant === 'regala';
   }
 
   /* ── Labels ──────────────────────────────────────────────── */
-
   .contact-form__label {
     font-size: var(--vrm-font-size-sm);
     font-weight: var(--vrm-font-weight-semibold);
@@ -199,7 +293,6 @@ const isRegala = variant === 'regala';
   }
 
   /* ── Inputs ──────────────────────────────────────────────── */
-
   .contact-form__input {
     width: 100%;
     padding: var(--vrm-space-sm) var(--vrm-space-md);
@@ -233,7 +326,6 @@ const isRegala = variant === 'regala';
   }
 
   /* ── Checkbox ────────────────────────────────────────────── */
-
   .contact-form__checkbox {
     flex-shrink: 0;
     width: 18px;
@@ -244,7 +336,6 @@ const isRegala = variant === 'regala';
   }
 
   /* ── Enlace inline (política de privacidad) ──────────────── */
-
   .contact-form__link {
     background: none;
     border: none;
@@ -267,8 +358,7 @@ const isRegala = variant === 'regala';
     }
   }
 
-  /* ── Error ───────────────────────────────────────────────── */
-
+  /* ── Error validación ────────────────────────────────────── */
   .contact-form__error {
     padding: var(--vrm-space-sm) var(--vrm-space-md);
     border-radius: var(--vrm-radius-md);
@@ -279,16 +369,15 @@ const isRegala = variant === 'regala';
     line-height: 1.5;
   }
 
-  /* ── Submit ──────────────────────────────────────────────── */
-
+  /* ── Botón submit ────────────────────────────────────────── */
   .contact-form__submit {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--vrm-space-sm);
     padding: var(--vrm-space-sm) var(--vrm-space-lg);
-    background-color: #25d366;
-    color: #ffffff;
+    background-color: var(--vrm-color-primary);
+    color: var(--vrm-color-text-inverted);
     font-family: var(--vrm-font-body);
     font-size: var(--vrm-font-size-base);
     font-weight: var(--vrm-font-weight-semibold);
@@ -299,17 +388,21 @@ const isRegala = variant === 'regala';
 
     &:hover,
     &:focus-visible {
-      background-color: #128c7e;
+      background-color: var(--vrm-color-primary-light);
     }
 
     &:focus-visible {
-      outline: 2px solid #25d366;
+      outline: 2px solid var(--vrm-color-primary);
       outline-offset: 3px;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
   }
 
   /* ── Nota informativa ────────────────────────────────────── */
-
   .contact-form__note {
     font-size: var(--vrm-font-size-xs);
     color: var(--vrm-color-text-muted);
@@ -318,22 +411,116 @@ const isRegala = variant === 'regala';
     line-height: 1.5;
   }
 
+  /* ── Estados feedback ────────────────────────────────────── */
+  .cf-feedback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--vrm-space-md);
+    padding: var(--vrm-space-2xl) var(--vrm-space-lg);
+    text-align: center;
+    min-height: 280px;
+  }
+
+  .cf-feedback h3 {
+    margin: 0;
+    font-size: var(--vrm-font-size-xl);
+    color: var(--vrm-color-text);
+  }
+
+  .cf-feedback p {
+    margin: 0;
+    line-height: var(--vrm-line-height-relaxed);
+    color: var(--vrm-color-text-muted);
+    max-width: 420px;
+
+    & a {
+      color: var(--vrm-color-primary);
+      font-weight: var(--vrm-font-weight-semibold);
+    }
+  }
+
+  /* Éxito — icono verde */
+  .cf-feedback--success svg {
+    color: var(--vrm-color-primary);
+  }
+
+  /* Error — icono rojo */
+  .cf-feedback--error svg {
+    color: #dc2626;
+  }
+
+  /* Botón reintentar */
+  .contact-form__retry {
+    margin-top: var(--vrm-space-sm);
+    padding: var(--vrm-space-xs) var(--vrm-space-lg);
+    background: none;
+    border: 2px solid var(--vrm-color-primary);
+    border-radius: var(--vrm-radius-full);
+    color: var(--vrm-color-primary);
+    font-family: var(--vrm-font-body);
+    font-size: var(--vrm-font-size-sm);
+    font-weight: var(--vrm-font-weight-semibold);
+    cursor: pointer;
+    transition: background-color var(--vrm-transition-fast), color var(--vrm-transition-fast);
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--vrm-color-primary);
+      color: var(--vrm-color-text-inverted);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--vrm-color-primary);
+      outline-offset: 3px;
+    }
+  }
+
+  /* Spinner de carga */
+  .cf-spinner {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    border: 3px solid rgb(32 91 79 / 0.2);
+    border-top-color: var(--vrm-color-primary);
+    border-radius: 50%;
+    animation: cf-spin 0.8s linear infinite;
+  }
+
+  @keyframes cf-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .cf-feedback--sending p {
+    color: var(--vrm-color-text-muted);
+    font-size: var(--vrm-font-size-sm);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .contact-form__input,
-    .contact-form__submit {
+    .contact-form__submit,
+    .contact-form__retry {
       transition: none;
+    }
+    .cf-spinner {
+      animation: none;
+      border-top-color: var(--vrm-color-primary);
     }
   }
 </style>
 
 <script>
-  // Lee configuración desde los data-* del form (evita define:vars)
-  const WA_BASE = 'https://wa.me/34623941891?text=';
+  const W3F_URL = 'https://api.web3forms.com/submit';
 
   document.querySelectorAll<HTMLFormElement>('form.contact-form').forEach((form) => {
-    const formId   = form.dataset.formId ?? form.id;
-    const isRegala = form.dataset.isRegala === 'true';
-    const errorEl  = document.getElementById(`${formId}-error`);
+    const formId    = form.dataset.formId ?? form.id;
+    const isRegala  = form.dataset.isRegala === 'true';
+    const accessKey = form.dataset.accessKey ?? '';
+    const errorEl   = document.getElementById(`${formId}-error`);
+    const sendingEl = document.getElementById(`${formId}-sending`);
+    const successEl = document.getElementById(`${formId}-success`);
+    const failEl    = document.getElementById(`${formId}-fail`);
 
     function showError(msg: string): void {
       if (!errorEl) return;
@@ -346,19 +533,40 @@ const isRegala = variant === 'regala';
       errorEl?.setAttribute('hidden', '');
     }
 
-    form.addEventListener('submit', (e) => {
+    function setState(state: 'form' | 'sending' | 'success' | 'fail'): void {
+      form.hidden         = state !== 'form';
+      sendingEl!.hidden   = state !== 'sending';
+      successEl!.hidden   = state !== 'success';
+      failEl!.hidden      = state !== 'fail';
+      // Foco al feedback para lectores de pantalla
+      if (state === 'success') successEl?.focus();
+      if (state === 'fail')    failEl?.focus();
+    }
+
+    // Botón "Intentar de nuevo" restaura el formulario
+    failEl?.querySelector('[data-retry-btn]')?.addEventListener('click', () => {
+      setState('form');
+    });
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const data      = new FormData(form);
-      const nombre    = data.get('nombre')?.toString().trim()    ?? '';
-      const apellidos = data.get('apellidos')?.toString().trim() ?? '';
-      const email     = data.get('email')?.toString().trim()     ?? '';
-      const telefono  = data.get('telefono')?.toString().trim()  ?? '';
-      const mensaje   = data.get('mensaje')?.toString().trim()   ?? '';
+      const data       = new FormData(form);
+      const nombre     = data.get('nombre')?.toString().trim()     ?? '';
+      const apellidos  = data.get('apellidos')?.toString().trim()  ?? '';
+      const email      = data.get('email')?.toString().trim()      ?? '';
+      const telefono   = data.get('telefono')?.toString().trim()   ?? '';
+      const mensaje    = data.get('mensaje')?.toString().trim()    ?? '';
       const privacidad = data.get('privacidad');
+      const botcheck   = (form.querySelector<HTMLInputElement>('[name="botcheck"]'))?.checked ?? false;
 
-      if (!nombre || !apellidos) {
-        showError('Por favor, introduce tu nombre y apellidos.');
+      // Validación
+      if (!nombre || nombre.length < 2) {
+        showError('Por favor, introduce tu nombre (mínimo 2 caracteres).');
+        return;
+      }
+      if (!apellidos) {
+        showError('Por favor, introduce tus apellidos.');
         return;
       }
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -371,16 +579,44 @@ const isRegala = variant === 'regala';
       }
 
       hideError();
+      setState('sending');
 
-      let text = isRegala
-        ? `Hola, me llamo ${nombre} ${apellidos} y me interesa un vale regalo de masaje.\n`
-        : `Hola, me llamo ${nombre} ${apellidos} y me gustaría reservar una sesión de masaje californiano.\n`;
+      const subject = isRegala
+        ? `[Voramà] Solicitud de vale regalo — ${nombre} ${apellidos}`
+        : `[Voramà] Consulta de contacto — ${nombre} ${apellidos}`;
 
-      text += `Email: ${email}\n`;
-      if (telefono) text += `Teléfono: ${telefono}\n`;
-      if (mensaje)  text += `Mensaje: ${mensaje}\n`;
+      const lines = [
+        `Nombre: ${nombre} ${apellidos}`,
+        `Email: ${email}`,
+        telefono ? `Teléfono: ${telefono}` : null,
+        mensaje  ? `\nMensaje:\n${mensaje}` : null,
+      ].filter(Boolean).join('\n');
 
-      window.open(WA_BASE + encodeURIComponent(text), '_blank', 'noopener,noreferrer');
+      try {
+        const res = await fetch(W3F_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            access_key: accessKey,
+            subject,
+            from_name:  `${nombre} ${apellidos}`,
+            replyto:    email,
+            botcheck:   botcheck ? 'true' : '',
+            message:    lines,
+          }),
+        });
+
+        const json = await res.json().catch(() => ({}));
+        if (res.ok && json.success) {
+          setState('success');
+        } else {
+          console.error('[ContactForm] Web3Forms error', json);
+          setState('fail');
+        }
+      } catch (err) {
+        console.error('[ContactForm] fetch error', err);
+        setState('fail');
+      }
     });
   });
 </script>
