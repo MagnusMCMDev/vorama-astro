@@ -26,7 +26,7 @@ function getMadridOffsetMin(year: number, month1: number, day: number): number {
   }).formatToParts(d);
   const get = (t: string) => Number(parts.find((p) => p.type === t)!.value);
   const madridLocalMs = Date.UTC(get('year'), get('month') - 1, get('day'), get('hour'), get('minute'), 0);
-  return (madridLocalMs - utcNoon) / 60_000 + 12 * 60; // compensar el noon UTC
+  return (madridLocalMs - utcNoon) / 60_000;
 }
 
 /**
@@ -183,7 +183,7 @@ export function formatSlot(isoString: string): { date: string; time: string } {
     timeZone: 'Europe/Madrid',
     hour: '2-digit',
     minute: '2-digit',
-    hour12: false,
+    hourCycle: 'h23',
   }).format(d);
   return { date, time };
 }
