@@ -603,12 +603,30 @@ const jsonLd = {
 
   /* ── Responsive ──────────────────────────────────────────── */
   @media (max-width: 800px) {
+    /* Menos padding vertical: en desktop hay mucho por compensar el
+       header sticky; en móvil el header es más corto y sobra espacio. */
+    .hero {
+      padding-top: calc(var(--vrm-space-sm) + var(--vrm-header-height));
+      padding-bottom: var(--vrm-space-xl);
+    }
+
     .hero__inner {
       grid-template-columns: 1fr;
-      gap: var(--vrm-space-lg);
+      gap: var(--vrm-space-md);
     }
-    /* Mantener orden de la web origen en mobile:
-       texto + CTA arriba, imagen debajo. */
+
+    /* Imagen arriba del texto en móvil para aprovechar el espacio
+       y mostrarla completa sin cortes. */
+    .hero__media {
+      order: -1;
+    }
+
+    /* Círculo perfecto (1:1) y tamaño contenido: en móvil el óvalo
+       4/5 queda demasiado alto y se sale de pantalla. */
+    .hero__img {
+      aspect-ratio: 1 / 1;
+      max-width: 260px;
+    }
   }
 </style>
 
