@@ -358,6 +358,41 @@ import Dialog from '~/components/interactive/Dialog.astro';
 
 /* ── Utilidades ──────────────────────────────────────────────────────────── */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border-width: 0; }
+
+/* ── Hub compacto en móvil (≤480px) para que los 3 tipos quepan sin scroll ── */
+@media (max-width: 480px) {
+  .bw-hub {
+    gap: var(--vrm-space-sm);
+  }
+  .bw-hub__type {
+    gap: 2px;
+  }
+  .bw-hub__type-label {
+    font-size: var(--vrm-font-size-sm);
+    margin-bottom: 0;
+  }
+  .bw-dur__desc {
+    font-size: var(--vrm-font-size-xs);
+    margin-bottom: var(--vrm-space-xs);
+    line-height: 1.3;
+  }
+  .bw-dur__grid {
+    gap: var(--vrm-space-xs);
+    margin-top: 0;
+  }
+  .bw-dur__card {
+    padding: var(--vrm-space-xs) var(--vrm-space-md);
+  }
+  .bw-dur__min {
+    font-size: var(--vrm-font-size-base);
+  }
+  .bw-dur__price {
+    font-size: var(--vrm-font-size-sm);
+  }
+  .bw-hub__divider {
+    margin-block: 0;
+  }
+}
 </style>
 
 <script>
