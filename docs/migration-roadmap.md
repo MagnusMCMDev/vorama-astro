@@ -3,6 +3,12 @@
 > Plan cronológico de la migración de WordPress estático a Astro.
 > Última revisión: 2026-05-08.
 
+> **Estado a 2026-06-13:** Fases B1–B9 completas. El sistema de reservas propio
+> (sustituye a Calendly) está implementado: `src/lib/booking/*` + `BookingDialog`,
+> con lectura de Google Calendar (freebusy) y envío por Web3Forms. Trabajo
+> posterior: ajustes móviles, rendimiento y el cutover de dominio (pendiente).
+> El detalle de fases de abajo es referencia histórica.
+
 ## Contexto
 
 - **Origen:** sitio WP estático limpio en `C:\WebSites\MagnusMCMDev.github.io\` (también en producción en `https://magnusmcmdev.github.io/`).

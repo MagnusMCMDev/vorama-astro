@@ -16,13 +16,15 @@
 
 - **Layout** (4): Header, Footer, WhatsAppFloating, SEO.
 - **Sections** (8): Section, HeroBanner, PriceCard, CardCTA, IconBox, AccordionFAQ, Reviews, ImageCarousel.
-- **Interactive** (4): Dialog, LegalDialog, CalendlyDialog, ContactForm.
+- **Interactive** (3): Dialog, LegalDialog, ContactForm.  · **Booking**: BookingDialog (`src/components/booking/`) + librería `src/lib/booking/*.ts`.
 
 ---
 
 # Grupo: Layout
 
 ## `SEO.astro`
+
+> **Obsoleto:** no existe un `SEO.astro`. La lógica SEO está inline en `src/layouts/BaseLayout.astro` (cabecera `<head>`, props `title`/`description`/`canonical`/`ogImage`/`jsonLd`).
 
 **Path:** `src/components/layout/SEO.astro`.
 
@@ -73,7 +75,7 @@ interface Props {
 - Logo SVG (link a /).
 - `<nav aria-label="Principal">` con menú primario (5-6 items).
 - `<nav aria-label="Secundaria">` con menú secundario (3-4 items, en algunas variantes).
-- Botón CTA "Reserva" (abre CalendlyDialog).
+- Botón CTA "Reserva" (abre BookingDialog).
 - Variante mobile: drawer con `<details>` o JS mínimo.
 
 **Comportamiento:**
@@ -427,7 +429,7 @@ document.querySelectorAll('[data-open]').forEach(btn => {
 });
 ```
 
-**Usado en:** base de LegalDialog y CalendlyDialog.
+**Usado en:** base de LegalDialog y BookingDialog.
 
 **Notas:**
 - Cierre con tecla Escape (nativo de `<dialog>`).
@@ -468,6 +470,8 @@ const { Content } = await entry.render();
 ---
 
 ## `CalendlyDialog.astro`
+
+> **Eliminado.** Calendly se sustituyó por el sistema de reservas propio (BookingDialog + `src/lib/booking/`). Mantenido aquí solo como referencia histórica.
 
 **Path:** `src/components/interactive/CalendlyDialog.astro`.
 
@@ -568,5 +572,5 @@ Tabla maestra (se mantiene actualizada durante B4–B6):
 | ImageCarousel | ⏳ pendiente B5 | |
 | Dialog | ⏳ pendiente B6 | |
 | LegalDialog | ⏳ pendiente B6 | |
-| CalendlyDialog | ⏳ pendiente B6 | |
+| BookingDialog | ✅ hecho (reemplaza Calendly) | |
 | ContactForm | ⏳ pendiente B6 | |
