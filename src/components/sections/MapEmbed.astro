@@ -1,0 +1,83 @@
+---
+interface Props {
+  /** Consulta para el embed de Google Maps (texto de la dirección). */
+  query: string;
+  /** Título accesible del mapa (también texto del botón previo). */
+  title: string;
+}
+
+const { query, title } = Astro.props;
+const embedSrc = `https://www.google.com/maps?q=${encodeURIComponent(query)}&output=embed`;
+---
+
+<div class="map-embed" data-map-src={embedSrc} data-map-title={title}>
+  <button type="button" class="map-embed__btn" data-map-load>
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+    </svg>
+    <span class="map-embed__label">Ver mapa</span>
+    <span class="map-embed__hint">{title}</span>
+  </button>
+</div>
+
+<style>
+  .map-embed {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    border-radius: var(--vrm-radius-lg);
+    box-shadow: var(--vrm-shadow-sm);
+    overflow: hidden;
+    background: var(--vrm-color-bg-subtle);
+  }
+  .map-embed__btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--vrm-space-xs);
+    width: 100%;
+    height: 100%;
+    border: 1px dashed var(--vrm-color-border);
+    border-radius: inherit;
+    background: none;
+    color: var(--vrm-color-primary);
+    cursor: pointer;
+    text-align: center;
+    padding: var(--vrm-space-md);
+    transition: background-color var(--vrm-transition-fast);
+
+    &:hover,
+    &:focus-visible {
+      background: color-mix(in srgb, var(--vrm-color-primary) 8%, transparent);
+    }
+    &:focus-visible {
+      outline: 2px solid var(--vrm-color-primary);
+      outline-offset: 2px;
+    }
+  }
+  .map-embed__label { font-weight: var(--vrm-font-weight-semibold); }
+  .map-embed__hint {
+    font-size: var(--vrm-font-size-sm);
+    color: var(--vrm-color-text-muted);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.map-embed').forEach((wrap) => {
+    const btn = wrap.querySelector<HTMLButtonElement>('[data-map-load]');
+    btn?.addEventListener('click', () => {
+      const src = wrap.dataset.mapSrc;
+      const title = wrap.dataset.mapTitle ?? 'Mapa';
+      if (!src) return;
+      const iframe = document.createElement('iframe');
+      iframe.src = src;
+      iframe.title = title;
+      iframe.loading = 'lazy';
+      iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+      iframe.style.cssText = 'width:100%;height:100%;border:0;display:block;';
+      wrap.replaceChildren(iframe);
+    });
+  });
+</script>
