@@ -2,6 +2,7 @@
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import PageHeader from '~/components/sections/PageHeader.astro';
 import Section from '~/components/sections/Section.astro';
+import { SITE_CONFIG } from '~/config/site';
 
 const base = import.meta.env.BASE_URL;
 const b = base.replace(/\/$/, '');
@@ -26,7 +27,7 @@ const b = base.replace(/\/$/, '');
         cuanto abramos inscripciones.
       </p>
       <div class="placeholder__ctas">
-        <a class="btn-primary" href="https://wa.me/34623941891?text=Hola,%20quiero%20m%C3%A1s%20info%20sobre%20las%20formaciones%20de%20masaje%20californiano" target="_blank" rel="noopener noreferrer">
+        <a class="btn-primary" href={`https://wa.me/${SITE_CONFIG.whatsappDigits}?text=${encodeURIComponent('Hola, quiero más info sobre las formaciones de masaje californiano')}`} target="_blank" rel="noopener noreferrer">
           Avisadme por WhatsApp
         </a>
         <a class="btn-secondary" href={`${b}/sobre-masaje-californiano/`}>
