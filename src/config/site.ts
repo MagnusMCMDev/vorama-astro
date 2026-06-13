@@ -19,6 +19,7 @@ export const SITE_CONFIG = {
     'Centro de masaje californiano en Barcelona. Sesiones individuales, a cuatro manos, en pareja y para eventos corporativos.',
   telephone: '+34 623 94 18 91',
   whatsapp: 'https://wa.me/34623941891',
+  whatsappDigits: '34623941891',
   email: '', // sin email público — contacto solo por WA/formulario
   address: {
     street: 'Carrer de Sant Antoni Maria Claret, 51, local 3 Despacho 3',

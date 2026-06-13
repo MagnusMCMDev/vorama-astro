@@ -14,6 +14,7 @@ import AccordionFAQ from '~/components/sections/AccordionFAQ.astro';
 import Reviews from '~/components/sections/Reviews.astro';
 import ImageCarousel from '~/components/sections/ImageCarousel.astro';
 import ContactForm from '~/components/interactive/ContactForm.astro';
+import { SITE_CONFIG } from '~/config/site';
 
 // Datos de prueba
 import relajanteImg from '~/assets/images/services/relajante-hero.webp';
@@ -144,7 +145,7 @@ const carouselImages = [
       <IconBox icon="star" title="Alta valoración" description="5 estrellas en Google Reviews" />
       <IconBox icon="clock" title="Flexibilidad horaria" description="Lunes a sábado, 9:00–20:00" />
       <IconBox icon="location" title="Barcelona, Gràcia" description="Carrer de Sant Antoni Maria Claret, 51" href="https://maps.google.com" />
-      <IconBox icon="whatsapp" title="WhatsApp directo" description="+34 623 94 18 91" href="https://wa.me/34623941891" />
+      <IconBox icon="whatsapp" title="WhatsApp directo" description={SITE_CONFIG.telephone} href={SITE_CONFIG.whatsapp} />
       <IconBox icon="instagram" title="@vorama.terapias" href="https://instagram.com/vorama.terapias" />
     </div>
   </Section>

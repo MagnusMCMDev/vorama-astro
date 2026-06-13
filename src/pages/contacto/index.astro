@@ -5,6 +5,7 @@ import Section from '~/components/sections/Section.astro';
 import IconBox from '~/components/sections/IconBox.astro';
 import ContactForm from '~/components/interactive/ContactForm.astro';
 import MapEmbed from '~/components/sections/MapEmbed.astro';
+import { SITE_CONFIG } from '~/config/site';
 ---
 
 <BaseLayout
@@ -28,8 +29,8 @@ import MapEmbed from '~/components/sections/MapEmbed.astro';
       <IconBox
         icon="whatsapp"
         title="WhatsApp"
-        description="+34 623 94 18 91"
-        href="https://api.whatsapp.com/send?phone=+34623941891&text=Quiero%20m%C3%A1s%20informaci%C3%B3n"
+        description={SITE_CONFIG.telephone}
+        href={`https://wa.me/${SITE_CONFIG.whatsappDigits}?text=${encodeURIComponent('Quiero más información')}`}
       />
       <IconBox
         icon="instagram"
@@ -59,7 +60,7 @@ import MapEmbed from '~/components/sections/MapEmbed.astro';
         <address class="location__address">
           Carrer de Sant Antoni Maria Claret, 51, local 3 Despacho 3<br />
           Gracia, 08025 Barcelona<br />
-          <a href="tel:+34623941891">623 941 891</a>
+          <a href={`tel:${SITE_CONFIG.telephone.replace(/\s/g, '')}`}>{SITE_CONFIG.telephone.replace('+34 ', '')}</a>
         </address>
         <MapEmbed query="Carrer de Sant Antoni Maria Claret 51, Barcelona" title="Voramà — Sant Antoni Maria Claret 51" />
       </article>

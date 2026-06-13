@@ -397,6 +397,7 @@ import Dialog from '~/components/interactive/Dialog.astro';
 
 <script>
 import type { ServiceId, ServiceType, MountOptions } from '~/lib/booking/types.ts';
+import { SITE_CONFIG } from '~/config/site';
 
 const dlg = document.getElementById('booking') as HTMLDialogElement | null;
 const mount = document.getElementById('bw-mount');
@@ -430,7 +431,7 @@ dlg.addEventListener('vrm:dialog-open', async () => {
     // Si falla la inicialización (p.ej. variables de entorno no configuradas),
     // mostrar un mensaje de fallback en lugar de popup vacío.
     console.error('[BookingDialog] Error al montar el widget:', err);
-    const wa = 'https://wa.me/34623941891?text=' + encodeURIComponent('Hola, quiero reservar una sesión de masaje');
+    const wa = `https://wa.me/${SITE_CONFIG.whatsappDigits}?text=` + encodeURIComponent('Hola, quiero reservar una sesión de masaje');
     mount.innerHTML = `
       <div class="bw-end bw-end--error" style="padding-block:var(--vrm-space-xl)">
         <p style="color:var(--vrm-color-text-muted);font-size:var(--vrm-font-size-sm);text-align:center;margin-bottom:var(--vrm-space-md)">
