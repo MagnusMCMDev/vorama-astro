@@ -397,7 +397,6 @@ import Dialog from '~/components/interactive/Dialog.astro';
 
 <script>
 import type { ServiceId, ServiceType, MountOptions } from '~/lib/booking/types.ts';
-import { mountWidget } from '~/lib/booking/widget-state.ts';
 
 const dlg = document.getElementById('booking') as HTMLDialogElement | null;
 const mount = document.getElementById('bw-mount');
@@ -421,9 +420,11 @@ document.addEventListener('click', (e) => {
   }
 }, true);
 
-// Cuando el dialog abre, monta el widget con las opciones correctas
-dlg.addEventListener('vrm:dialog-open', () => {
+// La librería de reservas (incluido Zod) se importa de forma diferida al abrir
+// el diálogo, para no añadir ese JS al bundle de todas las páginas.
+dlg.addEventListener('vrm:dialog-open', async () => {
   try {
+    const { mountWidget } = await import('~/lib/booking/widget-state.ts');
     mountWidget(mount, lastOptions);
   } catch (err) {
     // Si falla la inicialización (p.ej. variables de entorno no configuradas),
