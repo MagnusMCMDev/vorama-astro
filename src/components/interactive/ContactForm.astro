@@ -9,12 +9,19 @@ interface Props {
 const { variant = 'contacto', id = 'contact-form' } = Astro.props;
 const isRegala = variant === 'regala';
 
-// Claves Web3Forms por variante
-const ACCESS_KEYS: Record<string, string> = {
-  contacto: '79f5b132-ba65-4e68-a6f7-cac85dedd3a2',
-  regala:   'fe240b7c-15b5-4bab-bb92-26f3065003a8',
+// Claves Web3Forms por variante — desde entorno (PUBLIC_*, visibles en cliente).
+// Hardcodearlas obligaría a un cambio de código + redeploy para rotarlas.
+const ACCESS_KEYS: Record<string, string | undefined> = {
+  contacto: import.meta.env.PUBLIC_WEB3FORMS_KEY_CONTACTO,
+  regala:   import.meta.env.PUBLIC_WEB3FORMS_KEY_REGALA,
 };
 const accessKey = ACCESS_KEYS[variant];
+if (!accessKey) {
+  throw new Error(
+    `[ContactForm] Falta la clave Web3Forms para la variante "${variant}". ` +
+    `Define PUBLIC_WEB3FORMS_KEY_${variant.toUpperCase()} en .env o en los secrets de GitHub Actions.`
+  );
+}
 ---
 
 <div class="cf-wrap" data-cf-wrap id={`${id}-wrap`}>
@@ -693,11 +700,13 @@ const accessKey = ACCESS_KEYS[variant];
 
     // Botón "Intentar de nuevo" restaura el formulario
     failEl?.querySelector('[data-retry-btn]')?.addEventListener('click', () => {
+      form.dataset.submitting = '';
       setState('form');
     });
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (form.dataset.submitting === 'true') return;
 
       const data       = new FormData(form);
       const nombre     = data.get('nombre')?.toString().trim()     ?? '';
@@ -737,6 +746,7 @@ const accessKey = ACCESS_KEYS[variant];
       }
 
       hideError();
+      form.dataset.submitting = 'true';
       setState('sending');
 
       const subject = isRegala
@@ -771,10 +781,12 @@ const accessKey = ACCESS_KEYS[variant];
           setState('success');
         } else {
           console.error('[ContactForm] Web3Forms error', json);
+          form.dataset.submitting = '';
           setState('fail');
         }
       } catch (err) {
         console.error('[ContactForm] fetch error', err);
+        form.dataset.submitting = '';
         setState('fail');
       }
     });
