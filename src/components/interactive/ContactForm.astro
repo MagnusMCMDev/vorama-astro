@@ -1,4 +1,6 @@
 ---
+import { SITE_CONFIG } from '~/config/site';
+
 interface Props {
   /** 'contacto' — formulario general | 'regala' — solicitar vale regalo */
   variant?: 'contacto' | 'regala';
@@ -299,7 +301,7 @@ if (!accessKey) {
     <h3>No se pudo enviar</h3>
     <p>
       Ha ocurrido un error. Por favor, inténtalo de nuevo o
-      <a href="https://wa.me/34623941891" target="_blank" rel="noopener noreferrer">
+      <a href={SITE_CONFIG.whatsapp} target="_blank" rel="noopener noreferrer">
         escríbenos por WhatsApp
       </a>.
     </p>
