@@ -60,15 +60,6 @@ function addMin(hhmm: string, mins: number): string {
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
 }
 
-/** Devuelve true si [aStart,aEnd) solapa con [bStart,bEnd) incluyendo buffer. */
-function overlaps(
-  aStart: number, aEnd: number,
-  bStart: number, bEnd: number,
-  buffer: number,
-): boolean {
-  return aStart < bEnd + buffer && aEnd > bStart - buffer;
-}
-
 // ── Carga de reglas ──────────────────────────────────────────────────────────
 
 type RuleEntry = { serviceId: string; weekly: Record<string, TimeRange[]> };
@@ -97,6 +88,7 @@ export interface MonthAvailability {
  * @param year - Año (ej: 2026)
  * @param month0 - Mes 0-indexado (0 = enero, 11 = diciembre)
  * @param busy - Franjas ocupadas (de GCal). En C2 se pasa [].
+ * @param now - Epoch ms del "ahora" (inyectable en tests; default Date.now())
  */
 export function getMonthAvailability(
   serviceId: ServiceId,
@@ -104,8 +96,8 @@ export function getMonthAvailability(
   year: number,
   month0: number,
   busy: TimeRange[] = [],
+  now: number = Date.now(),
 ): MonthAvailability {
-  const now = Date.now();
   const minAdvanceMs = MIN_ADVANCE_HOURS * 60 * 60 * 1000;
   const maxFutureMs = MAX_DAYS_AHEAD * 24 * 60 * 60 * 1000;
   const daysInMonth = new Date(year, month0 + 1, 0).getDate();

@@ -38,6 +38,9 @@ jobs:
       - name: Type-check (astro check)
         run: npx astro check
 
+      - name: Tests (vitest)
+        run: npm test
+
       - name: Build
         run: npm run build
         env:
