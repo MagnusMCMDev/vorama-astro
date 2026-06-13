@@ -56,8 +56,6 @@ export const CustomerSchema = z.object({
     .min(2, 'El nombre debe tener al menos 2 caracteres')
     .max(80, 'El nombre es demasiado largo'),
   email: z
-    .string()
-    .min(1, 'Indica tu email')
     .email('El email no es válido'),
   phone: z
     .string()

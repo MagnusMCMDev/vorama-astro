@@ -96,6 +96,11 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
     errorCode: null,
   };
 
+  // Token monótono: cada carga de disponibilidad incrementa el contador.
+  // Una respuesta cuyo token ya no es el último se descarta (el usuario
+  // navegó a otro mes mientras la petición estaba en vuelo).
+  let loadToken = 0;
+
   function render() {
     let html = '';
     const live = container.querySelector<HTMLElement>('[aria-live="polite"]');
@@ -153,22 +158,26 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
 
   async function loadAvailability() {
     if (!state.serviceId || !state.durationMin) return;
+    const token = ++loadToken;
+    const reqYear = state.year;
+    const reqMonth0 = state.month0;
     state.isLoadingCal = true;
     state.availability = null;
     render();
 
     try {
-      const busy = await fetchBusy(state.year, state.month0);
-      const avail = getMonthAvailability(state.serviceId, state.durationMin, state.year, state.month0, busy);
+      const busy = await fetchBusy(reqYear, reqMonth0);
+      if (token !== loadToken) return; // respuesta obsoleta → descartar
+      const avail = getMonthAvailability(state.serviceId, state.durationMin, reqYear, reqMonth0, busy);
       state.availability = avail;
       state.isLoadingCal = false;
-      // Si el día seleccionado ya no tiene slots en el nuevo mes, deseleccionar
       if (state.selectedDate && !avail.days.has(state.selectedDate)) {
         state.selectedDate = null;
         state.selectedSlot = null;
         state.slotsForDate = [];
       }
     } catch (err) {
+      if (token !== loadToken) return; // error de una petición ya superada
       const code = err instanceof Error ? err.message : 'GCAL_DOWN';
       state.isLoadingCal = false;
       state.errorCode = code;

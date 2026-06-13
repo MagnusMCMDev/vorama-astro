@@ -4,7 +4,7 @@
  * Sin efectos secundarios ni acceso al DOM directamente.
  */
 
-import type { BookingStep, BookingErrorCode, ServiceType } from './types.ts';
+import type { ServiceType } from './types.ts';
 import type { MonthAvailability } from './availability.ts';
 import { formatSlot } from './availability.ts';
 import type { Slot } from './types.ts';
