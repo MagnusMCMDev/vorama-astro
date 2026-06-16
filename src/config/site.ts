@@ -7,9 +7,8 @@
 export const SITE_NAME = 'Voramà Terapias';
 export const SITE_TAGLINE = 'Masaje Californiano en Barcelona';
 
-// URL del sitio — provisional hasta el dominio definitivo
-// TODO: cambiar a dominio definitivo antes de lanzar producción
-export const SITE_URL = 'https://magnusmcmdev.github.io';
+// URL del sitio definitivo (producción)
+export const SITE_URL = 'https://vorama.es';
 
 export const SITE_CONFIG = {
   name: SITE_NAME,

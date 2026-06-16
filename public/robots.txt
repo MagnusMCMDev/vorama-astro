@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /_dev/
 
-Sitemap: https://magnusmcmdev.github.io/vorama-astro/sitemap-index.xml
+Sitemap: https://vorama.es/sitemap-index.xml
