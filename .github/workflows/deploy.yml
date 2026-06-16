@@ -7,7 +7,7 @@ on:
   # Allow manual dispatch from the Actions tab
   workflow_dispatch:
 
-# Permissions necessary for `actions/deploy-pages@v4`
+# Permissions necessary for `actions/deploy-pages@v5`
 permissions:
   contents: read
   pages: write
@@ -64,4 +64,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
