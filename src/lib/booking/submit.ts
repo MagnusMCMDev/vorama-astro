@@ -47,7 +47,7 @@ function formatEmailBody(request: BookingRequest, service: Service): string {
     `  Teléfono:  ${customer.phone}`,
   ];
   if (customer.notes) lines.push(`  Notas:     ${customer.notes}`);
-  lines.push('', 'Consentimiento RGPD: aceptado.', '', '— Enviado desde voramaterapias.com');
+  lines.push('', 'Consentimiento RGPD: aceptado.', '', '— Enviado desde vorama.es');
   return lines.join('\n');
 }
 
