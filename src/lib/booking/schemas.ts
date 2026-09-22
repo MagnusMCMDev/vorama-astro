@@ -1,10 +1,10 @@
 /**
- * Zod schemas del módulo de reservas — compatible con Zod v4 (bundleado en Astro 6).
+ * Zod schemas del módulo de reservas — compatible con Zod v4 (importado vía astro/zod).
  * Usados tanto en build-time (validar JSON de content collections)
  * como en runtime (validar formulario antes de enviar).
  */
 
-import { z } from 'zod';
+import { z } from 'astro/zod';
 
 // ── Servicio ──────────────────────────────────────────────────────────────────
 

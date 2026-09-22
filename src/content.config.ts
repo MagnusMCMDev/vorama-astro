@@ -1,6 +1,6 @@
 import { defineCollection } from 'astro:content';
 import { glob, file } from 'astro/loaders';
-import { z } from 'zod';
+import { z } from 'astro/zod';
 
 // ── services ─────────────────────────────────────────────────
 // 5 archivos Markdown en src/content/services/*.md
