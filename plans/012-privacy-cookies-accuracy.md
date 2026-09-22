@@ -72,7 +72,7 @@ ejecutarlo:
 ## Current state
 
 **Plan probado**: los Steps 2-6 se aplicaron en un clon del repo (sobre 010, 016, 011, 013 y 014), tomando
-los bloques de código **de este mismo archivo**: `astro check` 0/0/0, 23/23 tests (los 2 nuevos de
+los bloques de código **de este mismo archivo**: `astro check` 0/0/0, 23/23 tests en el clon —hoy serían 24: el 016 aportó al final 8 tests— (los 2 nuevos de
 `submit.test.ts` incluidos, y el de `sessionStorage` bloqueado en rojo antes del arreglo), build de 16
 páginas y todas las comprobaciones de los Steps en verde.
 
@@ -168,7 +168,7 @@ function markSubmit(): void {
 |---------|---------|---------------------|
 | Install | `npm ci` | exit 0 |
 | Typecheck | `npm run check` | `0 errors` |
-| Tests | `npm test` | 23 passed (21 con el 016 aplicado + 2 nuevos; 16 si el 016 no está) |
+| Tests | `npm test` | 24 passed (22 con el 016 aplicado + 2 nuevos; 16 si el 016 no está) |
 | Build | `npm run build` | `Complete!` (16 páginas si el 011 está aplicado) |
 
 `npm run build` necesita `.env`: en un worktree nuevo crea uno con las 5 claves `PUBLIC_GCAL_API_KEY`,
@@ -210,7 +210,7 @@ function markSubmit(): void {
 
 `npm ci`, `.env` ficticio, `npm test`, `npm run build`.
 
-**Verify**: `test -f src/pages/politica-de-cookies/index.astro && test -f src/components/sections/LegalContent.astro && echo OK` → `OK` (si no, el plan 011 no está aplicado: STOP) · `npm test` → `21 passed` (`14 passed` si el 016 no está aplicado).
+**Verify**: `test -f src/pages/politica-de-cookies/index.astro && test -f src/components/sections/LegalContent.astro && echo OK` → `OK` (si no, el plan 011 no está aplicado: STOP) · `npm test` → `22 passed` (`14 passed` si el 016 no está aplicado).
 
 ### Step 2: El formulario de reserva deja de pedir datos de salud
 
@@ -505,11 +505,11 @@ function markSubmit(): void {
 }
 ```
 
-**Verify**: `npm test` → `23 passed` (`16 passed` si el 016 no está aplicado) · `npm run check` → 0 errors.
+**Verify**: `npm test` → `24 passed` (`16 passed` si el 016 no está aplicado) · `npm run check` → 0 errors.
 
 ### Step 7: Verificación final
 
-**Verify**: `npm run check` → 0 errors · `npm test` → 23 passed (16 sin el 016) · `npm run build` → OK ·
+**Verify**: `npm run check` → 0 errors · `npm test` → 24 passed (16 sin el 016) · `npm run build` → OK ·
 `grep -c "Web3Forms" dist/politica-de-privacidad/index.html` → `≥1` ·
 `grep -c "Analytics" dist/politica-de-cookies/index.html` → `0`.
 
@@ -526,7 +526,7 @@ function markSubmit(): void {
 - [ ] `grep -c "lesión" src/lib/booking/widget-render.ts` → 0
 - [ ] `lastUpdated` de `privacidad.md` y `cookies.md` = fecha de ejecución; `aviso-legal.md` sin cambios
 - [ ] Las líneas de identidad y dirección del titular de `privacidad.md` no aparecen en el diff
-- [ ] `npm test` → 23 passed (16 sin el 016) · `npm run check` → 0 errors · `npm run build` OK
+- [ ] `npm test` → 24 passed (16 sin el 016) · `npm run check` → 0 errors · `npm run build` OK
 - [ ] El email del formulario de contacto incluye `Consentimiento RGPD: aceptado.`
 - [ ] `git status` sin cambios fuera del Scope (y sin `.env`)
 - [ ] Fila 012 de `plans/README.md` actualizada, con la nota "pendiente de visto bueno del titular"

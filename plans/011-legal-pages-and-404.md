@@ -181,7 +181,7 @@ const b = base.replace(/\/$/, ''); // base sin trailing slash para concatenar ru
 |---------|---------|---------------------|
 | Install | `npm ci` | exit 0 |
 | Typecheck | `npm run check` | `0 errors` |
-| Tests | `npm test` | todos pasan (14; 21 si el plan 016 ya está aplicado) |
+| Tests | `npm test` | todos pasan (14; 22 si el plan 016 ya está aplicado) |
 | Build | `npm run build` | `Complete!` — 16 páginas (12 + 3 legales + 404) |
 | Preview | `npm run preview` | sirve `dist/` en http://localhost:4321/ |
 

@@ -21,13 +21,13 @@ y actualiza su fila al terminar.
 **Orden recomendado (probado): 010 → 016 → 011 → 013 → 014 → 012 → 015.** Se ejecutaron todos los planes de
 código **en este orden** sobre un clon desechable del repo, siguiendo su texto. Cada paso aplicó limpio
 sobre el anterior y el resultado final fue: `npm audit` → 0 vulnerabilidades, `astro check` 0/0/0,
-**23/23 tests** (14 existentes + 7 del widget + 2 de envío), build de **16 páginas** + la redirección de
+**23/23 tests** en el simulacro (14 existentes + 7 del widget + 2 de envío; con la ronda 2 del 016 el widget aporta 8, así que al final serán 24), build de **16 páginas** + la redirección de
 `/servicios/`, y la portada pasa de 73 903 a 49 044 bytes.
 
 | Orden | Plan | Título | Prioridad | Esfuerzo | Riesgo | Depende de | Estado |
 |-------|------|--------|-----------|----------|--------|------------|--------|
 | 1 | 010 | Actualizar a Astro 7 y Vitest 5; `npm audit` a cero | P1 | S | LOW | — | DONE — **en producción** (2026-09-22): `main` = `c0f1ef0`, deploy en verde, verificado en vorama.es (Astro 7.3.4, widget y diálogos legales OK). Se instaló `astro@7.3.4` (parche de ese día, salida idéntica a 7.3.3) |
-| 2 | 016 | Widget de reservas: reintento, foco, anuncios, mes sin huecos (+ tests DOM) | P1 | M | LOW-MED | — | TODO |
+| 2 | 016 | Widget de reservas: reintento, foco, anuncios, mes sin huecos (+ tests DOM) | P1 | M | LOW-MED | — | DONE — **en producción** (2026-09-22): `main` = `5eca6af`, revisado en 2 rondas, CI 22/22 y deploy en verde; verificado en vorama.es (aviso de mes sin huecos, foco en "Mes siguiente", "Reintentar" vuelve a pedir la disponibilidad) |
 | 3 | 011 | Páginas legales reales + enlace roto de privacidad + 404 propia | P1 | M | LOW | — | TODO |
 | 4 | 013 | Accesibilidad: contraste AA, honeypot, tarjetas, carrusel, menú, mensajes | P1 | M | LOW | — | TODO |
 | 5 | 014 | Imagen social, preload del hero, datos estructurados, sitemap, redirección `/servicios/` | P1 | M | LOW | — | TODO |

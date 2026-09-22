@@ -21,6 +21,22 @@
 - **Category**: bug / accessibility
 - **Planned at**: commit `8bdbb94`, 2026-09-22
 
+## Resultado de la ejecución (2026-09-22)
+
+- **Ronda 1** (ejecutor): parche aplicado tal cual — commits `08b923f` (happy-dom + 7 tests en rojo) y
+  `6c713f2` (arreglo); 21/21 tests.
+- **Revisión en Chrome real** (servidor de desarrollo del worktree, teclado real para Tab y flechas): todo lo
+  del plan OK, más dos fallos **previos** que el parche no cubría: al entrar en el formulario, `goToStep()`
+  enfocaba el honeypot oculto (el foco caía al `<body>`), y el anuncio del día leía la fecha ISO.
+- **Ronda 2** (ejecutor, a petición del revisor): `324acfc` (test nuevo "al pasar al formulario, el foco va al
+  campo Nombre" + aserción del anuncio ajustada, ambos en rojo antes) y `5eca6af` (primer control enfocable
+  que no sea `tabindex=-1` ni `aria-hidden`; anuncio "martes, 2 de junio: N horarios disponibles").
+- Resultado final en la rama `advisor/016-widget`: **22/22 tests**, `astro check` 0/0/0, build de 12 páginas,
+  `npm audit` 0. El `plans/016-booking-widget-a11y.patch` refleja solo la ronda 1.
+- Nota para futuras pruebas en el panel del navegador integrado: si la pestaña está oculta
+  (`document.visibilityState === 'hidden'`), `requestAnimationFrame` no se ejecuta y el foco de `goToStep()`
+  parece no funcionar; no es un fallo del sitio.
+
 ## Why this matters
 
 El widget de reservas es el único camino de ingresos de la web. Se comprobaron cuatro fallos, en
