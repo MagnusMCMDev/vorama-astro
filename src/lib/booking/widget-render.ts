@@ -132,6 +132,11 @@ export function renderCalendar(s: CalendarRenderState): string {
   const todayKey = `${today.getFullYear()}-${pad2(today.getMonth() + 1)}-${pad2(today.getDate())}`;
   const daysInMonth = new Date(s.year, s.month0 + 1, 0).getDate();
   const firstWeekday = mondayFirst(new Date(s.year, s.month0, 1).getDay());
+  // Una sola parada de tabulación en la rejilla: el día elegido o, si no hay, el primero disponible.
+  const availableKeys = s.availability ? [...s.availability.days.keys()].sort() : [];
+  const rovingKey = s.selectedDate && s.availability?.days.has(s.selectedDate)
+    ? s.selectedDate
+    : (availableKeys[0] ?? null);
 
   // Celdas
   let cells = '';
@@ -154,9 +159,9 @@ export function renderCalendar(s: CalendarRenderState): string {
     const weekdayIdx = mondayFirst(new Date(s.year, s.month0, d).getDay());
     const ariaLabel = `${d} de ${MONTHS[s.month0]}, ${WEEKDAYS_LONG[weekdayIdx]}${disabled ? ', no disponible' : ''}`;
     if (disabled) {
-      cells += `<td role="gridcell" aria-disabled="true" class="${classes}" data-date="${key}" tabindex="-1"><span aria-label="${ariaLabel}">${d}</span></td>`;
+      cells += `<td role="gridcell" aria-disabled="true" class="${classes}" data-date="${key}"><span aria-label="${ariaLabel}">${d}</span></td>`;
     } else {
-      cells += `<td role="gridcell" class="${classes}" data-date="${key}" tabindex="${isSelected ? '0' : '-1'}"><button type="button" class="bw-cal__btn" data-date="${key}" aria-label="${ariaLabel}" aria-pressed="${isSelected}">${d}</button></td>`;
+      cells += `<td role="gridcell" class="${classes}" data-date="${key}"><button type="button" class="bw-cal__btn" data-date="${key}" aria-label="${ariaLabel}" aria-pressed="${isSelected}" tabindex="${key === rovingKey ? '0' : '-1'}">${d}</button></td>`;
     }
   }
 
@@ -208,14 +213,28 @@ export function renderCalendar(s: CalendarRenderState): string {
 
 export function renderSlots(slots: Slot[], selectedSlot: Slot | null): string {
   if (!slots.length) return '<p class="bw-empty">No hay horarios disponibles para este día.</p>';
+  // Una sola parada de tabulación: el horario elegido o, si no hay, el primero.
+  const rovingIso = slots.some((sl) => sl.startISO === selectedSlot?.startISO)
+    ? selectedSlot!.startISO
+    : slots[0]!.startISO;
   const items = slots.map((slot) => {
     const { time } = formatSlot(slot.startISO);
     const isSelected = slot.startISO === selectedSlot?.startISO;
-    return `<li role="option" aria-selected="${isSelected}" class="bw-slot${isSelected ? ' bw-slot--selected' : ''}">
-      <button type="button" class="bw-slot__btn" data-slot-iso="${esc(slot.startISO)}" data-slot-end="${esc(slot.endISO)}">${time}</button>
+    return `<li class="bw-slot${isSelected ? ' bw-slot--selected' : ''}">
+      <button type="button" class="bw-slot__btn" data-slot-iso="${esc(slot.startISO)}" data-slot-end="${esc(slot.endISO)}" aria-pressed="${isSelected}" tabindex="${slot.startISO === rovingIso ? '0' : '-1'}">${time}</button>
     </li>`;
   }).join('');
-  return `<ul role="listbox" class="bw-slots" aria-label="Horarios disponibles">${items}</ul>`;
+  return `<ul class="bw-slots" aria-label="Horarios disponibles">${items}</ul>`;
+}
+
+/** Aviso cuando el mes mostrado no tiene ningún hueco reservable (agenda bloqueada o completa). */
+export function renderEmptyMonth(year: number, month0: number, whatsapp: string): string {
+  const waHref = `https://wa.me/${whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent('Hola, quiero reservar una sesión de masaje')}`;
+  return `
+    <div class="bw-empty bw-empty--month" role="status">
+      <p>No hay horarios disponibles para reservar online en ${MONTHS[month0]} ${year}.</p>
+      <p>Puedes mirar otro mes o escribirnos por <a href="${waHref}" target="_blank" rel="noopener" class="bw-link">WhatsApp</a>.</p>
+    </div>`;
 }
 
 // ── Paso 3: BookingForm ───────────────────────────────────────────────────────
@@ -246,7 +265,7 @@ export function renderForm(slot: Slot, form: FormState): string {
         <input class="bw-field__input${form.errors.name ? ' bw-field__input--error' : ''}" type="text"
           id="bw-name" name="name" autocomplete="name" required
           value="${esc(form.name)}"
-          aria-required="true" aria-describedby="${form.errors.name ? 'err-name' : ''}">
+          aria-required="true" aria-invalid="${form.errors.name ? 'true' : 'false'}" aria-describedby="${form.errors.name ? 'err-name' : ''}">
         ${e('name')}
       </div>
       <div class="bw-field">
@@ -254,7 +273,7 @@ export function renderForm(slot: Slot, form: FormState): string {
         <input class="bw-field__input${form.errors.email ? ' bw-field__input--error' : ''}" type="email"
           id="bw-email" name="email" autocomplete="email" required
           value="${esc(form.email)}"
-          aria-required="true" aria-describedby="${form.errors.email ? 'err-email' : ''}">
+          aria-required="true" aria-invalid="${form.errors.email ? 'true' : 'false'}" aria-describedby="${form.errors.email ? 'err-email' : ''}">
         ${e('email')}
       </div>
       <div class="bw-field">
@@ -262,7 +281,7 @@ export function renderForm(slot: Slot, form: FormState): string {
         <input class="bw-field__input${form.errors.phone ? ' bw-field__input--error' : ''}" type="tel"
           id="bw-phone" name="phone" autocomplete="tel" required
           value="${esc(form.phone)}"
-          aria-required="true" aria-describedby="${form.errors.phone ? 'err-phone' : ''}">
+          aria-required="true" aria-invalid="${form.errors.phone ? 'true' : 'false'}" aria-describedby="${form.errors.phone ? 'err-phone' : ''}">
         ${e('phone')}
       </div>
       <div class="bw-field">
@@ -276,7 +295,7 @@ export function renderForm(slot: Slot, form: FormState): string {
       <div class="bw-field bw-field--check">
         <label class="bw-field__check-label">
           <input type="checkbox" class="bw-field__checkbox${form.errors.consent ? ' bw-field__input--error' : ''}"
-            name="consentRgpd" required aria-required="true"
+            name="consentRgpd" required aria-required="true" aria-invalid="${form.errors.consent ? 'true' : 'false'}"
             aria-describedby="${form.errors.consent ? 'err-consent' : ''}"
             ${form.consent ? 'checked' : ''}>
           <span>He leído y acepto la <a href="/legal/privacidad/" target="_blank" rel="noopener" class="bw-link">política de privacidad</a></span>

@@ -9,7 +9,7 @@ import type { FormState } from './widget-render.ts';
 import {
   renderServiceHub, renderDurationPicker,
   renderCalendar, renderSlots, renderForm,
-  renderSummary, renderSuccess, renderError,
+  renderSummary, renderSuccess, renderError, renderEmptyMonth,
   getService,
 } from './widget-render.ts';
 import { getMonthAvailability, type MonthAvailability } from './availability.ts';
@@ -61,6 +61,21 @@ function validateForm(form: FormState): boolean {
   return Object.keys(errors).length === 0;
 }
 
+// ── Foco estable entre renders ────────────────────────────────────────────────
+
+/**
+ * Selector del elemento enfocado que sigue existiendo tras re-renderizar el paso
+ * (día, horario o flechas de mes). Así el foco no cae al <body> en cada selección.
+ */
+function focusSelectorFor(el: Element | null): string | null {
+  if (!(el instanceof HTMLElement)) return null;
+  if (el.matches('.bw-cal__btn') && el.dataset.date) return `.bw-cal__btn[data-date="${el.dataset.date}"]`;
+  if (el.matches('.bw-slot__btn') && el.dataset.slotIso) return `.bw-slot__btn[data-slot-iso="${el.dataset.slotIso}"]`;
+  if (el.matches('[data-cal-prev]')) return '[data-cal-prev]';
+  if (el.matches('[data-cal-next]')) return '[data-cal-next]';
+  return null;
+}
+
 // ── Montaje del widget ────────────────────────────────────────────────────────
 
 /**
@@ -101,10 +116,16 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
   // navegó a otro mes mientras la petición estaba en vuelo).
   let loadToken = 0;
 
+  // Estructura fija: la región aria-live vive FUERA del contenido que se re-renderiza,
+  // para que los anuncios ni se pierdan ni se repitan en cada render.
+  container.innerHTML = '<div class="sr-only" aria-live="polite" data-bw-live></div><div class="bw-content" data-bw-content></div>';
+  const liveEl = container.querySelector<HTMLElement>('[data-bw-live]')!;
+  const contentEl = container.querySelector<HTMLElement>('[data-bw-content]')!;
+
   function render() {
     let html = '';
-    const live = container.querySelector<HTMLElement>('[aria-live="polite"]');
-    const msg = live?.getAttribute('data-announce');
+    const active = document.activeElement;
+    const restoreFocus = active && contentEl.contains(active) ? focusSelectorFor(active) : null;
 
     if (state.step === 'duration') {
       // Hub completo (header) vs picker de tipo concreto
@@ -127,6 +148,9 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
           <button type="button" class="bw-btn bw-btn--ghost" data-bw-back>← Cambiar duración</button>
         </div>` + html;
       }
+      if (!state.isLoadingCal && state.availability && state.availability.days.size === 0) {
+        html += renderEmptyMonth(state.year, state.month0, WHATSAPP_NUMBER);
+      }
       if (state.selectedDate && state.slotsForDate.length) {
         html += `<div class="bw-slots-section">${renderSlots(state.slotsForDate, state.selectedSlot)}</div>`;
         if (state.selectedSlot) {
@@ -143,17 +167,15 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
       html = renderError(state.errorCode ?? 'SUBMIT_FAILED', WHATSAPP_NUMBER);
     }
 
-    container.innerHTML = `
-      <div aria-live="polite" class="sr-only" data-announce="${msg ?? ''}"></div>
-      <div class="bw-content">${html}</div>`;
+    contentEl.innerHTML = html;
 
     attachListeners();
-    if (msg) setTimeout(() => announce(msg), 50);
+    if (restoreFocus) contentEl.querySelector<HTMLElement>(restoreFocus)?.focus();
   }
 
   function announce(msg: string) {
-    const el = container.querySelector<HTMLElement>('[aria-live="polite"]');
-    if (el) { el.textContent = ''; setTimeout(() => { el.textContent = msg; }, 50); }
+    liveEl.textContent = '';
+    setTimeout(() => { liveEl.textContent = msg; }, 50);
   }
 
   async function loadAvailability() {
@@ -190,14 +212,11 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
 
   function goToStep(step: BookingStep, announceMsg = '') {
     state.step = step;
-    if (announceMsg) {
-      const el = container.querySelector<HTMLElement>('[aria-live="polite"]');
-      if (el) el.setAttribute('data-announce', announceMsg);
-    }
     render();
+    if (announceMsg) announce(announceMsg);
     // Foco al primer elemento interactivo del nuevo paso
     requestAnimationFrame(() => {
-      const first = container.querySelector<HTMLElement>('button:not([disabled]), a, input, textarea');
+      const first = contentEl.querySelector<HTMLElement>('button:not([disabled]), a, input, textarea');
       first?.focus();
     });
   }
@@ -254,8 +273,8 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
         state.selectedDate = date;
         state.slotsForDate = state.availability?.days.get(date) ?? [];
         state.selectedSlot = null;
-        announce(`Día ${date} seleccionado, ${state.slotsForDate.length} horarios disponibles`);
         render();
+        announce(`Día ${date} seleccionado, ${state.slotsForDate.length} horarios disponibles`);
         // Scroll suave a slots
         setTimeout(() => container.querySelector('.bw-slots-section')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
       });
@@ -274,10 +293,19 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
       else if (ev.key === 'ArrowUp') delta = -7;
       else return;
       ev.preventDefault();
-      date.setDate(date.getDate() + delta);
-      const newKey = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
-      const target = container.querySelector<HTMLButtonElement>(`.bw-cal__btn[data-date="${newKey}"]`);
-      target?.focus();
+      // Salta los días sin huecos en la dirección pulsada, sin salir del mes.
+      let target: HTMLButtonElement | null = null;
+      for (let i = 0; i < 31 && !target; i++) {
+        date.setDate(date.getDate() + delta);
+        if (date.getMonth() !== state.month0) break;
+        const newKey = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+        target = container.querySelector<HTMLButtonElement>(`.bw-cal__btn[data-date="${newKey}"]`);
+      }
+      if (target) {
+        focused.tabIndex = -1;
+        target.tabIndex = 0;
+        target.focus();
+      }
     });
 
     // ── Selección de slot ─────────────────────────────────────────────────────
@@ -297,8 +325,15 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
       const ev = e as KeyboardEvent;
       const items = [...container.querySelectorAll<HTMLButtonElement>('.bw-slot__btn')];
       const idx = items.findIndex((b) => b === document.activeElement);
-      if (ev.key === 'ArrowDown' && idx < items.length - 1) { ev.preventDefault(); items[idx + 1].focus(); }
-      else if (ev.key === 'ArrowUp' && idx > 0) { ev.preventDefault(); items[idx - 1].focus(); }
+      if (idx < 0) return;
+      let next = idx;
+      if (ev.key === 'ArrowDown' || ev.key === 'ArrowRight') next = Math.min(idx + 1, items.length - 1);
+      else if (ev.key === 'ArrowUp' || ev.key === 'ArrowLeft') next = Math.max(idx - 1, 0);
+      else return;
+      ev.preventDefault();
+      items[idx]!.tabIndex = -1;
+      items[next]!.tabIndex = 0;
+      items[next]!.focus();
     });
 
     // ── Continuar a formulario ────────────────────────────────────────────────
@@ -329,7 +364,10 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
         });
         state.form.consent = (form.querySelector<HTMLInputElement>('[name="consentRgpd"]'))?.checked ?? false;
         if (validateForm(state.form)) goToStep('summary', 'Resumen de tu reserva');
-        else render();
+        else {
+          render();
+          contentEl.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+        }
       });
     }
 
@@ -379,7 +417,13 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
     // ── Reintentar desde error ────────────────────────────────────────────────
     container.querySelector('[data-bw-retry]')?.addEventListener('click', () => {
       state.errorCode = null;
-      goToStep(state.selectedSlot ? 'summary' : 'calendar', 'Reintentar');
+      if (state.selectedSlot) {
+        goToStep('summary', 'Reintentar');
+      } else {
+        // El error vino de cargar la disponibilidad: hay que volver a pedirla.
+        goToStep('calendar', 'Cargando de nuevo la disponibilidad');
+        loadAvailability();
+      }
     });
   }
 
