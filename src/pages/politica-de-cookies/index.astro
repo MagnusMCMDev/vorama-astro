@@ -1,0 +1,16 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/sections/PageHeader.astro';
+import Section from '~/components/sections/Section.astro';
+import LegalContent from '~/components/sections/LegalContent.astro';
+---
+
+<BaseLayout
+  title="Política de Cookies — Voramà Terapias"
+  description="Política de cookies de Voramà Terapias: qué almacenamiento técnico usa la web y qué servicios de terceros se cargan solo cuando tú lo pides."
+>
+  <PageHeader title="Política de Cookies" />
+  <Section variant="default" ariaLabel="Política de cookies">
+    <LegalContent slug="cookies" />
+  </Section>
+</BaseLayout>

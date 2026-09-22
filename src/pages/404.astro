@@ -1,0 +1,69 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/sections/PageHeader.astro';
+import Section from '~/components/sections/Section.astro';
+
+const b = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const links = [
+  { href: `${b}/`, label: 'Inicio' },
+  { href: `${b}/servicios-masaje-californiano/`, label: 'Servicios de masaje' },
+  { href: `${b}/regala-masaje/`, label: 'Regalar un masaje' },
+  { href: `${b}/contacto/`, label: 'Contacto' },
+];
+---
+
+<BaseLayout
+  title="Página no encontrada — Voramà Terapias"
+  description="La página que buscas no existe o ha cambiado de dirección. Vuelve al inicio o descubre nuestros masajes californianos en Barcelona."
+>
+  <PageHeader title="Página no encontrada" lead="La dirección que buscas no existe o ha cambiado." />
+  <Section variant="default" ariaLabel="Enlaces útiles">
+    <div class="not-found">
+      <ul class="not-found__links">
+        {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+      <button type="button" class="not-found__cta" data-dialog="booking">Reservar una sesión</button>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--vrm-space-lg);
+    text-align: center;
+  }
+
+  .not-found__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--vrm-space-md);
+
+    & a {
+      color: var(--vrm-color-primary);
+      font-weight: var(--vrm-font-weight-semibold);
+    }
+  }
+
+  .not-found__cta {
+    padding: var(--vrm-space-sm) var(--vrm-space-lg);
+    background: var(--vrm-color-primary);
+    color: var(--vrm-color-text-inverted);
+    border: none;
+    border-radius: var(--vrm-radius-md);
+    font-weight: var(--vrm-font-weight-semibold);
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid var(--vrm-color-primary);
+      outline-offset: 3px;
+    }
+  }
+</style>

@@ -1,0 +1,16 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/sections/PageHeader.astro';
+import Section from '~/components/sections/Section.astro';
+import LegalContent from '~/components/sections/LegalContent.astro';
+---
+
+<BaseLayout
+  title="Política de Privacidad — Voramà Terapias"
+  description="Política de privacidad de Voramà Terapias: qué datos recogemos en los formularios de contacto, vale regalo y reservas, y cómo ejercer tus derechos."
+>
+  <PageHeader title="Política de Privacidad" />
+  <Section variant="default" ariaLabel="Política de privacidad">
+    <LegalContent slug="privacidad" />
+  </Section>
+</BaseLayout>

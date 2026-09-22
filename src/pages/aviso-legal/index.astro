@@ -1,0 +1,16 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/sections/PageHeader.astro';
+import Section from '~/components/sections/Section.astro';
+import LegalContent from '~/components/sections/LegalContent.astro';
+---
+
+<BaseLayout
+  title="Aviso Legal — Voramà Terapias"
+  description="Aviso legal de Voramà Terapias: titular del sitio web, condiciones de uso, propiedad intelectual y legislación aplicable."
+>
+  <PageHeader title="Aviso Legal" />
+  <Section variant="default" ariaLabel="Aviso legal">
+    <LegalContent slug="aviso-legal" />
+  </Section>
+</BaseLayout>

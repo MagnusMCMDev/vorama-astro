@@ -1,0 +1,93 @@
+---
+import { getEntry, render } from 'astro:content';
+
+interface Props {
+  /** Documento de la colección `legal`. */
+  slug: 'privacidad' | 'cookies' | 'aviso-legal';
+}
+
+const { slug } = Astro.props;
+
+const entry = await getEntry('legal', slug);
+if (!entry) throw new Error(`[LegalContent] No se encontró el documento legal: "${slug}"`);
+
+const { Content } = await render(entry);
+
+// lastUpdated es 'YYYY-MM-DD' (validado por el schema de la colección).
+const updated = new Intl.DateTimeFormat('es-ES', { dateStyle: 'long', timeZone: 'UTC' })
+  .format(new Date(`${entry.data.lastUpdated}T00:00:00Z`));
+---
+
+<article class="legal-content">
+  <p class="legal-content__updated">
+    Última actualización: <time datetime={entry.data.lastUpdated}>{updated}</time>
+  </p>
+  <Content />
+</article>
+
+<style>
+  /* Tipografía del contenido Markdown legal. Los elementos que genera <Content />
+     no llevan el atributo de ámbito del componente: por eso van en :global(). */
+  .legal-content {
+    max-width: 72ch;
+    margin-inline: auto;
+    font-size: var(--vrm-font-size-sm);
+    color: var(--vrm-color-text);
+    line-height: var(--vrm-line-height-relaxed);
+
+    & :global(h2) {
+      font-family: var(--vrm-font-display);
+      font-size: var(--vrm-font-size-md);
+      color: var(--vrm-color-primary);
+      margin-top: var(--vrm-space-lg);
+      margin-bottom: var(--vrm-space-sm);
+    }
+
+    & :global(h3) {
+      font-size: var(--vrm-font-size-base);
+      font-weight: var(--vrm-font-weight-semibold);
+      color: var(--vrm-color-text);
+      margin-top: var(--vrm-space-md);
+      margin-bottom: var(--vrm-space-xs);
+    }
+
+    & :global(p) {
+      margin-bottom: var(--vrm-space-sm);
+    }
+
+    & :global(ul),
+    & :global(ol) {
+      padding-left: var(--vrm-space-lg);
+      margin-bottom: var(--vrm-space-sm);
+    }
+
+    & :global(li) {
+      margin-bottom: var(--vrm-space-xs);
+    }
+
+    & :global(a) {
+      color: var(--vrm-color-primary);
+      text-decoration: underline;
+    }
+
+    & :global(a:hover) {
+      color: var(--vrm-color-primary-light);
+    }
+
+    & :global(strong) {
+      font-weight: var(--vrm-font-weight-semibold);
+    }
+
+    & :global(hr) {
+      border: none;
+      border-top: 1px solid var(--vrm-color-border);
+      margin-block: var(--vrm-space-md);
+    }
+
+    & .legal-content__updated {
+      font-size: var(--vrm-font-size-sm);
+      color: var(--vrm-color-text-muted);
+      margin-bottom: var(--vrm-space-lg);
+    }
+  }
+</style>
