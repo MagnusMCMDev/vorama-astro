@@ -216,7 +216,9 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
     if (announceMsg) announce(announceMsg);
     // Foco al primer elemento interactivo del nuevo paso
     requestAnimationFrame(() => {
-      const first = contentEl.querySelector<HTMLElement>('button:not([disabled]), a, input, textarea');
+      // Primer control enfocable del paso (salta el honeypot: oculto, aria-hidden y tabindex="-1").
+      const first = [...contentEl.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], input, textarea')]
+        .find((el) => el.tabIndex >= 0 && !el.closest('[aria-hidden="true"]'));
       first?.focus();
     });
   }
@@ -274,7 +276,9 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
         state.slotsForDate = state.availability?.days.get(date) ?? [];
         state.selectedSlot = null;
         render();
-        announce(`Día ${date} seleccionado, ${state.slotsForDate.length} horarios disponibles`);
+        const fecha = new Intl.DateTimeFormat('es-ES', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' })
+          .format(new Date(`${date}T12:00:00Z`));
+        announce(`${fecha}: ${state.slotsForDate.length} horarios disponibles`);
         // Scroll suave a slots
         setTimeout(() => container.querySelector('.bw-slots-section')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
       });
