@@ -112,6 +112,18 @@ describe('widget de reservas — teclado y lectores de pantalla', () => {
 
     container.querySelector<HTMLButtonElement>('.bw-cal__btn')!.click();
     await tick(150);
-    expect(container.querySelector('.sr-only[aria-live="polite"]')!.textContent).toMatch(/^Día \d{4}-\d{2}-\d{2} seleccionado/);
+    expect(container.querySelector('.sr-only[aria-live="polite"]')!.textContent).toMatch(/^martes, 2 de junio: \d+ horarios disponibles$/);
+  });
+
+  it('al pasar al formulario, el foco va al campo Nombre (no al honeypot oculto)', async () => {
+    vi.mocked(fetchBusy).mockResolvedValue([]);
+    mountWidget(container, DIRECT);
+    await settle();
+    container.querySelector<HTMLButtonElement>('.bw-cal__btn')!.click();
+    container.querySelector<HTMLButtonElement>('.bw-slot__btn')!.click();
+    container.querySelector<HTMLButtonElement>('[data-bw-to-form]')!.click();
+    await tick(50); // deja correr el requestAnimationFrame de goToStep
+
+    expect((document.activeElement as HTMLInputElement).name).toBe('name');
   });
 });
