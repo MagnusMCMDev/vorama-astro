@@ -1,0 +1,401 @@
+diff --git a/src/lib/booking/widget-render.ts b/src/lib/booking/widget-render.ts
+index 6dbbaa2..6b451b1 100644
+--- a/src/lib/booking/widget-render.ts
++++ b/src/lib/booking/widget-render.ts
+@@ -132,6 +132,11 @@ export function renderCalendar(s: CalendarRenderState): string {
+   const todayKey = `${today.getFullYear()}-${pad2(today.getMonth() + 1)}-${pad2(today.getDate())}`;
+   const daysInMonth = new Date(s.year, s.month0 + 1, 0).getDate();
+   const firstWeekday = mondayFirst(new Date(s.year, s.month0, 1).getDay());
++  // Una sola parada de tabulación en la rejilla: el día elegido o, si no hay, el primero disponible.
++  const availableKeys = s.availability ? [...s.availability.days.keys()].sort() : [];
++  const rovingKey = s.selectedDate && s.availability?.days.has(s.selectedDate)
++    ? s.selectedDate
++    : (availableKeys[0] ?? null);
+ 
+   // Celdas
+   let cells = '';
+@@ -154,9 +159,9 @@ export function renderCalendar(s: CalendarRenderState): string {
+     const weekdayIdx = mondayFirst(new Date(s.year, s.month0, d).getDay());
+     const ariaLabel = `${d} de ${MONTHS[s.month0]}, ${WEEKDAYS_LONG[weekdayIdx]}${disabled ? ', no disponible' : ''}`;
+     if (disabled) {
+-      cells += `<td role="gridcell" aria-disabled="true" class="${classes}" data-date="${key}" tabindex="-1"><span aria-label="${ariaLabel}">${d}</span></td>`;
++      cells += `<td role="gridcell" aria-disabled="true" class="${classes}" data-date="${key}"><span aria-label="${ariaLabel}">${d}</span></td>`;
+     } else {
+-      cells += `<td role="gridcell" class="${classes}" data-date="${key}" tabindex="${isSelected ? '0' : '-1'}"><button type="button" class="bw-cal__btn" data-date="${key}" aria-label="${ariaLabel}" aria-pressed="${isSelected}">${d}</button></td>`;
++      cells += `<td role="gridcell" class="${classes}" data-date="${key}"><button type="button" class="bw-cal__btn" data-date="${key}" aria-label="${ariaLabel}" aria-pressed="${isSelected}" tabindex="${key === rovingKey ? '0' : '-1'}">${d}</button></td>`;
+     }
+   }
+ 
+@@ -208,14 +213,28 @@ export function renderCalendar(s: CalendarRenderState): string {
+ 
+ export function renderSlots(slots: Slot[], selectedSlot: Slot | null): string {
+   if (!slots.length) return '<p class="bw-empty">No hay horarios disponibles para este día.</p>';
++  // Una sola parada de tabulación: el horario elegido o, si no hay, el primero.
++  const rovingIso = slots.some((sl) => sl.startISO === selectedSlot?.startISO)
++    ? selectedSlot!.startISO
++    : slots[0]!.startISO;
+   const items = slots.map((slot) => {
+     const { time } = formatSlot(slot.startISO);
+     const isSelected = slot.startISO === selectedSlot?.startISO;
+-    return `<li role="option" aria-selected="${isSelected}" class="bw-slot${isSelected ? ' bw-slot--selected' : ''}">
+-      <button type="button" class="bw-slot__btn" data-slot-iso="${esc(slot.startISO)}" data-slot-end="${esc(slot.endISO)}">${time}</button>
++    return `<li class="bw-slot${isSelected ? ' bw-slot--selected' : ''}">
++      <button type="button" class="bw-slot__btn" data-slot-iso="${esc(slot.startISO)}" data-slot-end="${esc(slot.endISO)}" aria-pressed="${isSelected}" tabindex="${slot.startISO === rovingIso ? '0' : '-1'}">${time}</button>
+     </li>`;
+   }).join('');
+-  return `<ul role="listbox" class="bw-slots" aria-label="Horarios disponibles">${items}</ul>`;
++  return `<ul class="bw-slots" aria-label="Horarios disponibles">${items}</ul>`;
++}
++
++/** Aviso cuando el mes mostrado no tiene ningún hueco reservable (agenda bloqueada o completa). */
++export function renderEmptyMonth(year: number, month0: number, whatsapp: string): string {
++  const waHref = `https://wa.me/${whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent('Hola, quiero reservar una sesión de masaje')}`;
++  return `
++    <div class="bw-empty bw-empty--month" role="status">
++      <p>No hay horarios disponibles para reservar online en ${MONTHS[month0]} ${year}.</p>
++      <p>Puedes mirar otro mes o escribirnos por <a href="${waHref}" target="_blank" rel="noopener" class="bw-link">WhatsApp</a>.</p>
++    </div>`;
+ }
+ 
+ // ── Paso 3: BookingForm ───────────────────────────────────────────────────────
+@@ -246,7 +265,7 @@ export function renderForm(slot: Slot, form: FormState): string {
+         <input class="bw-field__input${form.errors.name ? ' bw-field__input--error' : ''}" type="text"
+           id="bw-name" name="name" autocomplete="name" required
+           value="${esc(form.name)}"
+-          aria-required="true" aria-describedby="${form.errors.name ? 'err-name' : ''}">
++          aria-required="true" aria-invalid="${form.errors.name ? 'true' : 'false'}" aria-describedby="${form.errors.name ? 'err-name' : ''}">
+         ${e('name')}
+       </div>
+       <div class="bw-field">
+@@ -254,7 +273,7 @@ export function renderForm(slot: Slot, form: FormState): string {
+         <input class="bw-field__input${form.errors.email ? ' bw-field__input--error' : ''}" type="email"
+           id="bw-email" name="email" autocomplete="email" required
+           value="${esc(form.email)}"
+-          aria-required="true" aria-describedby="${form.errors.email ? 'err-email' : ''}">
++          aria-required="true" aria-invalid="${form.errors.email ? 'true' : 'false'}" aria-describedby="${form.errors.email ? 'err-email' : ''}">
+         ${e('email')}
+       </div>
+       <div class="bw-field">
+@@ -262,7 +281,7 @@ export function renderForm(slot: Slot, form: FormState): string {
+         <input class="bw-field__input${form.errors.phone ? ' bw-field__input--error' : ''}" type="tel"
+           id="bw-phone" name="phone" autocomplete="tel" required
+           value="${esc(form.phone)}"
+-          aria-required="true" aria-describedby="${form.errors.phone ? 'err-phone' : ''}">
++          aria-required="true" aria-invalid="${form.errors.phone ? 'true' : 'false'}" aria-describedby="${form.errors.phone ? 'err-phone' : ''}">
+         ${e('phone')}
+       </div>
+       <div class="bw-field">
+@@ -276,7 +295,7 @@ export function renderForm(slot: Slot, form: FormState): string {
+       <div class="bw-field bw-field--check">
+         <label class="bw-field__check-label">
+           <input type="checkbox" class="bw-field__checkbox${form.errors.consent ? ' bw-field__input--error' : ''}"
+-            name="consentRgpd" required aria-required="true"
++            name="consentRgpd" required aria-required="true" aria-invalid="${form.errors.consent ? 'true' : 'false'}"
+             aria-describedby="${form.errors.consent ? 'err-consent' : ''}"
+             ${form.consent ? 'checked' : ''}>
+           <span>He leído y acepto la <a href="/legal/privacidad/" target="_blank" rel="noopener" class="bw-link">política de privacidad</a></span>
+diff --git a/src/lib/booking/widget-state.test.ts b/src/lib/booking/widget-state.test.ts
+new file mode 100644
+index 0000000..07fa80c
+--- /dev/null
++++ b/src/lib/booking/widget-state.test.ts
+@@ -0,0 +1,117 @@
++// @vitest-environment happy-dom
++import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
++
++vi.mock('./gcal.ts', () => ({ fetchBusy: vi.fn() }));
++
++import { fetchBusy } from './gcal.ts';
++import { mountWidget } from './widget-state.ts';
++
++const DIRECT = { mode: 'direct', serviceId: 'californiano-90', durationMin: 90 } as const;
++
++const tick = (ms = 0) => new Promise((r) => setTimeout(r, ms));
++async function settle() { await tick(); await tick(); }
++
++let container: HTMLElement;
++
++beforeEach(() => {
++  // Solo se falsea la fecha (junio 2026, con huecos libres); los temporizadores siguen siendo reales.
++  vi.useFakeTimers({ toFake: ['Date'], now: new Date('2026-06-01T08:00:00Z') });
++  vi.mocked(fetchBusy).mockReset();
++  document.body.innerHTML = '<div id="bw-mount"></div>';
++  container = document.getElementById('bw-mount')!;
++});
++
++afterEach(() => {
++  vi.useRealTimers();
++});
++
++describe('widget de reservas — recuperación de errores', () => {
++  it('«Reintentar» vuelve a pedir la disponibilidad tras un fallo de Google Calendar', async () => {
++    vi.mocked(fetchBusy).mockRejectedValueOnce(new Error('GCAL_DOWN')).mockResolvedValueOnce([]);
++    mountWidget(container, DIRECT);
++    await settle();
++    expect(container.querySelector('.bw-end--error')).not.toBeNull();
++
++    container.querySelector<HTMLButtonElement>('[data-bw-retry]')!.click();
++    await settle();
++
++    expect(fetchBusy).toHaveBeenCalledTimes(2);
++    expect(container.querySelectorAll('.bw-cal__btn').length).toBeGreaterThan(0);
++  });
++
++  it('avisa cuando el mes no tiene huecos (agenda bloqueada o completa)', async () => {
++    vi.mocked(fetchBusy).mockResolvedValue([{ start: '2026-05-31T22:00:00Z', end: '2026-07-01T00:00:00Z' }]);
++    mountWidget(container, DIRECT);
++    await settle();
++
++    expect(container.querySelectorAll('.bw-cal__btn').length).toBe(0);
++    const msg = container.querySelector('.bw-empty--month');
++    expect(msg?.textContent).toContain('junio 2026');
++    expect(msg?.querySelector('a[href^="https://wa.me/"]')).not.toBeNull();
++  });
++});
++
++describe('widget de reservas — teclado y lectores de pantalla', () => {
++  it('mantiene el foco en el día elegido', async () => {
++    vi.mocked(fetchBusy).mockResolvedValue([]);
++    mountWidget(container, DIRECT);
++    await settle();
++
++    const day = container.querySelector<HTMLButtonElement>('.bw-cal__btn')!;
++    const date = day.dataset.date;
++    day.focus();
++    day.click();
++
++    const active = document.activeElement as HTMLElement;
++    expect(active.dataset.date).toBe(date);
++    expect(active.getAttribute('aria-pressed')).toBe('true');
++  });
++
++  it('mantiene el foco en «Mes siguiente» al cambiar de mes', async () => {
++    vi.mocked(fetchBusy).mockResolvedValue([]);
++    mountWidget(container, DIRECT);
++    await settle();
++
++    const next = container.querySelector<HTMLButtonElement>('[data-cal-next]')!;
++    next.focus();
++    next.click();
++    await settle();
++
++    expect((document.activeElement as HTMLElement).hasAttribute('data-cal-next')).toBe(true);
++  });
++
++  it('la rejilla del calendario es una sola parada de tabulación', async () => {
++    vi.mocked(fetchBusy).mockResolvedValue([]);
++    mountWidget(container, DIRECT);
++    await settle();
++
++    const tabbable = [...container.querySelectorAll('.bw-cal__btn')].filter((b) => b.getAttribute('tabindex') === '0');
++    expect(tabbable.length).toBe(1);
++    expect(container.querySelectorAll('.bw-cal__grid td[tabindex]').length).toBe(0);
++  });
++
++  it('los horarios son botones con aria-pressed, sin listbox/option', async () => {
++    vi.mocked(fetchBusy).mockResolvedValue([]);
++    mountWidget(container, DIRECT);
++    await settle();
++    container.querySelector<HTMLButtonElement>('.bw-cal__btn')!.click();
++
++    expect(container.querySelectorAll('.bw-slots[role="listbox"], .bw-slots [role="option"]').length).toBe(0);
++    const slots = container.querySelectorAll('.bw-slot__btn');
++    expect(slots.length).toBeGreaterThan(0);
++    expect(slots[0]!.getAttribute('aria-pressed')).toBe('false');
++  });
++
++  it('anuncia el día elegido y no repite el anuncio del paso anterior', async () => {
++    vi.mocked(fetchBusy).mockResolvedValue([]);
++    mountWidget(container, { mode: 'hub' });
++    container.querySelector<HTMLButtonElement>('[data-bw-pick-duration="californiano-90"]')!.click();
++    await settle();
++    await tick(150);
++    expect(container.querySelector('.sr-only[aria-live="polite"]')!.textContent).toContain('90 minutos seleccionados');
++
++    container.querySelector<HTMLButtonElement>('.bw-cal__btn')!.click();
++    await tick(150);
++    expect(container.querySelector('.sr-only[aria-live="polite"]')!.textContent).toMatch(/^Día \d{4}-\d{2}-\d{2} seleccionado/);
++  });
++});
+diff --git a/src/lib/booking/widget-state.ts b/src/lib/booking/widget-state.ts
+index 3008304..7187b86 100644
+--- a/src/lib/booking/widget-state.ts
++++ b/src/lib/booking/widget-state.ts
+@@ -9,7 +9,7 @@ import type { FormState } from './widget-render.ts';
+ import {
+   renderServiceHub, renderDurationPicker,
+   renderCalendar, renderSlots, renderForm,
+-  renderSummary, renderSuccess, renderError,
++  renderSummary, renderSuccess, renderError, renderEmptyMonth,
+   getService,
+ } from './widget-render.ts';
+ import { getMonthAvailability, type MonthAvailability } from './availability.ts';
+@@ -61,6 +61,21 @@ function validateForm(form: FormState): boolean {
+   return Object.keys(errors).length === 0;
+ }
+ 
++// ── Foco estable entre renders ────────────────────────────────────────────────
++
++/**
++ * Selector del elemento enfocado que sigue existiendo tras re-renderizar el paso
++ * (día, horario o flechas de mes). Así el foco no cae al <body> en cada selección.
++ */
++function focusSelectorFor(el: Element | null): string | null {
++  if (!(el instanceof HTMLElement)) return null;
++  if (el.matches('.bw-cal__btn') && el.dataset.date) return `.bw-cal__btn[data-date="${el.dataset.date}"]`;
++  if (el.matches('.bw-slot__btn') && el.dataset.slotIso) return `.bw-slot__btn[data-slot-iso="${el.dataset.slotIso}"]`;
++  if (el.matches('[data-cal-prev]')) return '[data-cal-prev]';
++  if (el.matches('[data-cal-next]')) return '[data-cal-next]';
++  return null;
++}
++
+ // ── Montaje del widget ────────────────────────────────────────────────────────
+ 
+ /**
+@@ -101,10 +116,16 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
+   // navegó a otro mes mientras la petición estaba en vuelo).
+   let loadToken = 0;
+ 
++  // Estructura fija: la región aria-live vive FUERA del contenido que se re-renderiza,
++  // para que los anuncios ni se pierdan ni se repitan en cada render.
++  container.innerHTML = '<div class="sr-only" aria-live="polite" data-bw-live></div><div class="bw-content" data-bw-content></div>';
++  const liveEl = container.querySelector<HTMLElement>('[data-bw-live]')!;
++  const contentEl = container.querySelector<HTMLElement>('[data-bw-content]')!;
++
+   function render() {
+     let html = '';
+-    const live = container.querySelector<HTMLElement>('[aria-live="polite"]');
+-    const msg = live?.getAttribute('data-announce');
++    const active = document.activeElement;
++    const restoreFocus = active && contentEl.contains(active) ? focusSelectorFor(active) : null;
+ 
+     if (state.step === 'duration') {
+       // Hub completo (header) vs picker de tipo concreto
+@@ -127,6 +148,9 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
+           <button type="button" class="bw-btn bw-btn--ghost" data-bw-back>← Cambiar duración</button>
+         </div>` + html;
+       }
++      if (!state.isLoadingCal && state.availability && state.availability.days.size === 0) {
++        html += renderEmptyMonth(state.year, state.month0, WHATSAPP_NUMBER);
++      }
+       if (state.selectedDate && state.slotsForDate.length) {
+         html += `<div class="bw-slots-section">${renderSlots(state.slotsForDate, state.selectedSlot)}</div>`;
+         if (state.selectedSlot) {
+@@ -143,17 +167,15 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
+       html = renderError(state.errorCode ?? 'SUBMIT_FAILED', WHATSAPP_NUMBER);
+     }
+ 
+-    container.innerHTML = `
+-      <div aria-live="polite" class="sr-only" data-announce="${msg ?? ''}"></div>
+-      <div class="bw-content">${html}</div>`;
++    contentEl.innerHTML = html;
+ 
+     attachListeners();
+-    if (msg) setTimeout(() => announce(msg), 50);
++    if (restoreFocus) contentEl.querySelector<HTMLElement>(restoreFocus)?.focus();
+   }
+ 
+   function announce(msg: string) {
+-    const el = container.querySelector<HTMLElement>('[aria-live="polite"]');
+-    if (el) { el.textContent = ''; setTimeout(() => { el.textContent = msg; }, 50); }
++    liveEl.textContent = '';
++    setTimeout(() => { liveEl.textContent = msg; }, 50);
+   }
+ 
+   async function loadAvailability() {
+@@ -190,14 +212,11 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
+ 
+   function goToStep(step: BookingStep, announceMsg = '') {
+     state.step = step;
+-    if (announceMsg) {
+-      const el = container.querySelector<HTMLElement>('[aria-live="polite"]');
+-      if (el) el.setAttribute('data-announce', announceMsg);
+-    }
+     render();
++    if (announceMsg) announce(announceMsg);
+     // Foco al primer elemento interactivo del nuevo paso
+     requestAnimationFrame(() => {
+-      const first = container.querySelector<HTMLElement>('button:not([disabled]), a, input, textarea');
++      const first = contentEl.querySelector<HTMLElement>('button:not([disabled]), a, input, textarea');
+       first?.focus();
+     });
+   }
+@@ -254,8 +273,8 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
+         state.selectedDate = date;
+         state.slotsForDate = state.availability?.days.get(date) ?? [];
+         state.selectedSlot = null;
+-        announce(`Día ${date} seleccionado, ${state.slotsForDate.length} horarios disponibles`);
+         render();
++        announce(`Día ${date} seleccionado, ${state.slotsForDate.length} horarios disponibles`);
+         // Scroll suave a slots
+         setTimeout(() => container.querySelector('.bw-slots-section')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+       });
+@@ -274,10 +293,19 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
+       else if (ev.key === 'ArrowUp') delta = -7;
+       else return;
+       ev.preventDefault();
+-      date.setDate(date.getDate() + delta);
+-      const newKey = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+-      const target = container.querySelector<HTMLButtonElement>(`.bw-cal__btn[data-date="${newKey}"]`);
+-      target?.focus();
++      // Salta los días sin huecos en la dirección pulsada, sin salir del mes.
++      let target: HTMLButtonElement | null = null;
++      for (let i = 0; i < 31 && !target; i++) {
++        date.setDate(date.getDate() + delta);
++        if (date.getMonth() !== state.month0) break;
++        const newKey = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
++        target = container.querySelector<HTMLButtonElement>(`.bw-cal__btn[data-date="${newKey}"]`);
++      }
++      if (target) {
++        focused.tabIndex = -1;
++        target.tabIndex = 0;
++        target.focus();
++      }
+     });
+ 
+     // ── Selección de slot ─────────────────────────────────────────────────────
+@@ -297,8 +325,15 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
+       const ev = e as KeyboardEvent;
+       const items = [...container.querySelectorAll<HTMLButtonElement>('.bw-slot__btn')];
+       const idx = items.findIndex((b) => b === document.activeElement);
+-      if (ev.key === 'ArrowDown' && idx < items.length - 1) { ev.preventDefault(); items[idx + 1].focus(); }
+-      else if (ev.key === 'ArrowUp' && idx > 0) { ev.preventDefault(); items[idx - 1].focus(); }
++      if (idx < 0) return;
++      let next = idx;
++      if (ev.key === 'ArrowDown' || ev.key === 'ArrowRight') next = Math.min(idx + 1, items.length - 1);
++      else if (ev.key === 'ArrowUp' || ev.key === 'ArrowLeft') next = Math.max(idx - 1, 0);
++      else return;
++      ev.preventDefault();
++      items[idx]!.tabIndex = -1;
++      items[next]!.tabIndex = 0;
++      items[next]!.focus();
+     });
+ 
+     // ── Continuar a formulario ────────────────────────────────────────────────
+@@ -329,7 +364,10 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
+         });
+         state.form.consent = (form.querySelector<HTMLInputElement>('[name="consentRgpd"]'))?.checked ?? false;
+         if (validateForm(state.form)) goToStep('summary', 'Resumen de tu reserva');
+-        else render();
++        else {
++          render();
++          contentEl.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
++        }
+       });
+     }
+ 
+@@ -379,7 +417,13 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
+     // ── Reintentar desde error ────────────────────────────────────────────────
+     container.querySelector('[data-bw-retry]')?.addEventListener('click', () => {
+       state.errorCode = null;
+-      goToStep(state.selectedSlot ? 'summary' : 'calendar', 'Reintentar');
++      if (state.selectedSlot) {
++        goToStep('summary', 'Reintentar');
++      } else {
++        // El error vino de cargar la disponibilidad: hay que volver a pedirla.
++        goToStep('calendar', 'Cargando de nuevo la disponibilidad');
++        loadAvailability();
++      }
+     });
+   }
+ 
