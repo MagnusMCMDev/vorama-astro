@@ -1,0 +1,4 @@
+# Los parches se sacan tal cual (LF) también en Windows con core.autocrlf=true.
+# Convertidos a CRLF siguen aplicando bien, pero `git apply` avisa de cientos de
+# "trailing whitespace" (el \r de cada línea) y eso confunde a quien los ejecuta.
+*.patch -text
