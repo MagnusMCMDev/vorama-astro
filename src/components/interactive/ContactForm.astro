@@ -207,9 +207,9 @@ if (!accessKey) {
       />
       <label class="contact-form__label contact-form__label--check" for={`${id}-privacidad`}>
         He leído y acepto la
-        <button type="button" class="contact-form__link" data-dialog="dialog-privacidad">
+        <a class="contact-form__link" href={`${import.meta.env.BASE_URL}politica-de-privacidad/`} target="_blank" rel="noopener">
           política de privacidad
-        </button>
+        </a>
         <span class="contact-form__required" aria-hidden="true">*</span>
       </label>
     </div>

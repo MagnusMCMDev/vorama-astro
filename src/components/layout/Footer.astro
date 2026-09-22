@@ -115,18 +115,11 @@ const year = new Date().getFullYear();
     <p class="site-footer__copy">
       &copy; {year} {SITE_CONFIG.name} — Masaje Californiano Barcelona
     </p>
-    <div class="site-footer__legal" role="list">
-      <!-- Los botones disparan LegalDialog (B6). Por ahora son buttons accesibles. -->
-      <button type="button" class="site-footer__legal-btn" data-dialog="dialog-privacidad" role="listitem">
-        Política de Privacidad
-      </button>
-      <button type="button" class="site-footer__legal-btn" data-dialog="dialog-cookies" role="listitem">
-        Política de Cookies
-      </button>
-      <button type="button" class="site-footer__legal-btn" data-dialog="dialog-aviso-legal" role="listitem">
-        Aviso Legal
-      </button>
-    </div>
+    <ul class="site-footer__legal">
+      <li><a class="site-footer__legal-link" href={`${b}/politica-de-privacidad/`}>Política de Privacidad</a></li>
+      <li><a class="site-footer__legal-link" href={`${b}/politica-de-cookies/`}>Política de Cookies</a></li>
+      <li><a class="site-footer__legal-link" href={`${b}/aviso-legal/`}>Aviso Legal</a></li>
+    </ul>
   </div>
 </footer>
 
@@ -302,15 +295,14 @@ const year = new Date().getFullYear();
     display: flex;
     gap: var(--vrm-space-md);
     flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
 
-  .site-footer__legal-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
+  .site-footer__legal-link {
     font-size: var(--vrm-font-size-xs);
     color: var(--vrm-color-text-muted);
-    padding: 0;
     text-decoration: underline;
     text-underline-offset: 2px;
     transition: color var(--vrm-transition-fast);

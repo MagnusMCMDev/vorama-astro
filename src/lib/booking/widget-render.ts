@@ -298,7 +298,7 @@ export function renderForm(slot: Slot, form: FormState): string {
             name="consentRgpd" required aria-required="true" aria-invalid="${form.errors.consent ? 'true' : 'false'}"
             aria-describedby="${form.errors.consent ? 'err-consent' : ''}"
             ${form.consent ? 'checked' : ''}>
-          <span>He leído y acepto la <a href="/legal/privacidad/" target="_blank" rel="noopener" class="bw-link">política de privacidad</a></span>
+          <span>He leído y acepto la <a href="${import.meta.env.BASE_URL}politica-de-privacidad/" target="_blank" rel="noopener" class="bw-link">política de privacidad</a></span>
         </label>
         ${e('consent')}
       </div>
