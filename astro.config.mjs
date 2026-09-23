@@ -8,6 +8,11 @@ export default defineConfig({
   site: 'https://vorama.es',
   base: '/',
   trailingSlash: 'always',
+  // URLs antiguas que Google aún tiene indexadas → página nueva
+  // (en build estático Astro genera una página con meta refresh + canonical + noindex).
+  redirects: {
+    '/servicios': '/servicios-masaje-californiano/',
+  },
   compressHTML: true,
   prefetch: {
     defaultStrategy: 'hover',
