@@ -38,15 +38,13 @@ const jsonLd = {
     latitude: SITE_CONFIG.geo.latitude,
     longitude: SITE_CONFIG.geo.longitude,
   },
-  openingHours: SITE_CONFIG.openingHours,
-  sameAs: [SITE_CONFIG.social.instagram].filter(Boolean),
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: SITE_CONFIG.aggregateRating.ratingValue,
-    reviewCount: SITE_CONFIG.aggregateRating.reviewCount,
-    bestRating: SITE_CONFIG.aggregateRating.bestRating,
-    worstRating: SITE_CONFIG.aggregateRating.worstRating,
-  },
+  openingHoursSpecification: SITE_CONFIG.openingHours.map((h) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: [...h.days],
+    opens: h.opens,
+    closes: h.closes,
+  })),
+  sameAs: [SITE_CONFIG.social.instagram, SITE_CONFIG.social.facebook].filter(Boolean),
 };
 ---
 

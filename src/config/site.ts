@@ -31,7 +31,14 @@ export const SITE_CONFIG = {
     latitude: 41.4095,
     longitude: 2.1754,
   },
-  openingHours: 'Mo-Sa 09:00-20:00', // formato schema.org
+  /**
+   * Horario de atención publicado en los datos estructurados.
+   * Debe coincidir con src/content/booking/availability-rules.json (0=domingo … 6=sábado).
+   */
+  openingHours: [
+    { days: ['Saturday', 'Sunday'], opens: '09:00', closes: '21:00' },
+    { days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '18:00', closes: '21:00' },
+  ],
   social: {
     instagram: 'https://www.instagram.com/vorama.terapias/',
     facebook: 'https://www.facebook.com/vorama.terapias',
@@ -39,11 +46,5 @@ export const SITE_CONFIG = {
   googleBusiness: {
     rating: 4.9,
     count: 80,
-  },
-  aggregateRating: {
-    ratingValue: 5.0,
-    reviewCount: 5,
-    bestRating: 5,
-    worstRating: 1,
   },
 } as const;
