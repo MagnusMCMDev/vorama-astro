@@ -2,8 +2,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 vi.mock('./gcal.ts', () => ({ fetchBusy: vi.fn() }));
+vi.mock('./submit.ts', () => ({ submitBooking: vi.fn().mockResolvedValue({ ok: true }) }));
 
 import { fetchBusy } from './gcal.ts';
+import { submitBooking } from './submit.ts';
 import { mountWidget } from './widget-state.ts';
 
 const DIRECT = { mode: 'direct', serviceId: 'californiano-90', durationMin: 90 } as const;
@@ -17,6 +19,7 @@ beforeEach(() => {
   // Solo se falsea la fecha (junio 2026, con huecos libres); los temporizadores siguen siendo reales.
   vi.useFakeTimers({ toFake: ['Date'], now: new Date('2026-06-01T08:00:00Z') });
   vi.mocked(fetchBusy).mockReset();
+  vi.mocked(submitBooking).mockClear();
   document.body.innerHTML = '<div id="bw-mount"></div>';
   container = document.getElementById('bw-mount')!;
 });
@@ -125,5 +128,94 @@ describe('widget de reservas — teclado y lectores de pantalla', () => {
     await tick(50); // deja correr el requestAnimationFrame de goToStep
 
     expect((document.activeElement as HTMLInputElement).name).toBe('name');
+  });
+});
+
+describe('widget de reservas — pregunta de salud', () => {
+  async function goToForm() {
+    vi.mocked(fetchBusy).mockResolvedValue([]);
+    mountWidget(container, DIRECT);
+    await settle();
+    container.querySelector<HTMLButtonElement>('.bw-cal__btn')!.click();
+    container.querySelector<HTMLButtonElement>('.bw-slot__btn')!.click();
+    container.querySelector<HTMLButtonElement>('[data-bw-to-form]')!.click();
+    await tick(50);
+  }
+
+  function fillContact() {
+    const set = (name: string, value: string) => {
+      container.querySelector<HTMLInputElement>(`[name="${name}"]`)!.value = value;
+    };
+    set('name', 'Ana Prueba');
+    set('email', 'ana@example.com');
+    set('phone', '600000000');
+    container.querySelector<HTMLInputElement>('[name="consentRgpd"]')!.checked = true;
+  }
+
+  function answerHealth(value: 'no' | 'yes') {
+    const radio = container.querySelector<HTMLInputElement>(`[name="health"][value="${value}"]`)!;
+    radio.checked = true;
+    radio.dispatchEvent(new Event('change'));
+  }
+
+  const submitForm = () =>
+    container.querySelector<HTMLFormElement>('.bw-form')!.dispatchEvent(new Event('submit', { cancelable: true }));
+
+  it('la pregunta de salud es obligatoria y el foco va a ella', async () => {
+    await goToForm();
+    fillContact();
+    submitForm();
+
+    expect(container.querySelector('#err-health')?.textContent).toContain('lesión o problema de salud');
+    expect((document.activeElement as HTMLInputElement).name).toBe('health');
+    expect(container.querySelector('.bw-summary')).toBeNull();
+  });
+
+  it('con «Sí» muestra el detalle y exige detalle y consentimiento explícito', async () => {
+    await goToForm();
+    fillContact();
+    answerHealth('yes');
+    expect(container.querySelector<HTMLElement>('[data-health-details]')!.hidden).toBe(false);
+
+    submitForm();
+
+    expect(container.querySelector('#err-healthNotes')).not.toBeNull();
+    expect(container.querySelector('#err-healthConsent')).not.toBeNull();
+    expect(container.querySelector('.bw-summary')).toBeNull();
+  });
+
+  it('con «Sí», detalle y consentimiento, lo muestra en el resumen y lo envía', async () => {
+    await goToForm();
+    fillContact();
+    answerHealth('yes');
+    container.querySelector<HTMLTextAreaElement>('[name="healthNotes"]')!.value = 'Ataque de gota en el pie derecho';
+    container.querySelector<HTMLInputElement>('[name="healthConsent"]')!.checked = true;
+    submitForm();
+
+    expect(container.querySelector('.bw-summary')?.textContent).toContain('Ataque de gota en el pie derecho');
+    container.querySelector<HTMLButtonElement>('[data-bw-submit]')!.click();
+    await settle();
+
+    expect(submitBooking).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(submitBooking).mock.calls[0]![0].customer).toMatchObject({
+      health: 'yes',
+      healthNotes: 'Ataque de gota en el pie derecho',
+      healthConsent: true,
+    });
+  });
+
+  it('con «No» no envía datos de salud', async () => {
+    await goToForm();
+    fillContact();
+    answerHealth('no');
+    submitForm();
+
+    expect(container.querySelector('.bw-summary')?.textContent).toContain('Nada que indicar');
+    container.querySelector<HTMLButtonElement>('[data-bw-submit]')!.click();
+    await settle();
+
+    const customer = vi.mocked(submitBooking).mock.calls[0]![0].customer;
+    expect(customer.health).toBe('no');
+    expect(customer.healthNotes).toBeUndefined();
   });
 });
