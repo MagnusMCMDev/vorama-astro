@@ -8,21 +8,22 @@
 > maintain the index.
 >
 > **Drift check (run first)**: `git diff --stat 8bdbb94..HEAD -- src/content/legal src/lib/booking/widget-render.ts src/lib/booking/submit.ts src/components/sections/MapEmbed.astro src/pages/index.astro src/components/booking/BookingDialog.astro src/components/interactive/ContactForm.astro`
-> Cambios esperados según el orden recomendado (010 → 016 → 011 → 013 → 014 → **012**):
-> `widget-render.ts` (016: calendario, horarios, `aria-invalid`; 011: `href` de privacidad),
-> `ContactForm.astro` (011: enlace de privacidad; 013: honeypot y mensajes de éxito/error) e
-> `index.astro` (014: objeto `jsonLd` y props de `<BaseLayout>`). Ninguno toca el campo de notas, el
-> bloque del vídeo, `MapEmbed.astro`, `submit.ts` ni los `.md`. Cualquier otro cambio: compara con
-> "Current state" y, si no coincide, trátalo como STOP.
+> Cambios esperados según el orden recomendado (010 → 016 → 011 → 013 → 014 → 018 → 017 → **012**):
+> `widget-render.ts` (016, 011 y 017: formulario con la pregunta de salud), `submit.ts` (017: email con el
+> bloque de salud; `checkRateLimit`/`markSubmit` siguen como en "Current state"), `ContactForm.astro` (011 y
+> 013), `index.astro` (014: `jsonLd` y props del layout), `BookingDialog.astro` (017: estilos) y
+> `privacidad.md`/`aviso-legal.md` (018: identidad reducida a nombre y teléfono, `lastUpdated` 2026-09-23).
+> Ninguno toca el bloque del vídeo, `MapEmbed.astro`, `cookies.md` ni las secciones de `privacidad.md` que
+> reescribe este plan. Cualquier otro cambio: compara con "Current state" y, si no coincide, STOP.
 
 ## Status
 
 - **Priority**: P2
 - **Effort**: M
 - **Risk**: LOW (texto legal + dos `try/catch` con test). **El texto legal se publica a nombre del titular: no se mergea sin su visto bueno** (ver "Decisiones del titular").
-- **Depends on**: 011 (necesita las páginas `/politica-de-cookies/` y `/politica-de-privacidad/` y que `LegalContent` muestre la fecha `lastUpdated`)
+- **Depends on**: 011 (páginas legales), 018 (identidad ya reducida) y **017** (la pregunta de salud que este texto describe)
 - **Category**: compliance / bug
-- **Planned at**: commit `8bdbb94`, 2026-09-22
+- **Planned at**: commit `8bdbb94`, 2026-09-22 · **v2** en `f2e3515`, 2026-09-23 (salud con consentimiento explícito, identidad reducida)
 
 ## Why this matters
 
@@ -35,11 +36,11 @@ Los dos textos vienen de la web WordPress antigua (fechados 2024-11-06) y descri
    citas; además, el navegador consulta la disponibilidad directamente a la API de Google Calendar) y
    GitHub (aloja la web y registra la IP de los visitantes por seguridad, según su documentación).
    Tampoco informa de transferencias internacionales (art. 13.1.f RGPD).
-2. **Dice que no se tratan datos de salud** (`privacidad.md:45`), pero el campo "notas" del formulario
-   de reserva los pide expresamente: placeholder `"Ej: zona de tensión, lesión reciente, preferencia de
-   presión…"` (`widget-render.ts:272` en `8bdbb94`). Una lesión es un dato de salud (art. 9 RGPD), y esas notas viajan
-   por Web3Forms y Gmail. Por defecto este plan aplica **minimización**: el formulario deja de pedirlos
-   (se hablan en persona) y la política lo explica.
+2. **Dice que no se tratan datos de salud** (`privacidad.md:45`), pero la reserva sí los recoge. Por
+   decisión del titular (2026-09-23: la seguridad del cliente exige saber las contraindicaciones antes de
+   confirmar), el plan 017 añade una **pregunta de salud obligatoria** y, si la respuesta es "Sí", un detalle
+   con **consentimiento explícito** (art. 9.2.a RGPD). La política debe declarar ese tratamiento: qué se
+   pide, para qué, con qué base legal y quién lo recibe.
 3. **Única base legal "el consentimiento"** (`privacidad.md:47-51`) y el principio de licitud dice que
    "se requerirá en todo momento el consentimiento" (línea 35). Las solicitudes de reserva y de vale
    regalo son medidas precontractuales a petición del interesado (art. 6.1.b), no consentimiento.
@@ -62,27 +63,30 @@ Los dos textos vienen de la web WordPress antigua (fechados 2024-11-06) y descri
 El plan aplica estos valores por defecto. El operador puede cambiarlos editando este archivo antes de
 ejecutarlo:
 
-1. **Datos de salud por la web → NO se piden** (Step 2). Si el titular quiere seguir pidiendo lesiones
-   en el formulario, **no ejecutes este plan**: esa opción exige consentimiento explícito (art. 9.2.a
-   RGPD), otra casilla y otro texto, y se planifica aparte.
-2. **Plazo de conservación → 18 meses** (el que ya figura en la política actual).
-3. Fuera del repo (lo hace el titular, no el ejecutor): aceptar el **acuerdo de encargo de tratamiento
+1. **Datos de salud → SÍ se piden**, con pregunta obligatoria y consentimiento explícito (plan 017,
+   decidido por el titular el 2026-09-23). Este plan redacta la política para ese formulario.
+2. **Plazo de conservación → 18 meses** (confirmado por el titular el 2026-09-23).
+3. **Identidad → solo nombre y teléfono** (plan 018, ya publicado): este plan no toca esas líneas.
+4. Fuera del repo (lo hace el titular, no el ejecutor): aceptar el **acuerdo de encargo de tratamiento
    (DPA) de Web3Forms** (su política dice que lo ofrece) y revisar si su panel permite borrar envíos antiguos.
+   Con datos de salud pasando por Web3Forms, el DPA deja de ser opcional.
 
 ## Current state
 
-**Plan probado**: los Steps 2-6 se aplicaron en un clon del repo (sobre 010, 016, 011, 013 y 014), tomando
-los bloques de código **de este mismo archivo**: `astro check` 0/0/0, 23/23 tests en el clon —hoy serían 24: el 016 aportó al final 8 tests— (los 2 nuevos de
-`submit.test.ts` incluidos, y el de `sessionStorage` bloqueado en rojo antes del arreglo), build de 16
-páginas y todas las comprobaciones de los Steps en verde.
+**Plan probado (v1)**: los Steps 3-6 se aplicaron en un clon del repo (sobre 010, 016, 011, 013 y 014),
+tomando los bloques de código **de este mismo archivo**: `astro check` 0/0/0, los 2 tests nuevos de
+`submit.test.ts` (el de `sessionStorage` bloqueado en rojo antes del arreglo), build de 16 páginas y todas
+las comprobaciones de los Steps en verde. La v2 solo cambia textos de los Steps 3b-3g, quita el antiguo
+Step 2 y añade `health: 'no'` al test; los recuentos parten de los 29 tests que deja el 017.
 
 - `src/content/legal/privacidad.md` (101 líneas). Secciones `###` en este orden: Leyes (10-17), Identidad
   del responsable (19-25), Registro de Datos (27-29), Principios (31-41), Categorías (43-45), Base legal
   (47-51), Fines (53-55), Retención (57-59), Destinatarios (61-63), Menores (65-67), Secreto y seguridad
   (69-71), Derechos (73-88), Reclamaciones (90-92); luego `## II. ACEPTACIÓN…` (94-98) y la línea final
   100 (`*Este documento de Política de Privacidad fue creado el día 06/11/2024.*`).
-  - **Las líneas 19-25 y 85-88 contienen los datos identificativos y la dirección del titular. No las
-    toques** (y no las copies en commits ni en informes).
+  - **Identidad y derechos**: tras el plan 018, la sección de identidad solo tiene el nombre y el teléfono
+    del titular, y el párrafo de derechos remite al formulario de contacto y al teléfono/WhatsApp. **No los
+    toques.** Los números de línea de este bloque son los de `8bdbb94`: guíate siempre por los encabezados.
   - Línea 16: `- El Real Decreto 1720/2007, de 21 de diciembre, por el que se aprueba el Reglamento de desarrollo de la Ley Orgánica 15/1999, … (RDLOPD).`
   - Líneas 27-29:
 
@@ -105,30 +109,10 @@ páginas y todas las comprobaciones de los Steps en verde.
 - Formularios reales (lo que la política debe describir):
   - `ContactForm.astro` variante `contacto`: nombre, apellidos, email, teléfono, comentario, casilla de privacidad.
   - `ContactForm.astro` variante `regala`: lo mismo + masaje a regalar, duración y "Mensaje para el destinatario (opcional)".
-  - Widget de reservas (`widget-render.ts:243-284`): nombre, email, teléfono, notas opcionales (máx. 500), casilla de privacidad. El email que llega incluye `Consentimiento RGPD: aceptado.` (`submit.ts:50`).
+  - Widget de reservas (tras el 017): nombre, email, teléfono, **pregunta de salud obligatoria (No/Sí)**; con
+    "Sí", detalle (máx. 500) y casilla de consentimiento explícito; notas opcionales de preferencias; casilla
+    de privacidad. El email incluye `Salud: …` y `Consentimiento RGPD: aceptado.`.
 - Almacenamiento: `gcal.ts:27-29` clave `booking:freebusy:${year}-${MM}` (caché de 60 s, `FREEBUSY_CACHE_TTL_MS`), protegida con `try/catch`; `submit.ts:13` clave `booking:last-submit`.
-- `src/lib/booking/widget-render.ts:268-275` en `8bdbb94` (≈ 287-294 con el 016 aplicado; búscalo por el
-  texto del `placeholder`):
-
-```ts
-      <div class="bw-field">
-        <label class="bw-field__label" for="bw-notes">Si procede, indique algún detalle para preparar la sesión <span class="bw-field__optional">(opcional)</span></label>
-        <textarea class="bw-field__input bw-field__textarea" id="bw-notes" name="notes"
-          rows="3" maxlength="500"
-          placeholder="Ej: zona de tensión, lesión reciente, preferencia de presión…"
-          aria-describedby="${form.errors.notes ? 'err-notes' : ''}">${esc(form.notes)}</textarea>
-        ${e('notes')}
-      </div>
-```
-
-- Estilos del widget: `<style is:global>` en `src/components/booking/BookingDialog.astro` (el HTML del
-  widget se inyecta por JS, por eso son globales). Patrón, líneas 265 y 280:
-
-```css
-.bw-field__optional { font-weight: 400; color: var(--vrm-color-text-muted); }
-.bw-field__error { font-size: var(--vrm-font-size-xs); color: #c0392b; }
-```
-
 - `src/lib/booking/submit.ts:13-25`:
 
 ```ts
@@ -168,7 +152,7 @@ function markSubmit(): void {
 |---------|---------|---------------------|
 | Install | `npm ci` | exit 0 |
 | Typecheck | `npm run check` | `0 errors` |
-| Tests | `npm test` | 24 passed (22 con el 016 aplicado + 2 nuevos; 16 si el 016 no está) |
+| Tests | `npm test` | 31 passed (29 con el 017 aplicado + 2 nuevos) |
 | Build | `npm run build` | `Complete!` (16 páginas si el 011 está aplicado) |
 
 `npm run build` necesita `.env`: en un worktree nuevo crea uno con las 5 claves `PUBLIC_GCAL_API_KEY`,
@@ -180,9 +164,7 @@ function markSubmit(): void {
 **In scope**:
 - `src/content/legal/privacidad.md` (solo las secciones indicadas)
 - `src/content/legal/cookies.md` (reescritura completa)
-- `src/lib/booking/widget-render.ts` (solo el campo de notas)
 - `src/components/interactive/ContactForm.astro` (solo el array `lines` del email, Step 5b)
-- `src/components/booking/BookingDialog.astro` (añadir una regla CSS `.bw-field__hint`)
 - `src/lib/booking/submit.ts` (solo `checkRateLimit` y `markSubmit`)
 - `src/lib/booking/submit.test.ts` (crear)
 - `src/components/sections/MapEmbed.astro` (una línea de aviso + su estilo)
@@ -190,8 +172,9 @@ function markSubmit(): void {
 - `plans/README.md` (fila de estado)
 
 **Out of scope** (NO tocar):
-- `src/content/legal/aviso-legal.md` — su contenido sigue siendo correcto.
-- Las líneas de identidad y dirección del titular en `privacidad.md` (19-25, 85-88).
+- `src/content/legal/aviso-legal.md` — ya lo ajustó el plan 018.
+- La sección de identidad y el párrafo de derechos de `privacidad.md` (plan 018).
+- El formulario de reserva (`widget-render.ts`, `widget-state.ts`, `BookingDialog.astro`): lo cambia el plan 017.
 - Secciones de privacidad no listadas en el Step 3 (Fines, Menores, Seguridad, Derechos, Reclamaciones).
 - `src/lib/booking/gcal.ts` (ya protege su acceso a `sessionStorage`), `availability.ts` y el resto del widget.
 - Añadir un banner de cookies: no hace falta (la web no instala cookies) y no forma parte de este plan.
@@ -200,8 +183,8 @@ function markSubmit(): void {
 ## Git workflow
 
 - Branch: `advisor/012-privacy-cookies`.
-- Commits: (1) texto legal; (2) campo de notas del widget; (3) avisos de YouTube/Maps; (4) rate-limit
-  tolerante + test. Español, imperativo, ≤70 caracteres. Ejemplo: `Tolerar sessionStorage bloqueado al enviar reservas`.
+- Commits: (1) texto legal; (2) avisos de YouTube/Maps; (3) consentimiento en el email del formulario de
+  contacto; (4) rate-limit tolerante + test. Español, imperativo, ≤70 caracteres. Ejemplo: `Tolerar sessionStorage bloqueado al enviar reservas`.
 - NO hagas push ni abras PR: el titular debe leer el texto antes del merge.
 
 ## Steps
@@ -210,32 +193,13 @@ function markSubmit(): void {
 
 `npm ci`, `.env` ficticio, `npm test`, `npm run build`.
 
-**Verify**: `test -f src/pages/politica-de-cookies/index.astro && test -f src/components/sections/LegalContent.astro && echo OK` → `OK` (si no, el plan 011 no está aplicado: STOP) · `npm test` → `22 passed` (`14 passed` si el 016 no está aplicado).
+**Verify**: `test -f src/pages/politica-de-cookies/index.astro && test -f src/components/sections/LegalContent.astro && echo OK` → `OK` (si no, el plan 011 no está aplicado: STOP) · `grep -c 'name="healthConsent"' src/lib/booking/widget-render.ts` → `1` (si no, el plan 017 no está aplicado: STOP) · `npm test` → `29 passed`.
 
-### Step 2: El formulario de reserva deja de pedir datos de salud
+### Step 2: (sin cambios en el formulario)
 
-En `widget-render.ts`, sustituye el bloque del campo de notas (el `<div class="bw-field">` que contiene
-`id="bw-notes"`) por:
+La pregunta de salud y el nuevo placeholder de notas los añade el plan 017. Este plan no toca el widget.
 
-```ts
-      <div class="bw-field">
-        <label class="bw-field__label" for="bw-notes">Si procede, indique algún detalle para preparar la sesión <span class="bw-field__optional">(opcional)</span></label>
-        <textarea class="bw-field__input bw-field__textarea" id="bw-notes" name="notes"
-          rows="3" maxlength="500"
-          placeholder="Ej: zona en la que centrarse, preferencia de presión…"
-          aria-describedby="bw-notes-hint${form.errors.notes ? ' err-notes' : ''}">${esc(form.notes)}</textarea>
-        <span class="bw-field__hint" id="bw-notes-hint">No incluya datos de salud (lesiones, dolencias…): los comentaremos en persona antes de la sesión.</span>
-        ${e('notes')}
-      </div>
-```
-
-En `BookingDialog.astro`, justo después de la regla `.bw-field__error` (línea 280), añade:
-
-```css
-.bw-field__hint { font-size: var(--vrm-font-size-xs); color: var(--vrm-color-text-muted); }
-```
-
-**Verify**: `grep -c "lesión" src/lib/booking/widget-render.ts` → `0` · `grep -c "bw-notes-hint" src/lib/booking/widget-render.ts` → `2` · `npm run check` → 0 errors.
+**Verify**: `grep -c "lesión reciente" src/lib/booking/widget-render.ts` → `0` (lo quitó el 017).
 
 ### Step 3: Corregir `privacidad.md`
 
@@ -252,7 +216,7 @@ Voramà Terapias solo trata los datos personales que el Usuario facilita volunta
 
 - **Formulario de contacto:** nombre, apellidos, email, teléfono y el comentario o la pregunta. Se usan para responder a la consulta.
 - **Solicitud de vale regalo:** los mismos datos, el masaje y la duración elegidos y, si lo escribe, un mensaje para la persona que recibirá el regalo. Se usan para gestionar la compra y el envío del vale.
-- **Solicitud de reserva:** nombre, email, teléfono, el servicio, la fecha y la hora elegidos y, si las añade, notas para preparar la sesión. Se usan para confirmar y gestionar la cita.
+- **Solicitud de reserva:** nombre, email, teléfono, el servicio, la fecha y la hora elegidos, la respuesta a si tiene alguna lesión, dolencia, embarazo u otro problema de salud y, si responde que sí, la descripción que él mismo haga; y, si las añade, notas para preparar la sesión. Se usan para confirmar y gestionar la cita y para valorar, antes de confirmarla, si el masaje es adecuado o está contraindicado.
 
 El Sitio Web no utiliza herramientas de analítica ni de publicidad y no elabora perfiles de sus visitantes.
 ```
@@ -266,7 +230,9 @@ El Sitio Web no utiliza herramientas de analítica ni de publicidad y no elabora
 **3d.** Sustituye el párrafo de `### Categorías de datos personales` por:
 
 ```md
-Se tratan datos identificativos y de contacto (nombre, apellidos, email y teléfono) y los detalles de cada solicitud (servicio, fecha y hora, comentarios). El Sitio Web no solicita categorías especiales de datos del artículo 9 del RGPD, como los datos de salud: esa información se comenta en persona antes de la sesión. Si el Usuario la incluye por iniciativa propia en un campo de texto libre, solo se usará para preparar su sesión y se suprimirá junto con la solicitud.
+Se tratan datos identificativos y de contacto (nombre, apellidos, email y teléfono) y los detalles de cada solicitud (servicio, fecha y hora, comentarios).
+
+En la solicitud de reserva se pregunta, además, si el Usuario tiene alguna lesión, dolencia, embarazo u otro problema de salud. Si responde que sí, se tratan los datos de salud que él mismo describa, que son una categoría especial de datos (artículo 9 del RGPD). Se usan únicamente para valorar si el masaje es adecuado o está contraindicado y, en su caso, para desaconsejar o adaptar la sesión.
 ```
 
 **3e.** Sustituye los dos párrafos de `### Base legal para el tratamiento de los datos personales` por:
@@ -274,14 +240,15 @@ Se tratan datos identificativos y de contacto (nombre, apellidos, email y teléf
 ```md
 - **Solicitudes de reserva y de vale regalo:** la aplicación, a petición del Usuario, de medidas precontractuales y, en su caso, la ejecución del contrato de prestación del servicio (artículo 6.1.b del RGPD).
 - **Formulario de contacto:** el consentimiento del Usuario (artículo 6.1.a del RGPD), que presta al marcar la casilla de aceptación antes de enviarlo.
+- **Datos de salud de la solicitud de reserva:** el consentimiento explícito del Usuario (artículo 9.2.a del RGPD), que presta marcando la casilla específica que aparece cuando indica que tiene un problema de salud. Sin ese consentimiento no se puede enviar la descripción.
 
-El Usuario puede retirar su consentimiento en cualquier momento escribiendo al email de contacto, sin que ello afecte a la licitud del tratamiento anterior a la retirada.
+El Usuario puede retirar su consentimiento en cualquier momento a través del formulario de contacto o por teléfono o WhatsApp, sin que ello afecte a la licitud del tratamiento anterior a la retirada.
 ```
 
 **3f.** Sustituye el párrafo de `### Períodos de retención de los datos personales` por:
 
 ```md
-Los datos de cada solicitud se conservan como máximo **18 meses** desde el último contacto, o hasta que el Usuario solicite su supresión, salvo que una obligación legal exija conservarlos más tiempo (por ejemplo, las facturas de los servicios contratados). Web3Forms, el proveedor que transmite los formularios, conserva además una copia de los envíos según su propia política de privacidad.
+Los datos de cada solicitud, incluidos los de salud, se conservan como máximo **18 meses** desde el último contacto, o hasta que el Usuario solicite su supresión, salvo que una obligación legal exija conservarlos más tiempo (por ejemplo, las facturas de los servicios contratados). Web3Forms, el proveedor que transmite los formularios, conserva además una copia de los envíos según su propia política de privacidad.
 ```
 
 **3g.** Sustituye la sección `### Destinatarios de los datos personales` (encabezado + párrafo) por:
@@ -291,7 +258,7 @@ Los datos de cada solicitud se conservan como máximo **18 meses** desde el últ
 
 No se ceden datos a terceros, salvo obligación legal. Para prestar el servicio intervienen estos proveedores, que acceden a los datos solo en la medida necesaria:
 
-- **Web3Forms** (Web3Creative, India): transmite el contenido de los formularios al correo electrónico de Voramà Terapias.
+- **Web3Forms** (Web3Creative, India): transmite el contenido de los formularios, incluidos, en su caso, los datos de salud de la solicitud de reserva, al correo electrónico de Voramà Terapias.
 - **Google** (Google Ireland Ltd. y Google LLC): proveedor del correo electrónico en el que se reciben las solicitudes y del calendario con el que se gestionan las citas. Al abrir el calendario de reservas, el navegador del Usuario consulta la disponibilidad directamente a Google, que recibe su dirección IP.
 - **GitHub** (GitHub, Inc.): aloja el Sitio Web y registra la dirección IP de los visitantes por motivos de seguridad.
 
@@ -313,7 +280,8 @@ Antes de enviar cualquier formulario, el Usuario debe leer esta Política de Pri
 **Verify**:
 - `grep -c "Google Analytics\|1720/2007\|implicará la aceptación\|creado el día" src/content/legal/privacidad.md` → `0`
 - `grep -c "Web3Forms\|GitHub\|Transferencias internacionales\|6.1.b" src/content/legal/privacidad.md` → `≥4`
-- `git diff src/content/legal/privacidad.md | grep "^[-+]" | grep -c "NIF\|\*\*Dirección"` → `0` (no has tocado la identidad ni la dirección; ojo, distingue mayúsculas: el texto nuevo dice "dirección IP" en minúscula y no debe contar)
+- `grep -c "9.2.a" src/content/legal/privacidad.md` → `1` · `grep -c "problema de salud" src/content/legal/privacidad.md` → `≥2`
+- `git diff src/content/legal/privacidad.md | grep "^[-+]" | grep -c "623 941 891"` → `0` (no has tocado la identidad ni los derechos)
 
 ### Step 4: Reescribir `cookies.md`
 
@@ -435,7 +403,7 @@ const service: Service = {
 const request: BookingRequest = {
   serviceId: 'californiano-90',
   startISO: '2026-10-05T18:00:00+02:00',
-  customer: { name: 'Ana Prueba', email: 'ana@example.com', phone: '600000000', consentRgpd: true },
+  customer: { name: 'Ana Prueba', email: 'ana@example.com', phone: '600000000', health: 'no', consentRgpd: true },
   hp_website: '',
 };
 
@@ -476,7 +444,8 @@ describe('submitBooking — almacenamiento de sesión', () => {
 ```
 
    (Se usa `vi.stubGlobal` en ambos casos para que el resultado no dependa de si la versión de Node trae
-   `sessionStorage` nativo.)
+   `sessionStorage` nativo. `health: 'no'` es obligatorio desde el plan 017: sin él, el primer test fallaría
+   por la validación y no por `sessionStorage`.)
 
 **Verify**: `npm test` → el test "envía la reserva aunque el navegador bloquee sessionStorage" **falla**
 (con `SecurityError`) y el de rate-limit pasa. Si el primero ya pasa antes del arreglo: STOP.
@@ -505,28 +474,28 @@ function markSubmit(): void {
 }
 ```
 
-**Verify**: `npm test` → `24 passed` (`16 passed` si el 016 no está aplicado) · `npm run check` → 0 errors.
+**Verify**: `npm test` → `31 passed` · `npm run check` → 0 errors.
 
 ### Step 7: Verificación final
 
-**Verify**: `npm run check` → 0 errors · `npm test` → 24 passed (16 sin el 016) · `npm run build` → OK ·
+**Verify**: `npm run check` → 0 errors · `npm test` → 31 passed · `npm run build` → OK ·
 `grep -c "Web3Forms" dist/politica-de-privacidad/index.html` → `≥1` ·
 `grep -c "Analytics" dist/politica-de-cookies/index.html` → `0`.
 
 ## Test plan
 
 - Nuevo: `src/lib/booking/submit.test.ts` (2 tests; ver Step 6). Sigue el estilo de `availability.test.ts`.
-- Manual (`npm run preview`): abrir "Reservar", llegar al formulario y comprobar el nuevo placeholder y
-  el aviso bajo las notas; en `/contacto/` ver el aviso en los botones de mapa; en la portada, el aviso
-  bajo el vídeo con enlace a `/politica-de-cookies/`; leer las dos páginas legales completas.
+- Manual (`npm run preview`): en `/contacto/` ver el aviso en los botones de mapa; en la portada, el aviso
+  bajo el vídeo con enlace a `/politica-de-cookies/`; leer las dos páginas legales completas y comprobar que
+  lo que dicen de la reserva coincide con el formulario (pregunta de salud, casilla de consentimiento).
 
 ## Done criteria
 
 - [ ] `grep -rn "Google Analytics" src/content/legal/` → sin resultados
-- [ ] `grep -c "lesión" src/lib/booking/widget-render.ts` → 0
+- [ ] La política declara la pregunta de salud y su base legal (consentimiento explícito, art. 9.2.a)
 - [ ] `lastUpdated` de `privacidad.md` y `cookies.md` = fecha de ejecución; `aviso-legal.md` sin cambios
-- [ ] Las líneas de identidad y dirección del titular de `privacidad.md` no aparecen en el diff
-- [ ] `npm test` → 24 passed (16 sin el 016) · `npm run check` → 0 errors · `npm run build` OK
+- [ ] La sección de identidad y el párrafo de derechos de `privacidad.md` (plan 018) no aparecen en el diff
+- [ ] `npm test` → 31 passed · `npm run check` → 0 errors · `npm run build` OK
 - [ ] El email del formulario de contacto incluye `Consentimiento RGPD: aceptado.`
 - [ ] `git status` sin cambios fuera del Scope (y sin `.env`)
 - [ ] Fila 012 de `plans/README.md` actualizada, con la nota "pendiente de visto bueno del titular"
@@ -536,7 +505,7 @@ function markSubmit(): void {
 Para y reporta si:
 
 - El plan 011 no está aplicado (Step 1).
-- La casilla de privacidad del widget (`widget-render.ts`, alrededor de la línea 282) ya no enlaza a
+- La casilla de privacidad del widget (`widget-render.ts`, busca `name="consentRgpd"`) ya no enlaza a
   `/politica-de-privacidad/`.
 - El test de `sessionStorage` bloqueado pasa **antes** del arreglo (el código habrá cambiado).
 - El build falla al validar el front matter de la colección `legal`.
@@ -547,8 +516,9 @@ Para y reporta si:
 
 - **Cualquier servicio de terceros nuevo** (analítica, chat, embeds, otro proveedor de formularios)
   obliga a actualizar estas dos páginas, y si instala cookies no exentas, a poner un banner de consentimiento.
-- Si en el futuro se quieren pedir datos de salud en la reserva: consentimiento explícito (art. 9.2.a),
-  otra casilla y otro texto. No basta con volver a cambiar el placeholder.
+- La política describe la pregunta de salud del plan 017: si cambia el formulario (por ejemplo, se deja de
+  pedir el detalle o se pide por WhatsApp), hay que actualizar las secciones de categorías, base legal y
+  destinatarios.
 - Web3Forms conserva los envíos (hasta 3 años según su política de 2026): si cambia de política o de
   proveedor, revisar la sección de retención y la de transferencias.
 - Revisor: leer el diff de los `.md` completo; el titular debe aprobar el texto antes del merge.

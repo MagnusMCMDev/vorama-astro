@@ -1,0 +1,411 @@
+diff --git a/src/components/booking/BookingDialog.astro b/src/components/booking/BookingDialog.astro
+index 55c2a72..f2be2f1 100644
+--- a/src/components/booking/BookingDialog.astro
++++ b/src/components/booking/BookingDialog.astro
+@@ -278,6 +278,14 @@ import Dialog from '~/components/interactive/Dialog.astro';
+ .bw-field__input--error { border-color: #c0392b; }
+ .bw-field__textarea { resize: vertical; min-height: 80px; }
+ .bw-field__error { font-size: var(--vrm-font-size-xs); color: #c0392b; }
++.bw-field__hint { font-size: var(--vrm-font-size-xs); color: var(--vrm-color-text-muted); }
++.bw-health { border: 0; padding: 0; margin: 0; min-inline-size: 0; }
++.bw-health legend { padding: 0; margin-bottom: 4px; }
++.bw-health__options { display: flex; gap: var(--vrm-space-lg); }
++.bw-health__option { display: inline-flex; align-items: center; gap: var(--vrm-space-xs); font-size: var(--vrm-font-size-sm); cursor: pointer; }
++.bw-health__option input { width: 18px; height: 18px; margin: 0; accent-color: var(--vrm-color-primary); }
++.bw-health__details { display: flex; flex-direction: column; gap: var(--vrm-space-sm); margin-top: var(--vrm-space-sm); }
++.bw-health__details[hidden] { display: none; }
+ .bw-field--check { flex-direction: row; align-items: flex-start; gap: var(--vrm-space-sm); }
+ .bw-field__check-label { display: flex; align-items: flex-start; gap: var(--vrm-space-sm); font-size: var(--vrm-font-size-sm); cursor: pointer; line-height: 1.4; }
+ .bw-field__checkbox { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; accent-color: var(--vrm-color-primary); }
+diff --git a/src/lib/booking/booking-health.test.ts b/src/lib/booking/booking-health.test.ts
+new file mode 100644
+index 0000000..e22ec78
+--- /dev/null
++++ b/src/lib/booking/booking-health.test.ts
+@@ -0,0 +1,61 @@
++import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
++import { submitBooking } from './submit.ts';
++import type { BookingRequest, Service } from './types.ts';
++
++const service: Service = {
++  id: 'californiano-90', name: 'Masaje californiano', durationMin: 90, priceEur: 60,
++};
++
++const base: BookingRequest = {
++  serviceId: 'californiano-90',
++  startISO: '2026-10-05T18:00:00+02:00',
++  customer: { name: 'Ana Prueba', email: 'ana@example.com', phone: '600000000', health: 'no', consentRgpd: true },
++  hp_website: '',
++};
++
++let fetchMock: ReturnType<typeof vi.fn>;
++
++beforeEach(() => {
++  // sessionStorage propio por test: el rate-limit de 1 minuto no debe cruzarse entre tests.
++  const store = new Map<string, string>();
++  vi.stubGlobal('sessionStorage', {
++    getItem: (k: string) => store.get(k) ?? null,
++    setItem: (k: string, v: string) => { store.set(k, v); },
++  });
++  fetchMock = vi.fn().mockResolvedValue({ json: async () => ({ success: true }) });
++  vi.stubGlobal('fetch', fetchMock);
++});
++
++afterEach(() => {
++  vi.unstubAllGlobals();
++});
++
++const sentPayload = () => JSON.parse(fetchMock.mock.calls[0]![1].body);
++
++describe('reserva — datos de salud en el email', () => {
++  it('sin problemas de salud: lo dice y no marca el asunto', async () => {
++    await submitBooking(base, service);
++    const payload = sentPayload();
++    expect(payload.subject).not.toContain('revisar salud');
++    expect(payload.message).toContain('Salud: nada que indicar.');
++  });
++
++  it('con un problema de salud: marca el asunto e incluye el detalle y el consentimiento', async () => {
++    await submitBooking({
++      ...base,
++      customer: { ...base.customer, health: 'yes', healthNotes: 'Ataque de gota', healthConsent: true },
++    }, service);
++    const payload = sentPayload();
++    expect(payload.subject).toContain('⚠ revisar salud');
++    expect(payload.message).toContain('Detalle: Ataque de gota');
++    expect(payload.message).toContain('Consentimiento explícito (datos de salud): sí.');
++  });
++
++  it('rechaza «Sí» sin consentimiento explícito y no envía nada', async () => {
++    await expect(submitBooking({
++      ...base,
++      customer: { ...base.customer, health: 'yes', healthNotes: 'Ataque de gota' },
++    }, service)).rejects.toThrow();
++    expect(fetchMock).not.toHaveBeenCalled();
++  });
++});
+diff --git a/src/lib/booking/schemas.ts b/src/lib/booking/schemas.ts
+index 755ec0a..38f3c2f 100644
+--- a/src/lib/booking/schemas.ts
++++ b/src/lib/booking/schemas.ts
+@@ -65,10 +65,20 @@ export const CustomerSchema = z.object({
+     .string()
+     .max(500, 'Las notas no pueden superar 500 caracteres')
+     .optional(),
++  health: z.enum(['no', 'yes'], { message: 'Indica si tienes alguna lesión o problema de salud' }),
++  healthNotes: z
++    .string()
++    .max(500, 'El detalle de salud no puede superar 500 caracteres')
++    .optional(),
++  healthConsent: z.boolean().optional(),
+   consentRgpd: z
+     .boolean()
+     .refine((v) => v === true, { message: 'Debes aceptar la política de privacidad' }),
+-});
++}).refine(
++  // Con «Sí» hacen falta el detalle y el consentimiento explícito (art. 9.2.a RGPD).
++  (c) => c.health === 'no' || (!!c.healthNotes?.trim() && c.healthConsent === true),
++  { message: 'Falta el detalle de salud o el consentimiento para tratarlo', path: ['healthConsent'] },
++);
+ 
+ export type Customer = z.infer<typeof CustomerSchema>;
+ 
+diff --git a/src/lib/booking/submit.ts b/src/lib/booking/submit.ts
+index eddb2a9..34c6c07 100644
+--- a/src/lib/booking/submit.ts
++++ b/src/lib/booking/submit.ts
+@@ -47,6 +47,16 @@ function formatEmailBody(request: BookingRequest, service: Service): string {
+     `  Teléfono:  ${customer.phone}`,
+   ];
+   if (customer.notes) lines.push(`  Notas:     ${customer.notes}`);
++  lines.push('');
++  if (customer.health === 'yes') {
++    lines.push(
++      'Salud: ⚠ INDICA UNA LESIÓN O PROBLEMA DE SALUD — revisar antes de confirmar',
++      `  Detalle: ${customer.healthNotes ?? ''}`,
++      '  Consentimiento explícito (datos de salud): sí.',
++    );
++  } else {
++    lines.push('Salud: nada que indicar.');
++  }
+   lines.push('', 'Consentimiento RGPD: aceptado.', '', '— Enviado desde vorama.es');
+   return lines.join('\n');
+ }
+@@ -77,7 +87,7 @@ export async function submitBooking(
+ 
+   const payload = {
+     access_key: WEB3FORMS_KEY,
+-    subject:    `[Voramà] Solicitud: ${service.name} — ${fecha} ${hora}`,
++    subject:    `[Voramà] Solicitud: ${service.name} — ${fecha} ${hora}${request.customer.health === 'yes' ? ' · ⚠ revisar salud' : ''}`,
+     from_name:  request.customer.name,
+     replyto:    request.customer.email,
+     botcheck:   '',
+diff --git a/src/lib/booking/types.ts b/src/lib/booking/types.ts
+index f3c5d33..fce008b 100644
+--- a/src/lib/booking/types.ts
++++ b/src/lib/booking/types.ts
+@@ -61,6 +61,12 @@ export interface Customer {
+   email: string;
+   phone: string;
+   notes?: string;
++  /** Respuesta a «¿Tienes ahora mismo alguna lesión, dolencia, embarazo u otro problema de salud?». */
++  health: 'no' | 'yes';
++  /** Detalle del problema de salud (solo si health === 'yes'). */
++  healthNotes?: string;
++  /** Consentimiento explícito para tratar datos de salud, art. 9.2.a RGPD (solo si health === 'yes'). */
++  healthConsent?: boolean;
+   consentRgpd: true;
+ }
+ 
+diff --git a/src/lib/booking/widget-render.ts b/src/lib/booking/widget-render.ts
+index 314d560..32caff5 100644
+--- a/src/lib/booking/widget-render.ts
++++ b/src/lib/booking/widget-render.ts
+@@ -241,7 +241,9 @@ export function renderEmptyMonth(year: number, month0: number, whatsapp: string)
+ 
+ export interface FormState {
+   name: string; email: string; phone: string; notes: string;
+-  errors: Partial<Record<'name'|'email'|'phone'|'notes'|'consent', string>>;
++  /** '' = todavía sin responder. */
++  health: '' | 'no' | 'yes'; healthNotes: string; healthConsent: boolean;
++  errors: Partial<Record<'name'|'email'|'phone'|'notes'|'health'|'healthNotes'|'healthConsent'|'consent', string>>;
+   consent: boolean;
+ }
+ 
+@@ -284,11 +286,35 @@ export function renderForm(slot: Slot, form: FormState): string {
+           aria-required="true" aria-invalid="${form.errors.phone ? 'true' : 'false'}" aria-describedby="${form.errors.phone ? 'err-phone' : ''}">
+         ${e('phone')}
+       </div>
++      <fieldset class="bw-field bw-health" aria-describedby="bw-health-hint${form.errors.health ? ' err-health' : ''}">
++        <legend class="bw-field__label">¿Tienes ahora mismo alguna lesión, dolencia, embarazo u otro problema de salud? <span aria-hidden="true">*</span></legend>
++        <span class="bw-field__hint" id="bw-health-hint">Por ejemplo: fiebre o infección, inflamación o un ataque de gota, heridas o problemas en la piel, trombosis o varices importantes, una operación reciente… En algunos casos el masaje no es recomendable y prefiero saberlo antes de confirmar la cita.</span>
++        <div class="bw-health__options">
++          <label class="bw-health__option"><input type="radio" name="health" value="no" required aria-invalid="${form.errors.health ? 'true' : 'false'}" ${form.health === 'no' ? 'checked' : ''}> No</label>
++          <label class="bw-health__option"><input type="radio" name="health" value="yes" ${form.health === 'yes' ? 'checked' : ''}> Sí</label>
++        </div>
++        ${e('health')}
++        <div class="bw-health__details" data-health-details ${form.health === 'yes' ? '' : 'hidden'}>
++          <label class="bw-field__label" for="bw-health-notes">Cuéntame brevemente qué te ocurre <span aria-hidden="true">*</span></label>
++          <textarea class="bw-field__input bw-field__textarea${form.errors.healthNotes ? ' bw-field__input--error' : ''}" id="bw-health-notes" name="healthNotes"
++            rows="3" maxlength="500"
++            aria-invalid="${form.errors.healthNotes ? 'true' : 'false'}" aria-describedby="${form.errors.healthNotes ? 'err-healthNotes' : ''}">${esc(form.healthNotes)}</textarea>
++          ${e('healthNotes')}
++          <label class="bw-field__check-label">
++            <input type="checkbox" class="bw-field__checkbox${form.errors.healthConsent ? ' bw-field__input--error' : ''}"
++              name="healthConsent" aria-invalid="${form.errors.healthConsent ? 'true' : 'false'}"
++              aria-describedby="${form.errors.healthConsent ? 'err-healthConsent' : ''}"
++              ${form.healthConsent ? 'checked' : ''}>
++            <span>Consiento expresamente que Voramà Terapias trate estos datos de salud solo para valorar si el masaje es adecuado para mí.</span>
++          </label>
++          ${e('healthConsent')}
++        </div>
++      </fieldset>
+       <div class="bw-field">
+         <label class="bw-field__label" for="bw-notes">Si procede, indique algún detalle para preparar la sesión <span class="bw-field__optional">(opcional)</span></label>
+         <textarea class="bw-field__input bw-field__textarea" id="bw-notes" name="notes"
+           rows="3" maxlength="500"
+-          placeholder="Ej: zona de tensión, lesión reciente, preferencia de presión…"
++          placeholder="Ej: zona en la que centrarse, preferencia de presión…"
+           aria-describedby="${form.errors.notes ? 'err-notes' : ''}">${esc(form.notes)}</textarea>
+         ${e('notes')}
+       </div>
+@@ -325,6 +351,7 @@ export function renderSummary(slot: Slot, form: FormState, isSubmitting: boolean
+         <div class="bw-summary__row"><dt>Nombre</dt><dd>${esc(form.name)}</dd></div>
+         <div class="bw-summary__row"><dt>Email</dt><dd>${esc(form.email)}</dd></div>
+         <div class="bw-summary__row"><dt>Teléfono</dt><dd>${esc(form.phone)}</dd></div>
++        <div class="bw-summary__row"><dt>Salud</dt><dd>${form.health === 'yes' ? esc(form.healthNotes) : 'Nada que indicar'}</dd></div>
+         ${form.notes ? `<div class="bw-summary__row"><dt>Notas</dt><dd>${esc(form.notes)}</dd></div>` : ''}
+       </dl>
+       <p class="bw-summary__notice">
+diff --git a/src/lib/booking/widget-state.test.ts b/src/lib/booking/widget-state.test.ts
+index bd6be9c..e109589 100644
+--- a/src/lib/booking/widget-state.test.ts
++++ b/src/lib/booking/widget-state.test.ts
+@@ -2,8 +2,10 @@
+ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+ 
+ vi.mock('./gcal.ts', () => ({ fetchBusy: vi.fn() }));
++vi.mock('./submit.ts', () => ({ submitBooking: vi.fn().mockResolvedValue({ ok: true }) }));
+ 
+ import { fetchBusy } from './gcal.ts';
++import { submitBooking } from './submit.ts';
+ import { mountWidget } from './widget-state.ts';
+ 
+ const DIRECT = { mode: 'direct', serviceId: 'californiano-90', durationMin: 90 } as const;
+@@ -17,6 +19,7 @@ beforeEach(() => {
+   // Solo se falsea la fecha (junio 2026, con huecos libres); los temporizadores siguen siendo reales.
+   vi.useFakeTimers({ toFake: ['Date'], now: new Date('2026-06-01T08:00:00Z') });
+   vi.mocked(fetchBusy).mockReset();
++  vi.mocked(submitBooking).mockClear();
+   document.body.innerHTML = '<div id="bw-mount"></div>';
+   container = document.getElementById('bw-mount')!;
+ });
+@@ -127,3 +130,92 @@ describe('widget de reservas — teclado y lectores de pantalla', () => {
+     expect((document.activeElement as HTMLInputElement).name).toBe('name');
+   });
+ });
++
++describe('widget de reservas — pregunta de salud', () => {
++  async function goToForm() {
++    vi.mocked(fetchBusy).mockResolvedValue([]);
++    mountWidget(container, DIRECT);
++    await settle();
++    container.querySelector<HTMLButtonElement>('.bw-cal__btn')!.click();
++    container.querySelector<HTMLButtonElement>('.bw-slot__btn')!.click();
++    container.querySelector<HTMLButtonElement>('[data-bw-to-form]')!.click();
++    await tick(50);
++  }
++
++  function fillContact() {
++    const set = (name: string, value: string) => {
++      container.querySelector<HTMLInputElement>(`[name="${name}"]`)!.value = value;
++    };
++    set('name', 'Ana Prueba');
++    set('email', 'ana@example.com');
++    set('phone', '600000000');
++    container.querySelector<HTMLInputElement>('[name="consentRgpd"]')!.checked = true;
++  }
++
++  function answerHealth(value: 'no' | 'yes') {
++    const radio = container.querySelector<HTMLInputElement>(`[name="health"][value="${value}"]`)!;
++    radio.checked = true;
++    radio.dispatchEvent(new Event('change'));
++  }
++
++  const submitForm = () =>
++    container.querySelector<HTMLFormElement>('.bw-form')!.dispatchEvent(new Event('submit', { cancelable: true }));
++
++  it('la pregunta de salud es obligatoria y el foco va a ella', async () => {
++    await goToForm();
++    fillContact();
++    submitForm();
++
++    expect(container.querySelector('#err-health')?.textContent).toContain('lesión o problema de salud');
++    expect((document.activeElement as HTMLInputElement).name).toBe('health');
++    expect(container.querySelector('.bw-summary')).toBeNull();
++  });
++
++  it('con «Sí» muestra el detalle y exige detalle y consentimiento explícito', async () => {
++    await goToForm();
++    fillContact();
++    answerHealth('yes');
++    expect(container.querySelector<HTMLElement>('[data-health-details]')!.hidden).toBe(false);
++
++    submitForm();
++
++    expect(container.querySelector('#err-healthNotes')).not.toBeNull();
++    expect(container.querySelector('#err-healthConsent')).not.toBeNull();
++    expect(container.querySelector('.bw-summary')).toBeNull();
++  });
++
++  it('con «Sí», detalle y consentimiento, lo muestra en el resumen y lo envía', async () => {
++    await goToForm();
++    fillContact();
++    answerHealth('yes');
++    container.querySelector<HTMLTextAreaElement>('[name="healthNotes"]')!.value = 'Ataque de gota en el pie derecho';
++    container.querySelector<HTMLInputElement>('[name="healthConsent"]')!.checked = true;
++    submitForm();
++
++    expect(container.querySelector('.bw-summary')?.textContent).toContain('Ataque de gota en el pie derecho');
++    container.querySelector<HTMLButtonElement>('[data-bw-submit]')!.click();
++    await settle();
++
++    expect(submitBooking).toHaveBeenCalledTimes(1);
++    expect(vi.mocked(submitBooking).mock.calls[0]![0].customer).toMatchObject({
++      health: 'yes',
++      healthNotes: 'Ataque de gota en el pie derecho',
++      healthConsent: true,
++    });
++  });
++
++  it('con «No» no envía datos de salud', async () => {
++    await goToForm();
++    fillContact();
++    answerHealth('no');
++    submitForm();
++
++    expect(container.querySelector('.bw-summary')?.textContent).toContain('Nada que indicar');
++    container.querySelector<HTMLButtonElement>('[data-bw-submit]')!.click();
++    await settle();
++
++    const customer = vi.mocked(submitBooking).mock.calls[0]![0].customer;
++    expect(customer.health).toBe('no');
++    expect(customer.healthNotes).toBeUndefined();
++  });
++});
+diff --git a/src/lib/booking/widget-state.ts b/src/lib/booking/widget-state.ts
+index 465828d..e8542a4 100644
+--- a/src/lib/booking/widget-state.ts
++++ b/src/lib/booking/widget-state.ts
+@@ -42,7 +42,7 @@ interface WidgetState {
+ }
+ 
+ function emptyForm(): FormState {
+-  return { name: '', email: '', phone: '', notes: '', errors: {}, consent: false };
++  return { name: '', email: '', phone: '', notes: '', health: '', healthNotes: '', healthConsent: false, errors: {}, consent: false };
+ }
+ 
+ // ── Validación de formulario ──────────────────────────────────────────────────
+@@ -55,6 +55,14 @@ function validateForm(form: FormState): boolean {
+     errors.email = 'Indica un email válido';
+   if (!form.phone.trim() || form.phone.replace(/\D/g,'').length < 7)
+     errors.phone = 'Indica un número de teléfono válido';
++  if (form.health !== 'no' && form.health !== 'yes')
++    errors.health = 'Indica si tienes alguna lesión o problema de salud';
++  if (form.health === 'yes') {
++    if (!form.healthNotes.trim())
++      errors.healthNotes = 'Cuéntame brevemente qué te ocurre';
++    if (!form.healthConsent)
++      errors.healthConsent = 'Necesito tu consentimiento para tratar estos datos de salud';
++  }
+   if (!form.consent)
+     errors.consent = 'Debes aceptar la política de privacidad';
+   form.errors = errors;
+@@ -351,7 +359,7 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
+       form.querySelectorAll<HTMLInputElement|HTMLTextAreaElement>('input,textarea').forEach((inp) => {
+         inp.addEventListener('input', () => {
+           const n = inp.name as keyof FormState;
+-          if (n === 'name' || n === 'email' || n === 'phone' || n === 'notes') {
++          if (n === 'name' || n === 'email' || n === 'phone' || n === 'notes' || n === 'healthNotes') {
+             (state.form as any)[n] = inp.value;
+           }
+         });
+@@ -359,13 +367,27 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
+       const checkbox = form.querySelector<HTMLInputElement>('[name="consentRgpd"]');
+       checkbox?.addEventListener('change', () => { state.form.consent = checkbox.checked; });
+ 
++      // Pregunta de salud: con «Sí» se muestran el detalle y el consentimiento explícito (sin re-render).
++      const healthDetails = form.querySelector<HTMLElement>('[data-health-details]');
++      form.querySelectorAll<HTMLInputElement>('[name="health"]').forEach((radio) => {
++        radio.addEventListener('change', () => {
++          state.form.health = radio.value === 'yes' ? 'yes' : 'no';
++          if (healthDetails) healthDetails.hidden = state.form.health !== 'yes';
++        });
++      });
++      const healthConsent = form.querySelector<HTMLInputElement>('[name="healthConsent"]');
++      healthConsent?.addEventListener('change', () => { state.form.healthConsent = healthConsent.checked; });
++
+       form.addEventListener('submit', (e) => {
+         e.preventDefault();
+         // Leer valores actuales del DOM
+-        ['name','email','phone','notes'].forEach((f) => {
++        ['name','email','phone','notes','healthNotes'].forEach((f) => {
+           const el = form.querySelector<HTMLInputElement>(`[name="${f}"]`);
+           if (el) (state.form as any)[f] = el.value;
+         });
++        const health = form.querySelector<HTMLInputElement>('[name="health"]:checked')?.value;
++        state.form.health = health === 'yes' || health === 'no' ? health : '';
++        state.form.healthConsent = (form.querySelector<HTMLInputElement>('[name="healthConsent"]'))?.checked ?? false;
+         state.form.consent = (form.querySelector<HTMLInputElement>('[name="consentRgpd"]'))?.checked ?? false;
+         if (validateForm(state.form)) goToStep('summary', 'Resumen de tu reserva');
+         else {
+@@ -405,6 +427,9 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
+             email: state.form.email,
+             phone: state.form.phone,
+             notes: state.form.notes || undefined,
++            health: state.form.health === 'yes' ? 'yes' : 'no',
++            healthNotes: state.form.health === 'yes' ? state.form.healthNotes : undefined,
++            healthConsent: state.form.health === 'yes' ? state.form.healthConsent : undefined,
+             consentRgpd: true,
+           },
+           hp_website: hp,

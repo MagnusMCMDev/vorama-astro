@@ -6,7 +6,10 @@ Dos rondas de la skill `improve`:
   producción** en https://vorama.es desde el 2026-06-15.
 - **010-016** — ronda del 2026-09-22 (commit `8bdbb94`): auditoría de implementación, seguridad,
   rendimiento, SEO y tecnologías + plan de actualización de versiones; revisada y ampliada el mismo día
-  (plan 016, pasos nuevos en 011-015). **Pendientes de ejecutar.**
+  (plan 016, pasos nuevos en 011-015).
+- **017-018** — añadidos el 2026-09-23 (commit `801d8f3`/`f2e3515`) a petición del titular: quitar su NIF y
+  su dirección de los textos legales (018) y preguntar por la salud del cliente antes de confirmar la cita,
+  con consentimiento explícito (017). El 012 se reescribió (v2) para describir ese formulario.
 
 Cada executor: lee el plan entero antes de empezar, ejecuta su *drift check*, respeta sus STOP conditions
 y actualiza su fila al terminar.
@@ -18,8 +21,8 @@ y actualiza su fila al terminar.
 
 ## Ronda 2026-09 — orden de ejecución y estado
 
-**Orden recomendado (probado): 010 → 016 → 011 → 013 → 014 → 012 → 015.** Se ejecutaron todos los planes de
-código **en este orden** sobre un clon desechable del repo, siguiendo su texto. Cada paso aplicó limpio
+**Orden recomendado: 010 → 016 → 011 → 013 → 014 → 018 → 017 → 012 → 015.** Los planes 010-016 se
+ejecutaron **en este orden** (sin 017/018, que llegaron después) sobre un clon desechable del repo, siguiendo su texto. Cada paso aplicó limpio
 sobre el anterior y el resultado final fue: `npm audit` → 0 vulnerabilidades, `astro check` 0/0/0,
 **23/23 tests** en el simulacro (14 existentes + 7 del widget + 2 de envío; con la ronda 2 del 016 el widget aporta 8, así que al final serán 24), build de **16 páginas** + la redirección de
 `/servicios/`, y la portada pasa de 73 903 a 49 044 bytes.
@@ -31,28 +34,36 @@ sobre el anterior y el resultado final fue: `npm audit` → 0 vulnerabilidades, 
 | 3 | 011 | Páginas legales reales + enlace roto de privacidad + 404 propia | P1 | M | LOW | — | DONE — **en producción** (2026-09-23): `main` = `2f98655`, deploy en verde (16 páginas); verificado en vorama.es (3 páginas legales 200, 404 propia con estado 404, portada 48 148 bytes con un solo `<dialog>`, enlaces de pie/contacto/widget a `/politica-de-privacidad/`) |
 | 4 | 013 | Accesibilidad: contraste AA, honeypot, tarjetas, carrusel, menú, mensajes | P1 | M | LOW | — | DONE — **en producción** (2026-09-23): `main` = `8efb2fb`, CI 22/22 y deploy en verde; Lighthouse accesibilidad **100 en las 12 páginas** (antes 92-96); verificado en vorama.es (token `#676460`, honeypot oculto, mensajes enfocables, botón de pausa, etiquetas con precio) |
 | 5 | 014 | Imagen social, preload del hero, datos estructurados, sitemap, redirección `/servicios/` | P1 | M | LOW | — | DONE — **en producción** (2026-09-23): `main` = `430d40e`, CI 22/22 y deploy en verde; verificado en vorama.es (OG JPEG 1200×630 → 200, preload `MATCH`, horario real, sin `aggregateRating` ni `generator`, sitemap sin `lastmod`, `/servicios/` redirige). Pendiente del titular: re-scrape en el depurador de Facebook y revisar 404 en Search Console |
-| 6 | 012 | Privacidad y cookies acordes a lo que hace la web (+ bug de `sessionStorage`) | P2 | M | LOW | 011 | TODO — requiere visto bueno del titular antes del merge |
-| 7 | 015 | CI (Node 24, actions v7), Dependabot, CI de PR y documentación obsoleta | P2 | S | LOW | 010 | TODO |
+| 6 | 018 | Quitar el NIF y la dirección del titular de los textos legales | P1 | S | LOW | 011 | DONE — **en producción** (2026-09-23): `main` = `f2e3515`; verificado en vorama.es (privacidad y aviso legal solo con nombre y teléfono, "Última actualización: 23 de septiembre de 2026"). El historial de git sigue conteniendo esos datos (ver "Acciones del operador") |
+| 7 | 017 | Pregunta de salud obligatoria en la reserva, con consentimiento explícito | P1 | M | LOW-MED | 016 | TODO — probado en un clon de `f2e3515` (7 tests nuevos, 29/29) |
+| 8 | 012 | Privacidad y cookies acordes a lo que hace la web (+ bug de `sessionStorage`) — **v2** | P2 | M | LOW | 011, 017, 018 | TODO — requiere visto bueno del titular antes del merge |
+| 9 | 015 | CI (Node 24, actions v7), Dependabot, CI de PR y documentación obsoleta | P2 | S | LOW | 010 | TODO |
 
 Valores de estado: TODO | IN PROGRESS | DONE | BLOCKED (motivo en una línea) | REJECTED (racional).
 
-`plans/016-booking-widget-a11y.patch` es parte del plan 016 (el arreglo probado, listo para `git apply`).
+`plans/016-booking-widget-a11y.patch` y `plans/017-booking-health-screening.patch` son parte de sus planes (el
+arreglo probado, listo para `git apply`).
 
 ### Por qué este orden
 
 1. **010** primero y solo: todo lo demás se construye y se prueba ya sobre Astro 7.
-2. **016** antes que 011 y 012 porque los tres tocan `widget-render.ts`: el 016 aplica un parche exacto que
-   necesita el archivo tal como está en `8bdbb94`; el 011 (enlace de privacidad) y el 012 (campo de notas)
-   editan líneas que el parche no toca y se aplican bien después.
+2. **016** antes que 011 y 017 porque los tres tocan `widget-render.ts`: el 016 aplica un parche exacto que
+   necesita el archivo tal como está en `8bdbb94`; el 011 (enlace de privacidad) edita líneas que el parche
+   no toca, y el parche del 017 se generó ya sobre `f2e3515`.
 3. **011** antes que 013/014/012: es el que más archivos toca (`BaseLayout`, `Footer`, `ContactForm`).
 4. **013** y **014** tocan archivos distintos entre sí (se pueden hacer en paralelo en ramas separadas).
-5. **012** cuando el titular pueda leer el texto legal (depende de 011; va después de 013 para que sus
-   avisos nuevos hereden el gris con contraste corregido).
-6. **015** al final: recoge CI, Dependabot y documentación con todo lo demás asentado.
+5. **018** en cuanto el titular lo pidió: son sus datos personales publicados.
+6. **017** antes que 012: el texto legal del 012 describe la pregunta de salud, así que el formulario tiene
+   que existir antes que el texto que lo explica.
+7. **012** cuando el titular pueda leer el texto legal (va después de 013 para que sus avisos nuevos hereden
+   el gris con contraste corregido).
+8. **015** al final: recoge CI, Dependabot y documentación con todo lo demás asentado.
 
 ### Solapes de archivos (ya resueltos por el orden)
 
-- `widget-render.ts`: 016 (calendario, horarios, `aria-invalid`) → 011 (enlace de privacidad) → 012 (campo de notas).
+- `widget-render.ts`: 016 (calendario, horarios, `aria-invalid`) → 011 (enlace de privacidad) → 017 (pregunta de salud, placeholder de notas).
+- `submit.ts`: 017 (bloque de salud en el email) → 012 (rate-limit tolerante).
+- `privacidad.md`: 018 (identidad y derechos) → 012 (el resto de secciones).
 - `ContactForm.astro`: 011 (enlace de privacidad) → 013 (honeypot, mensajes) → 012 (línea de consentimiento del email).
 - `BaseLayout.astro`: 011 (quita los `<LegalDialog>` del `<body>`) → 014 (reescribe el `<head>`).
 - `index.astro`: 014 (objeto `jsonLd` y props del layout) → 012 (aviso bajo el vídeo).
@@ -63,7 +74,10 @@ Valores de estado: TODO | IN PROGRESS | DONE | BLOCKED (motivo en una línea) | 
 | Cuándo | Acción | Plan |
 |--------|--------|------|
 | Ya | Google Cloud → credenciales → API key de Calendar: quitar el referrer `magnusmcmdev.github.io` (**hoy sigue aceptado**, comprobado) y dejar solo `https://vorama.es/*` y la Calendar API | 015 |
-| Antes de mergear 012 | Leer y aprobar los textos nuevos de privacidad y cookies; aceptar el DPA de Web3Forms | 012 |
+| Antes de mergear 017 | Leer y aprobar los textos de la pregunta de salud (pregunta, ejemplos y casilla de consentimiento) | 017 |
+| Antes de mergear 012 | Leer y aprobar los textos nuevos de privacidad y cookies; aceptar el DPA de Web3Forms (con datos de salud deja de ser opcional) | 012 |
+| Tras desplegar 017 | Borrar del correo (y del panel de Web3Forms, si lo permite) las solicitudes de más de 18 meses, sobre todo las que traen datos de salud | 017 |
+| Cuando convenga | El repositorio es público y su historial de git conserva el NIF y la dirección que quitó el 018: hacerlo privado (GitHub Pages en repo privado exige plan de pago) o reescribir el historial y forzar el push | 018 |
 | Tras desplegar 014 | Validar la portada en el test de resultados enriquecidos; forzar re-scrape de la vista previa en el depurador de Facebook | 014 |
 | Tras desplegar 014 | Search Console: sitemap enviado; lista de 404 → añadir cada URL antigua a `redirects` | 014 |
 | Tras mergear 015 | Comprobar el deploy en verde con Node 24 y el primer PR de Dependabot con el CI en verde | 015 |
