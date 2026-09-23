@@ -87,8 +87,6 @@ function isParentActive(item: NavItem): boolean {
                 <a
                   href={`${b}${item.href}`}
                   class="site-header__nav-link"
-                  aria-haspopup="true"
-                  aria-expanded="false"
                   aria-current={isParentActive(item) ? 'page' : undefined}
                 >
                   {item.label}
