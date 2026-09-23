@@ -22,6 +22,8 @@ El responsable del tratamiento de los datos personales recogidos en Voramà Tera
 
 **Teléfono y WhatsApp:** 623 941 891
 
+**Email:** vorama.terapias@gmail.com
+
 ### Registro de Datos de Carácter Personal
 
 En cumplimiento de lo establecido en el RGPD y la LOPD-GDD, le informamos que los datos personales recabados por Voramà Terapias, mediante los formularios extendidos en sus páginas quedarán incorporados y serán tratados en nuestro fichero con el fin de poder facilitar, agilizar y cumplir los compromisos establecidos entre Voramà Terapias y el Usuario o el mantenimiento de la relación que se establezca en los formularios que este rellene, o para atender una solicitud o consulta del mismo.
@@ -80,7 +82,7 @@ El Usuario tiene sobre Voramà Terapias y podrá ejercer frente al Responsable d
 - **Derecho de oposición:** que no se lleve a cabo el tratamiento de sus datos de carácter personal.
 - **Derecho a no ser objeto de una decisión basada únicamente en el tratamiento automatizado.**
 
-Para ejercitar sus derechos, el Usuario podrá dirigirse al Responsable del tratamiento, con la referencia **«RGPD-vorama.es»**, a través del formulario de contacto del Sitio Web o por teléfono o WhatsApp en el 623 941 891.
+Para ejercitar sus derechos, el Usuario podrá dirigirse al Responsable del tratamiento, con la referencia **«RGPD-vorama.es»**, a través del formulario de contacto del Sitio Web, por email a vorama.terapias@gmail.com o por teléfono o WhatsApp en el 623 941 891.
 
 ### Reclamaciones ante la autoridad de control
 

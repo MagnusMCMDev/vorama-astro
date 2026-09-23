@@ -11,6 +11,8 @@ La titularidad de este sitio web, vorama.es, (en adelante, Sitio Web) la ostenta
 
 **Teléfono y WhatsApp:** 623 941 891
 
+**Email:** vorama.terapias@gmail.com
+
 ## II. TÉRMINOS Y CONDICIONES GENERALES DE USO
 
 ### El objeto de las condiciones: El Sitio Web
