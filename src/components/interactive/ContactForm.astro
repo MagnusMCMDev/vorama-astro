@@ -40,7 +40,7 @@ if (!accessKey) {
   >
 
     <!-- Honeypot anti-spam (Web3Forms lo detecta nativamente) -->
-    <input type="checkbox" name="botcheck" class="contact-form__botcheck" tabindex="-1" autocomplete="off" />
+    <input type="checkbox" name="botcheck" class="contact-form__botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" />
 
     <!-- Nombre + Apellidos -->
     <div class="contact-form__row">
@@ -330,13 +330,9 @@ if (!accessKey) {
     gap: var(--vrm-space-md);
   }
 
-  /* Ocultar honeypot */
+  /* Ocultar honeypot (fuera también del árbol de accesibilidad) */
   .contact-form__botcheck {
-    position: absolute;
-    left: -9999px;
-    opacity: 0;
-    pointer-events: none;
-    tabindex: -1;
+    display: none;
   }
 
   /* ── Fila doble ──────────────────────────────────────────── */
