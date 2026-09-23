@@ -47,6 +47,16 @@ function formatEmailBody(request: BookingRequest, service: Service): string {
     `  Teléfono:  ${customer.phone}`,
   ];
   if (customer.notes) lines.push(`  Notas:     ${customer.notes}`);
+  lines.push('');
+  if (customer.health === 'yes') {
+    lines.push(
+      'Salud: ⚠ INDICA UNA LESIÓN O PROBLEMA DE SALUD — revisar antes de confirmar',
+      `  Detalle: ${customer.healthNotes ?? ''}`,
+      '  Consentimiento explícito (datos de salud): sí.',
+    );
+  } else {
+    lines.push('Salud: nada que indicar.');
+  }
   lines.push('', 'Consentimiento RGPD: aceptado.', '', '— Enviado desde vorama.es');
   return lines.join('\n');
 }
@@ -77,7 +87,7 @@ export async function submitBooking(
 
   const payload = {
     access_key: WEB3FORMS_KEY,
-    subject:    `[Voramà] Solicitud: ${service.name} — ${fecha} ${hora}`,
+    subject:    `[Voramà] Solicitud: ${service.name} — ${fecha} ${hora}${request.customer.health === 'yes' ? ' · ⚠ revisar salud' : ''}`,
     from_name:  request.customer.name,
     replyto:    request.customer.email,
     botcheck:   '',

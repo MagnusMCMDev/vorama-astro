@@ -42,7 +42,7 @@ interface WidgetState {
 }
 
 function emptyForm(): FormState {
-  return { name: '', email: '', phone: '', notes: '', errors: {}, consent: false };
+  return { name: '', email: '', phone: '', notes: '', health: '', healthNotes: '', healthConsent: false, errors: {}, consent: false };
 }
 
 // ── Validación de formulario ──────────────────────────────────────────────────
@@ -55,6 +55,14 @@ function validateForm(form: FormState): boolean {
     errors.email = 'Indica un email válido';
   if (!form.phone.trim() || form.phone.replace(/\D/g,'').length < 7)
     errors.phone = 'Indica un número de teléfono válido';
+  if (form.health !== 'no' && form.health !== 'yes')
+    errors.health = 'Indica si tienes alguna lesión o problema de salud';
+  if (form.health === 'yes') {
+    if (!form.healthNotes.trim())
+      errors.healthNotes = 'Cuéntame brevemente qué te ocurre';
+    if (!form.healthConsent)
+      errors.healthConsent = 'Necesito tu consentimiento para tratar estos datos de salud';
+  }
   if (!form.consent)
     errors.consent = 'Debes aceptar la política de privacidad';
   form.errors = errors;
@@ -351,7 +359,7 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
       form.querySelectorAll<HTMLInputElement|HTMLTextAreaElement>('input,textarea').forEach((inp) => {
         inp.addEventListener('input', () => {
           const n = inp.name as keyof FormState;
-          if (n === 'name' || n === 'email' || n === 'phone' || n === 'notes') {
+          if (n === 'name' || n === 'email' || n === 'phone' || n === 'notes' || n === 'healthNotes') {
             (state.form as any)[n] = inp.value;
           }
         });
@@ -359,13 +367,27 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
       const checkbox = form.querySelector<HTMLInputElement>('[name="consentRgpd"]');
       checkbox?.addEventListener('change', () => { state.form.consent = checkbox.checked; });
 
+      // Pregunta de salud: con «Sí» se muestran el detalle y el consentimiento explícito (sin re-render).
+      const healthDetails = form.querySelector<HTMLElement>('[data-health-details]');
+      form.querySelectorAll<HTMLInputElement>('[name="health"]').forEach((radio) => {
+        radio.addEventListener('change', () => {
+          state.form.health = radio.value === 'yes' ? 'yes' : 'no';
+          if (healthDetails) healthDetails.hidden = state.form.health !== 'yes';
+        });
+      });
+      const healthConsent = form.querySelector<HTMLInputElement>('[name="healthConsent"]');
+      healthConsent?.addEventListener('change', () => { state.form.healthConsent = healthConsent.checked; });
+
       form.addEventListener('submit', (e) => {
         e.preventDefault();
         // Leer valores actuales del DOM
-        ['name','email','phone','notes'].forEach((f) => {
+        ['name','email','phone','notes','healthNotes'].forEach((f) => {
           const el = form.querySelector<HTMLInputElement>(`[name="${f}"]`);
           if (el) (state.form as any)[f] = el.value;
         });
+        const health = form.querySelector<HTMLInputElement>('[name="health"]:checked')?.value;
+        state.form.health = health === 'yes' || health === 'no' ? health : '';
+        state.form.healthConsent = (form.querySelector<HTMLInputElement>('[name="healthConsent"]'))?.checked ?? false;
         state.form.consent = (form.querySelector<HTMLInputElement>('[name="consentRgpd"]'))?.checked ?? false;
         if (validateForm(state.form)) goToStep('summary', 'Resumen de tu reserva');
         else {
@@ -405,6 +427,9 @@ export function mountWidget(container: HTMLElement, options: MountOptions): void
             email: state.form.email,
             phone: state.form.phone,
             notes: state.form.notes || undefined,
+            health: state.form.health === 'yes' ? 'yes' : 'no',
+            healthNotes: state.form.health === 'yes' ? state.form.healthNotes : undefined,
+            healthConsent: state.form.health === 'yes' ? state.form.healthConsent : undefined,
             consentRgpd: true,
           },
           hp_website: hp,

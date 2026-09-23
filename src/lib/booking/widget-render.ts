@@ -241,7 +241,9 @@ export function renderEmptyMonth(year: number, month0: number, whatsapp: string)
 
 export interface FormState {
   name: string; email: string; phone: string; notes: string;
-  errors: Partial<Record<'name'|'email'|'phone'|'notes'|'consent', string>>;
+  /** '' = todavía sin responder. */
+  health: '' | 'no' | 'yes'; healthNotes: string; healthConsent: boolean;
+  errors: Partial<Record<'name'|'email'|'phone'|'notes'|'health'|'healthNotes'|'healthConsent'|'consent', string>>;
   consent: boolean;
 }
 
@@ -284,11 +286,35 @@ export function renderForm(slot: Slot, form: FormState): string {
           aria-required="true" aria-invalid="${form.errors.phone ? 'true' : 'false'}" aria-describedby="${form.errors.phone ? 'err-phone' : ''}">
         ${e('phone')}
       </div>
+      <fieldset class="bw-field bw-health" aria-describedby="bw-health-hint${form.errors.health ? ' err-health' : ''}">
+        <legend class="bw-field__label">¿Tienes ahora mismo alguna lesión, dolencia, embarazo u otro problema de salud? <span aria-hidden="true">*</span></legend>
+        <span class="bw-field__hint" id="bw-health-hint">Por ejemplo: fiebre o infección, inflamación o un ataque de gota, heridas o problemas en la piel, trombosis o varices importantes, una operación reciente… En algunos casos el masaje no es recomendable y prefiero saberlo antes de confirmar la cita.</span>
+        <div class="bw-health__options">
+          <label class="bw-health__option"><input type="radio" name="health" value="no" required aria-invalid="${form.errors.health ? 'true' : 'false'}" ${form.health === 'no' ? 'checked' : ''}> No</label>
+          <label class="bw-health__option"><input type="radio" name="health" value="yes" ${form.health === 'yes' ? 'checked' : ''}> Sí</label>
+        </div>
+        ${e('health')}
+        <div class="bw-health__details" data-health-details ${form.health === 'yes' ? '' : 'hidden'}>
+          <label class="bw-field__label" for="bw-health-notes">Cuéntame brevemente qué te ocurre <span aria-hidden="true">*</span></label>
+          <textarea class="bw-field__input bw-field__textarea${form.errors.healthNotes ? ' bw-field__input--error' : ''}" id="bw-health-notes" name="healthNotes"
+            rows="3" maxlength="500"
+            aria-invalid="${form.errors.healthNotes ? 'true' : 'false'}" aria-describedby="${form.errors.healthNotes ? 'err-healthNotes' : ''}">${esc(form.healthNotes)}</textarea>
+          ${e('healthNotes')}
+          <label class="bw-field__check-label">
+            <input type="checkbox" class="bw-field__checkbox${form.errors.healthConsent ? ' bw-field__input--error' : ''}"
+              name="healthConsent" aria-invalid="${form.errors.healthConsent ? 'true' : 'false'}"
+              aria-describedby="${form.errors.healthConsent ? 'err-healthConsent' : ''}"
+              ${form.healthConsent ? 'checked' : ''}>
+            <span>Consiento expresamente que Voramà Terapias trate estos datos de salud solo para valorar si el masaje es adecuado para mí.</span>
+          </label>
+          ${e('healthConsent')}
+        </div>
+      </fieldset>
       <div class="bw-field">
         <label class="bw-field__label" for="bw-notes">Si procede, indique algún detalle para preparar la sesión <span class="bw-field__optional">(opcional)</span></label>
         <textarea class="bw-field__input bw-field__textarea" id="bw-notes" name="notes"
           rows="3" maxlength="500"
-          placeholder="Ej: zona de tensión, lesión reciente, preferencia de presión…"
+          placeholder="Ej: zona en la que centrarse, preferencia de presión…"
           aria-describedby="${form.errors.notes ? 'err-notes' : ''}">${esc(form.notes)}</textarea>
         ${e('notes')}
       </div>
@@ -325,6 +351,7 @@ export function renderSummary(slot: Slot, form: FormState, isSubmitting: boolean
         <div class="bw-summary__row"><dt>Nombre</dt><dd>${esc(form.name)}</dd></div>
         <div class="bw-summary__row"><dt>Email</dt><dd>${esc(form.email)}</dd></div>
         <div class="bw-summary__row"><dt>Teléfono</dt><dd>${esc(form.phone)}</dd></div>
+        <div class="bw-summary__row"><dt>Salud</dt><dd>${form.health === 'yes' ? esc(form.healthNotes) : 'Nada que indicar'}</dd></div>
         ${form.notes ? `<div class="bw-summary__row"><dt>Notas</dt><dd>${esc(form.notes)}</dd></div>` : ''}
       </dl>
       <p class="bw-summary__notice">

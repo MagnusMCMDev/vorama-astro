@@ -61,6 +61,12 @@ export interface Customer {
   email: string;
   phone: string;
   notes?: string;
+  /** Respuesta a «¿Tienes ahora mismo alguna lesión, dolencia, embarazo u otro problema de salud?». */
+  health: 'no' | 'yes';
+  /** Detalle del problema de salud (solo si health === 'yes'). */
+  healthNotes?: string;
+  /** Consentimiento explícito para tratar datos de salud, art. 9.2.a RGPD (solo si health === 'yes'). */
+  healthConsent?: boolean;
   consentRgpd: true;
 }
 

@@ -65,10 +65,20 @@ export const CustomerSchema = z.object({
     .string()
     .max(500, 'Las notas no pueden superar 500 caracteres')
     .optional(),
+  health: z.enum(['no', 'yes'], { message: 'Indica si tienes alguna lesión o problema de salud' }),
+  healthNotes: z
+    .string()
+    .max(500, 'El detalle de salud no puede superar 500 caracteres')
+    .optional(),
+  healthConsent: z.boolean().optional(),
   consentRgpd: z
     .boolean()
     .refine((v) => v === true, { message: 'Debes aceptar la política de privacidad' }),
-});
+}).refine(
+  // Con «Sí» hacen falta el detalle y el consentimiento explícito (art. 9.2.a RGPD).
+  (c) => c.health === 'no' || (!!c.healthNotes?.trim() && c.healthConsent === true),
+  { message: 'Falta el detalle de salud o el consentimiento para tratarlo', path: ['healthConsent'] },
+);
 
 export type Customer = z.infer<typeof CustomerSchema>;
 
