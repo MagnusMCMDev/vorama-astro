@@ -13,6 +13,8 @@ import BackToTop from '~/components/layout/BackToTop.astro';
 // Diálogos interactivos — disponibles en todas las páginas
 import BookingDialog from '~/components/booking/BookingDialog.astro';
 import type { ImageMetadata } from 'astro';
+import { getImage } from 'astro:assets';
+import ogDefault from '~/assets/images/pages/captura-video.webp';
 
 interface Props {
   /** <title> de la página. Debe ser único por página. */
@@ -21,7 +23,7 @@ interface Props {
   description: string;
   /** URL canónica. Por defecto: URL actual de la request. */
   canonical?: string | undefined;
-  /** URL absoluta imagen Open Graph. Por defecto: og-default.webp. */
+  /** URL absoluta de la imagen Open Graph. Por defecto: se genera a partir de captura-video.webp. */
   ogImage?: string | undefined;
   /** Schema JSON-LD. Acepta un objeto o array de objetos. */
   jsonLd?: object | object[] | undefined;
@@ -41,9 +43,19 @@ const {
   lcpImage,
 } = Astro.props;
 
-// Imagen OG: si no se pasa, usa og-default.webp relativo al site
 const siteOrigin = Astro.site?.origin ?? '';
-const ogImageUrl = ogImage ?? `${siteOrigin}/og-default.webp`;
+
+// Imagen OG por defecto: se genera en build a 1200×630 (formato JPEG, el más compatible
+// con WhatsApp/Facebook/X). Las páginas pueden pasar `ogImage` con una URL absoluta propia.
+const ogFallback = await getImage({
+  src: ogDefault,
+  width: 1200,
+  height: 630,
+  fit: 'cover',
+  position: 'center',
+  format: 'jpg',
+});
+const ogImageUrl = ogImage ?? new URL(ogFallback.src, siteOrigin).href;
 
 // JSON-LD: normaliza a array para el bucle
 const jsonLdSchemas = jsonLd
@@ -71,6 +83,9 @@ const base = import.meta.env.BASE_URL;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Manos dando un masaje californiano sobre la espalda en Voramà Terapias" />
     <meta property="og:locale" content="es_ES" />
     <meta property="og:site_name" content="Voramà Terapias" />
 
@@ -79,6 +94,7 @@ const base = import.meta.env.BASE_URL;
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content="Manos dando un masaje californiano sobre la espalda en Voramà Terapias" />
 
     <!-- JSON-LD estructurado — is:inline porque lleva atributo type -->
     {jsonLdSchemas.map((schema) => (
