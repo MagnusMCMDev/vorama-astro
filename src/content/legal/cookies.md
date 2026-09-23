@@ -1,38 +1,32 @@
 ---
 title: Política de Cookies
-lastUpdated: "2024-11-06"
+lastUpdated: "2026-09-23"
 ---
 
-El acceso a este Sitio Web puede implicar la utilización de cookies. Las cookies son pequeñas cantidades de información que se almacenan en el navegador utilizado por cada Usuario —en los distintos dispositivos que pueda utilizar para navegar— para que el servidor recuerde cierta información que posteriormente y únicamente el servidor que la implementó leerá. Las cookies facilitan la navegación, la hacen más amigable, y no dañan el dispositivo de navegación.
+Esta Política de Cookies explica qué información se guarda en el dispositivo del Usuario cuando visita el Sitio Web de Voramà Terapias.
 
-Las cookies son procedimientos automáticos de recogida de información relativa a las preferencias determinadas por el Usuario durante su visita al Sitio Web con el fin de reconocerlo como Usuario, y personalizar su experiencia y el uso del Sitio Web.
+## Este sitio no usa cookies de análisis ni de publicidad
 
-La información recabada a través de las cookies puede incluir la fecha y hora de visitas al Sitio Web, las páginas visionadas, el tiempo que ha estado en el Sitio Web y los sitios visitados justo antes y después del mismo. Sin embargo, ninguna cookie permite que esta misma pueda contactarse con el número de teléfono del Usuario o con cualquier otro medio de contacto personal. Ninguna cookie puede extraer información del disco duro del Usuario o robar información personal.
+Voramà Terapias no instala cookies propias ni utiliza herramientas de analítica, publicidad o seguimiento. Navegar por el Sitio Web no deja cookies en su dispositivo.
 
-## Cookies propias
+## Almacenamiento técnico del sistema de reservas
 
-Son aquellas cookies que son enviadas al ordenador o dispositivo del Usuario y gestionadas exclusivamente por Voramà Terapias para el mejor funcionamiento del Sitio Web. La información que se recaba se emplea para mejorar la calidad del Sitio Web y su Contenido y su experiencia como Usuario. Estas cookies permiten reconocer al Usuario como visitante recurrente del Sitio Web y adaptar el contenido para ofrecerle contenidos que se ajusten a sus preferencias.
+Cuando el Usuario usa el calendario de reservas, el Sitio Web guarda dos datos técnicos en el almacenamiento de sesión del navegador (*sessionStorage*), que se borra automáticamente al cerrar la pestaña:
 
-## Cookies de terceros
+- **`booking:freebusy:AAAA-MM`**: guarda la disponibilidad del mes consultado para no repetir la consulta al calendario. Caduca a los 60 segundos.
+- **`booking:last-submit`**: guarda la hora del último envío para evitar solicitudes de reserva duplicadas.
 
-Son cookies utilizadas y gestionadas por entidades externas que proporcionan a Voramà Terapias servicios solicitados por este mismo para mejorar el Sitio Web y la experiencia del usuario al navegar en el Sitio Web. Los principales objetivos para los que se utilizan cookies de terceros son la obtención de estadísticas de accesos y analizar la información de la navegación, es decir, cómo interactúa el Usuario con el Sitio Web.
+Estos datos no identifican al Usuario, no se envían a ningún servidor y son necesarios para el servicio de reservas que el propio Usuario solicita, por lo que están exentos de consentimiento (artículo 22.2 de la LSSI-CE).
 
-La información que se obtiene se refiere, por ejemplo, al número de páginas visitadas, el idioma, el lugar al que la dirección IP desde el que accede el Usuario, el número de Usuarios que acceden, la frecuencia y reincidencia de las visitas, el tiempo de visita, el navegador que usan, el operador o tipo de dispositivo desde el que se realiza la visita. Esta información se utiliza para mejorar el Sitio Web y detectar nuevas necesidades para ofrecer a los Usuarios un Contenido y/o servicio de óptima calidad. En todo caso, la información se recopila de forma anónima y se elaboran informes de tendencias del Sitio Web sin identificar a usuarios individuales.
+## Contenidos de terceros que solo se cargan si el Usuario lo pide
 
-Puede obtener más información sobre las cookies, la información sobre la privacidad, o consultar la descripción del tipo de cookies que se utiliza, sus principales características, periodo de expiración, etc. en el siguiente enlace:
+- **Vídeo de YouTube (página de inicio):** no se carga hasta que el Usuario pulsa reproducir. Se usa el modo de privacidad mejorada de YouTube (youtube-nocookie.com), pero al reproducirlo Google puede guardar información en el dispositivo. Más información en la [Política de privacidad de Google](https://policies.google.com/privacy).
+- **Mapas de Google Maps (página de contacto):** no se cargan hasta que el Usuario pulsa «Ver mapa». Al cargarlos, Google puede instalar sus propias cookies. Más información en [Cómo utiliza Google las cookies](https://policies.google.com/technologies/cookies).
 
-- **Google Analytics:** [developers.google.com](https://developers.google.com/)
+## Enlaces a redes sociales
 
-## Cookies de redes sociales
+Los enlaces a Instagram, Facebook y WhatsApp son enlaces normales: no se carga nada de esas redes hasta que el Usuario hace clic, y a partir de ese momento se aplican sus propias políticas.
 
-Voramà Terapias incorpora plugins de redes sociales, que permiten acceder a las mismas a partir del Sitio Web. Por esta razón, las cookies de redes sociales pueden almacenarse en el navegador del Usuario. Los titulares de dichas redes sociales disponen de sus propias políticas de protección de datos y de cookies, siendo ellos mismos, en cada caso, responsables de sus propios ficheros y de sus propias prácticas de privacidad. El Usuario debe referirse a las mismas para informarse acerca de dichas cookies y, en su caso, del tratamiento de sus datos personales:
+## Cómo borrar o bloquear el almacenamiento
 
-- **Facebook:** [facebook.com/policies/cookies](https://www.facebook.com/policies/cookies/)
-- **Instagram:** [help.instagram.com](https://help.instagram.com/1896641480634370?ref=ig)
-- **YouTube:** [policies.google.com/privacy](https://policies.google.com/privacy?hl=es-419&gl=es)
-
-## Deshabilitar, rechazar y eliminar cookies
-
-El Usuario puede deshabilitar, rechazar y eliminar las cookies —total o parcialmente— instaladas en su dispositivo mediante la configuración de su navegador (entre los que se encuentran, por ejemplo, Chrome, Firefox, Safari, Explorer). En este sentido, los procedimientos para rechazar y eliminar las cookies pueden diferir de un navegador de Internet a otro. En consecuencia, el Usuario debe acudir a las instrucciones facilitadas por el propio navegador de Internet que esté utilizando. En el supuesto de que rechace el uso de cookies —total o parcialmente— podrá seguir usando el Sitio Web, si bien podrá tener limitada la utilización de algunas de las prestaciones del mismo.
-
-*Este documento de Política de Cookies ha sido creado el día 06/11/2024.*
+El Usuario puede borrar o bloquear las cookies y el almacenamiento del Sitio Web desde la configuración de su navegador. Si bloquea el almacenamiento de sesión, el calendario de reservas seguirá funcionando, aunque consultará la disponibilidad cada vez.
