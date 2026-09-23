@@ -58,6 +58,16 @@ const { images, id = 'carousel', autoplayMs = 5000 } = Astro.props;
           <polyline points="9 18 15 12 9 6"/>
         </svg>
       </button>
+      {autoplayMs > 0 && (
+        <button type="button" class="carousel__toggle" data-carousel-toggle data-state="playing" aria-label="Pausar el pase automático de imágenes">
+          <svg class="carousel__icon carousel__icon--pause" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>
+          </svg>
+          <svg class="carousel__icon carousel__icon--play" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </button>
+      )}
     </>
   )}
 </div>
@@ -149,6 +159,39 @@ const { images, id = 'carousel', autoplayMs = 5000 } = Astro.props;
     transform: translateY(-50%) scale(0.94);
   }
 
+  /* ── Pausa / reanudar (WCAG 2.2.2) ───────────────────────── */
+  .carousel__toggle {
+    position: absolute;
+    right: var(--vrm-space-md);
+    bottom: var(--vrm-space-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background-color: rgb(255 255 255 / 0.4);
+    color: #fff;
+    border: 1px solid rgb(255 255 255 / 0.4);
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 0.18);
+    cursor: pointer;
+    z-index: 2;
+    -webkit-backdrop-filter: blur(8px) saturate(1.4);
+    backdrop-filter: blur(8px) saturate(1.4);
+
+    &:hover,
+    &:focus-visible {
+      background-color: rgb(255 255 255 / 0.85);
+      color: var(--vrm-color-primary);
+      outline: none;
+    }
+  }
+
+  .carousel__toggle[data-state="playing"] .carousel__icon--play,
+  .carousel__toggle[data-state="paused"] .carousel__icon--pause {
+    display: none;
+  }
+
   @media (max-width: 600px) {
     .carousel__arrow {
       width: 38px;
@@ -175,6 +218,9 @@ const { images, id = 'carousel', autoplayMs = 5000 } = Astro.props;
     slides: HTMLElement[];
     autoplayMs: number;
     timer: number | null;
+    /** Pausado por el usuario (botón) o por preferir movimiento reducido. */
+    paused: boolean;
+    toggle: HTMLButtonElement | null;
   };
 
   function setup(el: HTMLElement): Carousel | null {
@@ -183,7 +229,9 @@ const { images, id = 'carousel', autoplayMs = 5000 } = Astro.props;
     const slides = Array.from(el.querySelectorAll<HTMLElement>('.carousel__slide'));
     if (slides.length < 2) return null;
     const autoplayMs = Number(el.dataset.autoplay ?? '0');
-    return { el, track, slides, autoplayMs, timer: null };
+    const paused = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const toggle = el.querySelector<HTMLButtonElement>('[data-carousel-toggle]');
+    return { el, track, slides, autoplayMs, timer: null, paused, toggle };
   }
 
   function currentIndex(c: Carousel): number {
@@ -203,9 +251,7 @@ const { images, id = 'carousel', autoplayMs = 5000 } = Astro.props;
   function prev(c: Carousel): void { goTo(c, currentIndex(c) - 1); }
 
   function startAutoplay(c: Carousel): void {
-    if (c.autoplayMs <= 0) return;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) return;
+    if (c.autoplayMs <= 0 || c.paused) return;
     stopAutoplay(c);
     c.timer = window.setInterval(() => next(c), c.autoplayMs);
   }
@@ -229,8 +275,31 @@ const { images, id = 'carousel', autoplayMs = 5000 } = Astro.props;
       });
     });
 
-    // Pausar SOLO cuando la pestaña no es visible (ahorro de recursos);
-    // se reanuda al volver a la pestaña.
+    // Botón de pausa: el usuario detiene o reanuda el pase automático.
+    const syncToggle = () => {
+      if (!c.toggle) return;
+      c.toggle.dataset.state = c.paused ? 'paused' : 'playing';
+      c.toggle.setAttribute('aria-label', c.paused
+        ? 'Reanudar el pase automático de imágenes'
+        : 'Pausar el pase automático de imágenes');
+    };
+    c.toggle?.addEventListener('click', () => {
+      c.paused = !c.paused;
+      if (c.paused) stopAutoplay(c);
+      else startAutoplay(c);
+      syncToggle();
+    });
+    syncToggle();
+
+    // Mientras el ratón o el foco están dentro, no se mueve (se reanuda al salir si no está pausado).
+    el.addEventListener('mouseenter', () => stopAutoplay(c));
+    el.addEventListener('mouseleave', () => startAutoplay(c));
+    el.addEventListener('focusin', () => stopAutoplay(c));
+    el.addEventListener('focusout', (e) => {
+      if (!el.contains(e.relatedTarget as Node | null)) startAutoplay(c);
+    });
+
+    // Pestaña oculta: parar (ahorro de recursos); al volver, reanudar si no está pausado.
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) stopAutoplay(c);
       else startAutoplay(c);
