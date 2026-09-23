@@ -256,7 +256,7 @@ if (!accessKey) {
   </div>
 
   <!-- ── Estado: éxito ─────────────────────────────────────────── -->
-  <div class="cf-feedback cf-feedback--success" id={`${id}-success`} hidden aria-live="polite">
+  <div class="cf-feedback cf-feedback--success" id={`${id}-success`} hidden aria-live="polite" tabindex="-1">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="48"
@@ -281,7 +281,7 @@ if (!accessKey) {
   </div>
 
   <!-- ── Estado: error ─────────────────────────────────────────── -->
-  <div class="cf-feedback cf-feedback--error" id={`${id}-fail`} hidden>
+  <div class="cf-feedback cf-feedback--error" id={`${id}-fail`} hidden tabindex="-1">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="48"
