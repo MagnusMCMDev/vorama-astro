@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import Section from '~/components/sections/Section.astro';
 import IconBox from '~/components/sections/IconBox.astro';
@@ -13,9 +13,25 @@ import bgRelajante from '~/assets/images/pages/relajante-1.webp';
 import bgCuatroManos from '~/assets/images/pages/4manos-paravertebrales.webp';
 import bgParaDos from '~/assets/images/pages/faqs.webp';
 import bgEventos from '~/assets/images/pages/playa-spa.webp';
+import ogDefault from '~/assets/images/pages/og-default.webp';
+import bookingServices from '~/content/booking/services.json';
 
 const base = import.meta.env.BASE_URL;
 const b = base.replace(/\/$/, '');
+
+// Campos opcionales que Google recomienda para el negocio local:
+// - image: la misma imagen que Open Graph (mismas opciones que BaseLayout, así Astro reutiliza el archivo).
+// - priceRange: calculado de los precios del sistema de reservas, para que no se quede desfasado.
+const businessImage = await getImage({
+  src: ogDefault,
+  width: 1200,
+  height: 630,
+  fit: 'cover',
+  position: 'center',
+  format: 'jpg',
+});
+const bookingPrices = bookingServices.map((s) => s.priceEur);
+const priceRange = `${Math.min(...bookingPrices)}-${Math.max(...bookingPrices)} €`;
 
 // JSON-LD LocalBusiness para SEO de portada
 const jsonLd = {
@@ -24,7 +40,9 @@ const jsonLd = {
   name: SITE_CONFIG.name,
   description: SITE_CONFIG.description,
   url: SITE_CONFIG.url,
+  image: new URL(businessImage.src, Astro.site).href,
   telephone: SITE_CONFIG.telephone,
+  priceRange,
   address: {
     '@type': 'PostalAddress',
     streetAddress: SITE_CONFIG.address.street,
