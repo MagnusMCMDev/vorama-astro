@@ -17,11 +17,8 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      // No publicar la página interna de catálogo de componentes
-      filter: (page) => !page.includes('/_dev/'),
       changefreq: 'monthly',
       priority: 0.7,
-      lastmod: new Date(),
     }),
   ],
 });
