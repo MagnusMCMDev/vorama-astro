@@ -14,7 +14,7 @@ import BackToTop from '~/components/layout/BackToTop.astro';
 import BookingDialog from '~/components/booking/BookingDialog.astro';
 import type { ImageMetadata } from 'astro';
 import { getImage } from 'astro:assets';
-import ogDefault from '~/assets/images/pages/captura-video.webp';
+import ogDefault from '~/assets/images/pages/og-default.webp';
 
 interface Props {
   /** <title> de la página. Debe ser único por página. */
@@ -23,7 +23,7 @@ interface Props {
   description: string;
   /** URL canónica. Por defecto: URL actual de la request. */
   canonical?: string | undefined;
-  /** URL absoluta de la imagen Open Graph. Por defecto: se genera a partir de captura-video.webp. */
+  /** URL absoluta de la imagen Open Graph. Por defecto: se genera a partir de og-default.webp (captura del vídeo sin franjas). */
   ogImage?: string | undefined;
   /** Schema JSON-LD. Acepta un objeto o array de objetos. */
   jsonLd?: object | object[] | undefined;
