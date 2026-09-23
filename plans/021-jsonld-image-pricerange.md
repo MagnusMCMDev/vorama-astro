@@ -7,7 +7,7 @@
 > in `plans/README.md` — unless a reviewer dispatched you and told you they
 > maintain the index.
 >
-> **Drift check (run first)**: `git diff --stat 3b528f6..HEAD -- src/pages/index.astro src/layouts/BaseLayout.astro src/content/booking/services.json`
+> **Drift check (run first)**: `git diff --stat 6ac2da3..HEAD -- src/pages/index.astro src/layouts/BaseLayout.astro src/content/booking/services.json`
 > Debe salir **vacío**. Si no, compara las líneas de "Current state" con los archivos; si no coinciden, STOP.
 
 ## Status
@@ -17,7 +17,7 @@
 - **Risk**: LOW (solo añade dos campos al JSON-LD de la portada)
 - **Depends on**: 020 (en producción: `og-default.webp` es el origen de la imagen OG)
 - **Category**: seo
-- **Planned at**: commit `3b528f6`, 2026-09-23
+- **Planned at**: commit `6ac2da3`, 2026-09-23
 
 ## Why this matters
 

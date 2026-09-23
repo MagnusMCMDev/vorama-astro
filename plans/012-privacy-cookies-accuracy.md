@@ -7,7 +7,7 @@
 > in `plans/README.md` — unless a reviewer dispatched you and told you they
 > maintain the index.
 >
-> **Drift check (run first)**: `git diff --stat 8bdbb94..HEAD -- src/content/legal src/lib/booking/widget-render.ts src/lib/booking/submit.ts src/components/sections/MapEmbed.astro src/pages/index.astro src/components/booking/BookingDialog.astro src/components/interactive/ContactForm.astro`
+> **Drift check (run first)**: `git diff --stat 2f2eac9..HEAD -- src/content/legal src/lib/booking/widget-render.ts src/lib/booking/submit.ts src/components/sections/MapEmbed.astro src/pages/index.astro src/components/booking/BookingDialog.astro src/components/interactive/ContactForm.astro`
 > Cambios esperados según el orden recomendado (010 → 016 → 011 → 013 → 014 → 018 → 019 → 017 → **012**):
 > `widget-render.ts` (016, 011 y 017: formulario con la pregunta de salud), `submit.ts` (017: email con el
 > bloque de salud; `checkRateLimit`/`markSubmit` siguen como en "Current state"), `ContactForm.astro` (011 y
@@ -23,7 +23,7 @@
 - **Risk**: LOW (texto legal + dos `try/catch` con test). **El texto legal se publica a nombre del titular: no se mergea sin su visto bueno** (ver "Decisiones del titular").
 - **Depends on**: 011 (páginas legales), 018 y 019 (identidad) y **017** (la pregunta de salud que este texto describe)
 - **Category**: compliance / bug
-- **Planned at**: commit `8bdbb94`, 2026-09-22 · **v2** en `f2e3515`, 2026-09-23 (salud con consentimiento explícito, identidad reducida)
+- **Planned at**: commit `2f2eac9`, 2026-09-22 · **v2** en `3e80609`, 2026-09-23 (salud con consentimiento explícito, identidad reducida)
 
 ## Why this matters
 
@@ -86,7 +86,7 @@ Step 2 y añade `health: 'no'` al test; los recuentos parten de los 29 tests que
   100 (`*Este documento de Política de Privacidad fue creado el día 06/11/2024.*`).
   - **Identidad y derechos**: tras los planes 018 y 019, la sección de identidad tiene el nombre, el teléfono
     y el email del titular, y el párrafo de derechos remite al formulario de contacto, al email y al
-    teléfono/WhatsApp. **No los toques.** Los números de línea de este bloque son los de `8bdbb94`: guíate siempre por los encabezados.
+    teléfono/WhatsApp. **No los toques.** Los números de línea de este bloque son los de `2f2eac9`: guíate siempre por los encabezados.
   - Línea 16: `- El Real Decreto 1720/2007, de 21 de diciembre, por el que se aprueba el Reglamento de desarrollo de la Ley Orgánica 15/1999, … (RDLOPD).`
   - Líneas 27-29:
 

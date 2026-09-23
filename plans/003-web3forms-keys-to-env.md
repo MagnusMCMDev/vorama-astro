@@ -6,7 +6,7 @@
 > report — do not improvise. When done, update the status row for this plan
 > in `plans/README.md`.
 >
-> **Drift check (run first)**: `git diff --stat 5b37c88..HEAD -- src/components/interactive/ContactForm.astro .env.example .github/workflows/deploy.yml`
+> **Drift check (run first)**: `git diff --stat 8675271..HEAD -- src/components/interactive/ContactForm.astro .env.example .github/workflows/deploy.yml`
 > Si algún archivo in-scope cambió, compara los extractos de "Current state"
 > con el código vivo antes de continuar; si no coinciden, trátalo como STOP.
 
@@ -17,7 +17,7 @@
 - **Risk**: MED (introduce dependencia de 2 secrets nuevos: si no se configuran, los formularios dejan de enviar)
 - **Depends on**: none
 - **Category**: security
-- **Planned at**: commit `5b37c88`, 2026-06-13
+- **Planned at**: commit `8675271`, 2026-06-13
 
 ## Why this matters
 

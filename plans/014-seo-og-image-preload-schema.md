@@ -7,7 +7,7 @@
 > in `plans/README.md` — unless a reviewer dispatched you and told you they
 > maintain the index.
 >
-> **Drift check (run first)**: `git diff --stat 8bdbb94..HEAD -- src/layouts/BaseLayout.astro src/pages/index.astro src/config/site.ts astro.config.mjs`
+> **Drift check (run first)**: `git diff --stat 2f2eac9..HEAD -- src/layouts/BaseLayout.astro src/pages/index.astro src/config/site.ts astro.config.mjs`
 > Cambio esperado según el orden recomendado: el plan 011 quita 4 líneas de `BaseLayout.astro` (import y 3
 > `<LegalDialog>`). (Si el 012 se hubiera aplicado antes, también habrá un aviso bajo el vídeo en `index.astro`:
 > no afecta a este plan.) Cualquier otro cambio: compara con "Current state" y, si no coincide, STOP.
@@ -19,7 +19,7 @@
 - **Risk**: LOW (el cambio de `<head>` y del preload está **probado en clones de Astro 6 y de Astro 7**, ver "Current state")
 - **Depends on**: none (recomendado después de 011, que también toca `BaseLayout.astro`)
 - **Category**: seo / perf
-- **Planned at**: commit `8bdbb94`, 2026-09-22
+- **Planned at**: commit `2f2eac9`, 2026-09-22
 
 ## Why this matters
 

@@ -6,7 +6,7 @@
 > decida; solo entonces ejecuta la Fase B. Run every verification command. When
 > done (o al detenerte en A), update the status row in `plans/README.md`.
 >
-> **Drift check (run first)**: `git diff --stat 5b37c88..HEAD -- astro.config.mjs src/config/site.ts public/robots.txt`
+> **Drift check (run first)**: `git diff --stat 8675271..HEAD -- astro.config.mjs src/config/site.ts public/robots.txt`
 > Compara con "Current state" si hubo cambios.
 
 ## Status
@@ -16,7 +16,7 @@
 - **Risk**: MED (URLs/SEO; un error rompe canonicals, sitemap o la API key)
 - **Depends on**: none (recomendado hacerlo al final, tras estabilizar el resto)
 - **Category**: migration
-- **Planned at**: commit `5b37c88`, 2026-06-13
+- **Planned at**: commit `8675271`, 2026-06-13
 
 ## Why this matters
 

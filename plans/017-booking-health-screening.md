@@ -8,7 +8,7 @@
 > maintain the index.
 >
 > **Drift check (run first)**: `git apply --check plans/017-booking-health-screening.patch`
-> Debe aplicar sin errores. Si no aplica, STOP (los archivos del widget han cambiado desde `f2e3515`).
+> Debe aplicar sin errores. Si no aplica, STOP (los archivos del widget han cambiado desde `3e80609`).
 
 ## Status
 
@@ -17,7 +17,7 @@
 - **Risk**: LOW-MEDIUM (toca el flujo de reservas; el cambio está **probado**, ver "Current state")
 - **Depends on**: 016 (en producción). Va **antes** que 012, cuyo texto legal describe este formulario.
 - **Category**: feature / compliance
-- **Planned at**: commit `f2e3515`, 2026-09-23
+- **Planned at**: commit `3e80609`, 2026-09-23
 
 ## Why this matters
 
@@ -40,7 +40,7 @@ El campo de notas se queda para preferencias ("zona en la que centrarse, prefere
 
 ## Current state
 
-**Probado**: el parche `plans/017-booking-health-screening.patch` se aplicó en un clon del repo (`f2e3515`):
+**Probado**: el parche `plans/017-booking-health-screening.patch` se aplicó en un clon del repo (`3e80609`):
 
 - Con solo los tests aplicados: `Tests  7 failed | 22 passed (29)` (los 7 nuevos, cada uno por lo que describe).
 - Con el arreglo: `Tests  29 passed (29)`, `astro check` 0/0/0, build de 16 páginas.

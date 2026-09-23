@@ -5,7 +5,7 @@
 > anything in "STOP conditions" occurs, stop and report. When done, update the
 > status row in `plans/README.md`.
 >
-> **Drift check (run first)**: `git diff --stat 5b37c88..HEAD -- README.md docs/component-inventory.md docs/migration-roadmap.md`
+> **Drift check (run first)**: `git diff --stat 8675271..HEAD -- README.md docs/component-inventory.md docs/migration-roadmap.md`
 > Compara con "Current state" si hubo cambios.
 
 ## Status
@@ -15,7 +15,7 @@
 - **Risk**: LOW
 - **Depends on**: none
 - **Category**: docs
-- **Planned at**: commit `5b37c88`, 2026-06-13
+- **Planned at**: commit `8675271`, 2026-06-13
 
 ## Why this matters
 

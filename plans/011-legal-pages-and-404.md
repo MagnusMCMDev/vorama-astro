@@ -7,7 +7,7 @@
 > in `plans/README.md` — unless a reviewer dispatched you and told you they
 > maintain the index.
 >
-> **Drift check (run first)**: `git diff --stat 8bdbb94..HEAD -- src/layouts/BaseLayout.astro src/components/layout/Footer.astro src/components/interactive/ContactForm.astro src/components/interactive/LegalDialog.astro src/lib/booking/widget-render.ts src/pages`
+> **Drift check (run first)**: `git diff --stat 2f2eac9..HEAD -- src/layouts/BaseLayout.astro src/components/layout/Footer.astro src/components/interactive/ContactForm.astro src/components/interactive/LegalDialog.astro src/lib/booking/widget-render.ts src/pages`
 > Si algún archivo in-scope cambió, compara los extractos de "Current state"
 > con el código vivo antes de continuar; si no coinciden, trátalo como STOP.
 > Cambios esperados según el orden recomendado: el 016 modifica `widget-render.ts` (calendario, horarios y
@@ -20,7 +20,7 @@
 - **Risk**: LOW
 - **Depends on**: none (recomendado después de 010)
 - **Category**: bug / perf / seo
-- **Planned at**: commit `8bdbb94`, 2026-09-22
+- **Planned at**: commit `2f2eac9`, 2026-09-22
 
 ## Why this matters
 

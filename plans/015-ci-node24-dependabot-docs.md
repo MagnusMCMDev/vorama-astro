@@ -7,7 +7,7 @@
 > in `plans/README.md` — unless a reviewer dispatched you and told you they
 > maintain the index.
 >
-> **Drift check (run first)**: `git diff --stat 8bdbb94..HEAD -- .github package.json README.md CLAUDE.md docs`
+> **Drift check (run first)**: `git diff --stat 2f2eac9..HEAD -- .github package.json README.md CLAUDE.md docs`
 > Cambios esperados: el plan 010 sube dependencias en `package.json` y el 016 añade `happy-dom` a
 > `devDependencies`. Cualquier otro cambio en estos archivos: compara con "Current state" y, si no coincide, STOP.
 
@@ -19,7 +19,7 @@
   verifica con el propio despliegue)
 - **Depends on**: 010 (conviene que las dependencias ya estén al día antes de activar Dependabot)
 - **Category**: dx / tooling / docs
-- **Planned at**: commit `8bdbb94`, 2026-09-22 · **revisado** en `5f86a30`, 2026-09-23 (drift: solo `package.json`,
+- **Planned at**: commit `2f2eac9`, 2026-09-22 · **revisado** en `d33311d`, 2026-09-23 (drift: solo `package.json`,
   por 010 y 016; `checkout` v7.0.1, `setup-node` v7.0.0, `upload-pages-artifact` v5.0.0 y `deploy-pages` v5.0.1
   siguen siendo las últimas; `main` sin protección ni rulesets)
 

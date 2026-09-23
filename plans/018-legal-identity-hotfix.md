@@ -7,7 +7,7 @@
 > in `plans/README.md` — unless a reviewer dispatched you and told you they
 > maintain the index.
 >
-> **Drift check (run first)**: `git diff --stat 8bdbb94..HEAD -- src/content/legal`
+> **Drift check (run first)**: `git diff --stat 2f2eac9..HEAD -- src/content/legal`
 > Debe salir **vacío**. Si no, compara las anclas de texto de "Current state" con los ficheros; si no están, STOP.
 
 ## Status
@@ -17,7 +17,7 @@
 - **Risk**: LOW (solo texto de dos `.md`)
 - **Depends on**: none (va antes que 017 y 012)
 - **Category**: privacy
-- **Planned at**: commit `801d8f3`, 2026-09-23
+- **Planned at**: commit `d217252`, 2026-09-23
 
 ## Why this matters
 
@@ -146,6 +146,10 @@ La titularidad de este sitio web, vorama.es, (en adelante, Sitio Web) la ostenta
 - La LSSI (art. 10.1) pide en el aviso legal también un domicilio (vale el del local), un email y el NIF. El
   titular ha decidido publicar solo nombre y teléfono; si cambia de idea, basta con añadir la dirección del
   local y el email del negocio, que ya son públicos en `/contacto/`.
-- Los datos retirados siguen en el historial de git (commit `41edcb3`, repositorio público): quitarlos de ahí
-  exige reescribir el historial o hacer el repositorio privado. Decisión del titular.
+- **Historial de git reescrito el 2026-09-23** a petición del titular: en las versiones antiguas de los dos textos
+  legales, el NIF y la dirección se sustituyeron por `[NIF eliminado]` y `[dirección eliminada]` (89 commits con
+  contenido cambiado; autores, fechas y mensajes intactos; todos los identificadores de commit cambiaron y las
+  referencias de `plans/` se actualizaron). Copia del historial original, fuera del repo:
+  `C:\WebSites\_copias\vorama-astro-historial-original-2026-09-23.bundle`. GitHub puede seguir mostrando los
+  commits antiguos a quien tenga su identificador hasta que su soporte los purgue.
 - El plan 012 reescribe otras secciones de `privacidad.md`: sus anclas de texto no dependen de estas líneas.

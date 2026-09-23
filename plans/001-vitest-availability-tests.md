@@ -6,7 +6,7 @@
 > report — do not improvise. When done, update the status row for this plan
 > in `plans/README.md`.
 >
-> **Drift check (run first)**: `git diff --stat 5b37c88..HEAD -- src/lib/booking/availability.ts src/lib/booking/config.ts package.json .github/workflows/deploy.yml`
+> **Drift check (run first)**: `git diff --stat 8675271..HEAD -- src/lib/booking/availability.ts src/lib/booking/config.ts package.json .github/workflows/deploy.yml`
 > Si algún archivo in-scope cambió desde que se escribió este plan, compara los
 > extractos de "Current state" con el código vivo antes de continuar; si no
 > coinciden, trátalo como STOP condition.
@@ -18,13 +18,13 @@
 - **Risk**: LOW
 - **Depends on**: none
 - **Category**: tests
-- **Planned at**: commit `5b37c88`, 2026-06-12
+- **Planned at**: commit `8675271`, 2026-06-12
 
 ## Why this matters
 
 `src/lib/booking/availability.ts` genera los huecos reservables del sistema de
 reservas — el money-path del negocio. Esa lógica ya falló **tres veces en
-producción** (commits `d7fc7a3`, `31bd180`, `a7b16e6`: offset UTC incorrecto,
+producción** (commits `fca07b3`, `3a880c8`, `d2df330`: offset UTC incorrecto,
 eventos cruzando medianoche, y un evento bloqueando la misma hora en TODOS los
 días). Cada regresión llegó a producción porque no existe ni un solo test en el
 repo. Este plan instala Vitest, hace inyectable el reloj (`Date.now()` hoy está

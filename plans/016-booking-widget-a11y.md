@@ -7,7 +7,7 @@
 > in `plans/README.md` — unless a reviewer dispatched you and told you they
 > maintain the index.
 >
-> **Drift check (run first)**: `git diff --stat 8bdbb94..HEAD -- src/lib/booking/widget-state.ts src/lib/booking/widget-render.ts`
+> **Drift check (run first)**: `git diff --stat 2f2eac9..HEAD -- src/lib/booking/widget-state.ts src/lib/booking/widget-render.ts`
 > Debe salir **vacío** (ningún plan anterior del orden recomendado toca estos dos archivos antes que este).
 > Si no está vacío, `git apply --check plans/016-booking-widget-a11y.patch` dirá si el parche sigue aplicando;
 > si no aplica, STOP.
@@ -19,17 +19,17 @@
 - **Risk**: LOW-MEDIUM (toca el flujo de reservas, pero el cambio está **probado**: ver "Current state")
 - **Depends on**: none (recomendado justo después de 010)
 - **Category**: bug / accessibility
-- **Planned at**: commit `8bdbb94`, 2026-09-22
+- **Planned at**: commit `2f2eac9`, 2026-09-22
 
 ## Resultado de la ejecución (2026-09-22)
 
-- **Ronda 1** (ejecutor): parche aplicado tal cual — commits `08b923f` (happy-dom + 7 tests en rojo) y
-  `6c713f2` (arreglo); 21/21 tests.
+- **Ronda 1** (ejecutor): parche aplicado tal cual — commits `53dbc62` (happy-dom + 7 tests en rojo) y
+  `d0f082e` (arreglo); 21/21 tests.
 - **Revisión en Chrome real** (servidor de desarrollo del worktree, teclado real para Tab y flechas): todo lo
   del plan OK, más dos fallos **previos** que el parche no cubría: al entrar en el formulario, `goToStep()`
   enfocaba el honeypot oculto (el foco caía al `<body>`), y el anuncio del día leía la fecha ISO.
-- **Ronda 2** (ejecutor, a petición del revisor): `324acfc` (test nuevo "al pasar al formulario, el foco va al
-  campo Nombre" + aserción del anuncio ajustada, ambos en rojo antes) y `5eca6af` (primer control enfocable
+- **Ronda 2** (ejecutor, a petición del revisor): `eefe7e9` (test nuevo "al pasar al formulario, el foco va al
+  campo Nombre" + aserción del anuncio ajustada, ambos en rojo antes) y `5646d9f` (primer control enfocable
   que no sea `tabindex=-1` ni `aria-hidden`; anuncio "martes, 2 de junio: N horarios disponibles").
 - Resultado final en la rama `advisor/016-widget`: **22/22 tests**, `astro check` 0/0/0, build de 12 páginas,
   `npm audit` 0. El `plans/016-booking-widget-a11y.patch` refleja solo la ronda 1.
@@ -73,7 +73,7 @@ WhatsApp. Y, al fallar la validación del formulario, el foco no va al primer ca
 - `astro@7.3.3` + `vitest@5.0.1` (plan 010 aplicado): 21/21 tests, `astro check` 0/0/0 y build correcto.
 
 En los dos casos, **los 7 tests nuevos fallan con el código actual**, cada uno por el fallo que describe, y
-pasan con el parche. `git apply --check plans/016-booking-widget-a11y.patch` aplica limpio sobre `8bdbb94`.
+pasan con el parche. `git apply --check plans/016-booking-widget-a11y.patch` aplica limpio sobre `2f2eac9`.
 
 - `src/lib/booking/widget-state.ts:104-152` — `render()` actual:
 
@@ -245,7 +245,7 @@ Deja constancia en el informe de que lo has comprobado (o de que no has podido a
 
 Para y reporta si:
 
-- `git apply --check` falla (los archivos han cambiado desde `8bdbb94`). No reconstruyas el parche a mano.
+- `git apply --check` falla (los archivos han cambiado desde `2f2eac9`). No reconstruyas el parche a mano.
 - Algún test nuevo pasa antes del arreglo, o alguno de los 14 de `availability.test.ts` falla después.
 - `npm install -D happy-dom` rompe el árbol de dependencias o `npm audit` pasa a mostrar vulnerabilidades nuevas.
 - En la prueba manual, elegir día u hora deja de funcionar con el ratón.

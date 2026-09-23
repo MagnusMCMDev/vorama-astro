@@ -6,7 +6,7 @@
 > report — do not improvise. When done, update the status row for this plan
 > in `plans/README.md`.
 >
-> **Drift check (run first)**: `git diff --stat 5b37c88..HEAD -- src/lib/booking/widget-state.ts src/lib/booking/widget-render.ts src/lib/booking/schemas.ts`
+> **Drift check (run first)**: `git diff --stat 8675271..HEAD -- src/lib/booking/widget-state.ts src/lib/booking/widget-render.ts src/lib/booking/schemas.ts`
 > Si algún archivo in-scope cambió desde que se escribió este plan, compara los
 > extractos de "Current state" con el código vivo antes de continuar; si no
 > coinciden, trátalo como STOP condition.
@@ -18,7 +18,7 @@
 - **Risk**: LOW
 - **Depends on**: plans/001-vitest-availability-tests.md (la suite verde es la red de seguridad)
 - **Category**: bug
-- **Planned at**: commit `5b37c88`, 2026-06-13
+- **Planned at**: commit `8675271`, 2026-06-13
 
 ## Why this matters
 

@@ -7,7 +7,7 @@
 > in `plans/README.md` — unless a reviewer dispatched you and told you they
 > maintain the index.
 >
-> **Drift check (run first)**: `git diff --stat 8bdbb94..HEAD -- src/styles/theme.css src/components/interactive/ContactForm.astro src/components/sections/ReservaCard.astro src/components/layout/Header.astro src/components/sections/ImageCarousel.astro`
+> **Drift check (run first)**: `git diff --stat 2f2eac9..HEAD -- src/styles/theme.css src/components/interactive/ContactForm.astro src/components/sections/ReservaCard.astro src/components/layout/Header.astro src/components/sections/ImageCarousel.astro`
 > Cambio esperado según el orden recomendado: el plan 011 modifica `ContactForm.astro` (solo el enlace de
 > privacidad, hacia la línea 210). Cualquier otro cambio en estos archivos: compara con "Current state" y,
 > si no coincide, STOP.
@@ -20,7 +20,7 @@
   visuales pequeños y deliberados)
 - **Depends on**: none (recomendado después de 011, que también toca `ContactForm.astro`)
 - **Category**: accessibility
-- **Planned at**: commit `8bdbb94`, 2026-09-22
+- **Planned at**: commit `2f2eac9`, 2026-09-22
 
 ## Why this matters
 

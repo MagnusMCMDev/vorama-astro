@@ -5,7 +5,7 @@
 > anything in "STOP conditions" occurs, stop and report. When done, update the
 > status row in `plans/README.md`.
 >
-> **Drift check (run first)**: `git diff --stat 5b37c88..HEAD -- src/config/site.ts src/pages/contacto/index.astro src/pages/aprende-masaje-californiano/index.astro src/components/booking/BookingDialog.astro`
+> **Drift check (run first)**: `git diff --stat 8675271..HEAD -- src/config/site.ts src/pages/contacto/index.astro src/pages/aprende-masaje-californiano/index.astro src/components/booking/BookingDialog.astro`
 > Compara con "Current state" si hubo cambios.
 
 ## Status
@@ -15,7 +15,7 @@
 - **Risk**: LOW
 - **Depends on**: 005 toca el mismo `catch` de BookingDialog — si 005 ya se aplicó, respeta su forma (ver Step 4).
 - **Category**: tech-debt
-- **Planned at**: commit `5b37c88`, 2026-06-13
+- **Planned at**: commit `8675271`, 2026-06-13
 
 ## Why this matters
 

@@ -7,7 +7,7 @@
 > in `plans/README.md` — unless a reviewer dispatched you and told you they
 > maintain the index.
 >
-> **Drift check (run first)**: `git diff --stat c2f0600..HEAD -- src/layouts/BaseLayout.astro src/assets/images/pages`
+> **Drift check (run first)**: `git diff --stat f1bbb0a..HEAD -- src/layouts/BaseLayout.astro src/assets/images/pages`
 > Debe salir **vacío**. Si no, compara las líneas de "Current state" con el archivo; si no coinciden, STOP.
 
 ## Status
@@ -17,7 +17,7 @@
 - **Risk**: LOW (una imagen nueva y una línea de import; no toca la página)
 - **Depends on**: 014 (en producción: genera la imagen OG en build con `getImage`)
 - **Category**: seo / social
-- **Planned at**: commit `c2f0600`, 2026-09-23
+- **Planned at**: commit `f1bbb0a`, 2026-09-23
 
 ## Why this matters
 

@@ -7,7 +7,7 @@
 > in `plans/README.md` — unless a reviewer dispatched you and told you they
 > maintain the index.
 >
-> **Drift check (run first)**: `git diff --stat f2e3515..HEAD -- src/content/legal`
+> **Drift check (run first)**: `git diff --stat 3e80609..HEAD -- src/content/legal`
 > Debe salir **vacío**. Si no, compara las anclas de texto de "Current state" con los ficheros; si no están, STOP.
 
 ## Status
@@ -17,7 +17,7 @@
 - **Risk**: LOW (solo texto de dos `.md`)
 - **Depends on**: 018 (en producción)
 - **Category**: legal
-- **Planned at**: commit `9184fda`, 2026-09-23
+- **Planned at**: commit `371b7d9`, 2026-09-23
 
 ## Why this matters
 

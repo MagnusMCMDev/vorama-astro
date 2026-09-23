@@ -7,7 +7,7 @@
 > in `plans/README.md` — unless a reviewer dispatched you and told you they
 > maintain the index.
 >
-> **Drift check (run first)**: `git diff --stat 8bdbb94..HEAD -- package.json package-lock.json astro.config.mjs src/content.config.ts src/lib/booking/schemas.ts`
+> **Drift check (run first)**: `git diff --stat 2f2eac9..HEAD -- package.json package-lock.json astro.config.mjs src/content.config.ts src/lib/booking/schemas.ts`
 > Si algún archivo in-scope cambió desde que se escribió este plan, compara los
 > extractos de "Current state" con el código vivo antes de continuar; si no
 > coinciden, trátalo como STOP condition.
@@ -19,7 +19,7 @@
 - **Risk**: LOW (validado en un spike completo sobre un clon del repo, ver "Current state")
 - **Depends on**: none
 - **Category**: migration / security
-- **Planned at**: commit `8bdbb94`, 2026-09-22
+- **Planned at**: commit `2f2eac9`, 2026-09-22
 
 ## Why this matters
 
@@ -38,7 +38,7 @@ importa `zod` sin declararlo en `package.json`.
 ## Current state
 
 Evidencia de que el cambio es seguro: se hizo el upgrade completo en un clon
-desechable del repo (commit `8bdbb94`) con exactamente los comandos de este plan y el
+desechable del repo (commit `2f2eac9`) con exactamente los comandos de este plan y el
 resultado fue: `astro check` 0 errores/0 warnings/0 hints, `npm test` 14/14, `npm run
 build` 12 páginas, `npm audit` → `found 0 vulnerabilities`, y el HTML renderizado de
 los textos legales (Markdown) **idéntico byte a byte** al de Astro 6. El compilador

@@ -6,7 +6,7 @@
 > report — do not improvise. When done, update the status row for this plan
 > in `plans/README.md`.
 >
-> **Drift check (run first)**: `git diff --stat 5b37c88..HEAD -- src/pages package.json package-lock.json`
+> **Drift check (run first)**: `git diff --stat 8675271..HEAD -- src/pages package.json package-lock.json`
 > Si algo in-scope cambió, compara con "Current state" antes de continuar.
 
 ## Status
@@ -16,7 +16,7 @@
 - **Risk**: LOW
 - **Depends on**: none
 - **Category**: tech-debt / dependencies
-- **Planned at**: commit `5b37c88`, 2026-06-13
+- **Planned at**: commit `8675271`, 2026-06-13
 
 ## Why this matters
 
