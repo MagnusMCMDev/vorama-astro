@@ -76,9 +76,9 @@ arreglo probado, listo para `git apply`).
 
 | Cuándo | Acción | Plan |
 |--------|--------|------|
-| Ya | Google Cloud → credenciales → API key de Calendar: quitar el referrer `magnusmcmdev.github.io` (**hoy sigue aceptado**, comprobado) y dejar solo `https://vorama.es/*` y la Calendar API | 015 |
+| Hecho (2026-09-23) | API key de Calendar: el titular quitó el referrer `magnusmcmdev.github.io`. Comprobado sin mostrar la clave: `freeBusy` → 200 desde `https://vorama.es/`, 403 `API_KEY_HTTP_REFERRER_BLOCKED` desde el dominio antiguo y sin referrer | 015 |
 | Hecho (2026-09-23) | Textos de la pregunta de salud leídos y aprobados por el titular | 017 |
-| Ya | Aceptar el acuerdo de encargo de tratamiento (DPA) de Web3Forms: por ellos pasan los datos de salud y la política publicada cita sus cláusulas contractuales tipo. (Textos de privacidad y cookies: aprobados por el titular el 2026-09-23) | 012 |
+| Ya | DPA de Web3Forms: **no hay que firmar nada** — su DPA (v1.0, 13-07-2026, https://web3forms.com/dpa) se acepta al usar el servicio e incluye las cláusulas contractuales tipo; basta con guardar una copia en PDF. Web3Forms conserva los envíos 3 años (borrado a petición en support@web3forms.com). (Textos de privacidad y cookies: aprobados por el titular el 2026-09-23) | 012 |
 | Tras desplegar 017 | Borrar del correo (y del panel de Web3Forms, si lo permite) las solicitudes de más de 18 meses, sobre todo las que traen datos de salud | 017 |
 | Cuando convenga | El repositorio es público y su historial de git conserva el NIF y la dirección que quitó el 018: hacerlo privado (GitHub Pages en repo privado exige plan de pago) o reescribir el historial y forzar el push | 018 |
 | Tras desplegar 014 | Validar la portada en el test de resultados enriquecidos; forzar re-scrape de la vista previa en el depurador de Facebook | 014 |
