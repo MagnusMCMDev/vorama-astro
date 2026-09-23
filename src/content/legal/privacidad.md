@@ -1,6 +1,6 @@
 ---
 title: Política de Privacidad
-lastUpdated: "2024-11-06"
+lastUpdated: "2026-09-23"
 ---
 
 ## I. POLÍTICA DE PRIVACIDAD Y PROTECCIÓN DE DATOS
@@ -18,11 +18,9 @@ Esta política de privacidad está adaptada a la normativa española y europea v
 
 ### Identidad del responsable del tratamiento de los datos personales
 
-El responsable del tratamiento de los datos personales recogidos en Voramà Terapias es: Miguel Cerdá Martínez, con NIF: [NIF eliminado] (en adelante, Responsable del tratamiento). Sus datos de contacto son los siguientes:
+El responsable del tratamiento de los datos personales recogidos en Voramà Terapias es Miguel Cerdá Martínez (en adelante, Responsable del tratamiento). Puede contactar con él en:
 
-**Dirección:** [dirección eliminada]  
-**Teléfono de contacto:** 623941891  
-**Email de contacto:** vorama.terapias@gmail.com
+**Teléfono y WhatsApp:** 623 941 891
 
 ### Registro de Datos de Carácter Personal
 
@@ -82,10 +80,7 @@ El Usuario tiene sobre Voramà Terapias y podrá ejercer frente al Responsable d
 - **Derecho de oposición:** que no se lleve a cabo el tratamiento de sus datos de carácter personal.
 - **Derecho a no ser objeto de una decisión basada únicamente en el tratamiento automatizado.**
 
-Para ejercitar sus derechos, el Usuario podrá dirigirse por escrito al Responsable del tratamiento con la referencia **«RGPD-vorama.es»** a:
-
-**Dirección postal:** [dirección eliminada]  
-**Correo electrónico:** vorama.terapias@gmail.com
+Para ejercitar sus derechos, el Usuario podrá dirigirse al Responsable del tratamiento, con la referencia **«RGPD-vorama.es»**, a través del formulario de contacto del Sitio Web o por teléfono o WhatsApp en el 623 941 891.
 
 ### Reclamaciones ante la autoridad de control
 

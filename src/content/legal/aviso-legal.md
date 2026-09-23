@@ -1,17 +1,15 @@
 ---
 title: Aviso Legal
-lastUpdated: "2024-11-06"
+lastUpdated: "2026-09-23"
 ---
 
 ## I. INFORMACIÓN GENERAL
 
 En cumplimiento con el deber de información dispuesto en la Ley 34/2002 de Servicios de la Sociedad de la Información y el Comercio Electrónico (LSSI-CE) de 11 de julio, se facilitan a continuación los siguientes datos de información general de este sitio web:
 
-La titularidad de este sitio web, vorama.es, (en adelante, Sitio Web) la ostenta: **Miguel Cerdá Martínez**, con NIF: [NIF eliminado], y cuyos datos de contacto son:
+La titularidad de este sitio web, vorama.es, (en adelante, Sitio Web) la ostenta: **Miguel Cerdá Martínez**, cuyos datos de contacto son:
 
-**Dirección:** [dirección eliminada]  
-**Teléfono de contacto:** 623941891  
-**Email de contacto:** vorama.terapias@gmail.com
+**Teléfono y WhatsApp:** 623 941 891
 
 ## II. TÉRMINOS Y CONDICIONES GENERALES DE USO
 
