@@ -6,7 +6,7 @@ Dos rondas de la skill `improve`:
   producción** en https://vorama.es desde el 2026-06-15.
 - **010-016** — ronda del 2026-09-22 (commit `8bdbb94`): auditoría de implementación, seguridad,
   rendimiento, SEO y tecnologías + plan de actualización de versiones; revisada y ampliada el mismo día
-  (plan 016, pasos nuevos en 011-015).
+  (plan 016, pasos nuevos en 011-015). **Todos en producción desde el 2026-09-23.**
 - **017-019** — añadidos el 2026-09-23 a petición del titular: quitar su NIF y su dirección de los textos
   legales (018; el email, que el 018 también quitó, vuelve con el 019) y preguntar por la salud del cliente
   antes de confirmar la cita, con consentimiento explícito (017). El 012 se reescribió (v2) para describir ese
@@ -39,7 +39,7 @@ sobre el anterior y el resultado final fue: `npm audit` → 0 vulnerabilidades, 
 | 7 | 019 | Volver a poner el email de contacto en los textos legales | P0 | S | LOW | 018 | DONE — **en producción** (2026-09-23): `main` = `82be6c0`, deploy en verde; verificado en vorama.es (aviso legal y privacidad con nombre, teléfono y email como enlace `mailto:`; sin NIF ni dirección). 1ª ejecución cortada por límite de uso, repetida desde cero |
 | 8 | 017 | Pregunta de salud obligatoria en la reserva, con consentimiento explícito | P1 | M | LOW-MED | 016 | DONE — **en producción** (2026-09-23), publicado junto con el 012: `main` = `7e72176` (017 = `a47cbf9` tests, `0be841a` arreglo), deploy en verde; textos aprobados por el titular; verificado en vorama.es (el chunk del widget lleva la pregunta, la casilla de consentimiento explícito y el aviso «revisar salud»; sin «lesión reciente»). El formulario se probó en desarrollo: en producción la agenda está bloqueada a propósito |
 | 9 | 012 | Privacidad y cookies acordes a lo que hace la web (+ bug de `sessionStorage`) — **v2** | P2 | M | LOW | 011, 017, 018, 019 | DONE — **en producción** (2026-09-23): `main` = `7e72176` (`c1e2cd9` textos, `4aaa347` avisos, `1bb4369` consentimiento en el email, `7e72176` rate-limit + test), CI y deploy en verde; textos aprobados por el titular; verificado en vorama.es (privacidad con salud y art. 9.2.a, Web3Forms, email y sin Google Analytics; cookies sin Analytics; aviso del vídeo y de los 2 mapas). Ejecución cortada por límite de uso y reanudada; rebase sobre el 019 con un conflicto trivial |
-| 10 | 015 | CI (Node 24, actions v7), Dependabot, CI de PR y documentación obsoleta | P2 | S | LOW | 010 | TODO |
+| 10 | 015 | CI (Node 24, actions v7), Dependabot, CI de PR y documentación obsoleta | P2 | S | LOW | 010 | DONE — **en producción** (2026-09-23): `main` = `10e6f2e` (`c4eaae4` CI + engines, `2d7dba5` Dependabot, `10e6f2e` docs); deploy en verde con **Node v24.21.0**; Dependabot ejecutado (npm y actions) sin PRs: todo al día; los 3 YAML validan contra SchemaStore. Pendiente: el primer PR de Dependabot estrenará `ci.yml`; el titular activa las alertas de Dependabot del repo |
 
 Valores de estado: TODO | IN PROGRESS | DONE | BLOCKED (motivo en una línea) | REJECTED (racional).
 

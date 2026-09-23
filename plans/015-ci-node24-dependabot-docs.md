@@ -19,7 +19,9 @@
   verifica con el propio despliegue)
 - **Depends on**: 010 (conviene que las dependencias ya estén al día antes de activar Dependabot)
 - **Category**: dx / tooling / docs
-- **Planned at**: commit `8bdbb94`, 2026-09-22
+- **Planned at**: commit `8bdbb94`, 2026-09-22 · **revisado** en `5f86a30`, 2026-09-23 (drift: solo `package.json`,
+  por 010 y 016; `checkout` v7.0.1, `setup-node` v7.0.0, `upload-pages-artifact` v5.0.0 y `deploy-pages` v5.0.1
+  siguen siendo las últimas; `main` sin protección ni rulesets)
 
 ## Why this matters
 
@@ -108,13 +110,27 @@
   - `CLAUDE.md:34`: `- \`output: 'static'\`, GitHub Pages, \`base: '/vorama-astro/'\`. No introducir`
   - `README.md:9`: `- **Hosting**: GitHub Pages. \`base: '/vorama-astro/'\`, \`output: 'static'\`.`
   - `README.md:17`: `npm run dev            # http://localhost:4321/vorama-astro/`
-  - `docs/architecture.md:286-299`: sección "## 11. Hosting y deploy" con la URL de staging
-    `https://magnusmcmdev.github.io/vorama-astro/` y el "Path a producción" como algo pendiente.
+  - `docs/architecture.md:284-299`: sección "## 11. Hosting y deploy". Empieza así:
+
+    ```md
+    **GitHub Action** (`.github/workflows/deploy.yml`):
+    - Trigger: push a `main`.
+    - Build: `npm ci && npm run build`.
+    - Deploy: a GitHub Pages del propio repo `vorama-astro`.
+    ```
+
+    y sigue con la URL de staging `https://magnusmcmdev.github.io/vorama-astro/` ("URL inicial (staging)") y el
+    "Path a producción" (lista de 4 pasos) como algo pendiente.
+  - `docs/architecture.md:38`: `vorama-astro/` es la carpeta raíz del repo en el árbol de carpetas de la sección 3.
+    **Es correcta: no la toques.**
   - `docs/booking/architecture.md:164`: fila de tabla `| GH Pages base path (\`/vorama-astro/\`) | …`
   - `docs/booking/booking-system-spec.md:143`: `- Añadir referrer: \`https://magnusmcmdev.github.io/vorama-astro/*\` …`
   - `docs/migration-roadmap.md`: documento de la migración (líneas 14, 32, 38-39, 183, 235-256 hablan del
     staging). Es un **histórico**: no se reescribe, solo se marca como tal.
   - `src/pages/_dev/components.astro:5`: comentario `URL: /vorama-astro/_dev/components/`.
+  - `.env.example:14` (plantilla de configuración, sin valores reales):
+    `#   - HTTP referrer: https://magnusmcmdev.github.io/* (y el dominio final)` — la misma instrucción
+    peligrosa que `booking-system-spec.md:143`.
 
 - Estado real (para redactar la documentación): `astro.config.mjs` → `site: 'https://vorama.es'`,
   `base: '/'`, `trailingSlash: 'always'`; `public/CNAME` → `vorama.es`; el sitio está en producción.
@@ -125,7 +141,7 @@
 |---------|---------|---------------------|
 | Install | `npm ci` | exit 0 |
 | Typecheck | `npm run check` | `0 errors` |
-| Tests | `npm test` | todos pasan |
+| Tests | `npm test` | `31 passed` |
 | Build | `npm run build` | `Complete!` |
 | YAML válido | `npx -y js-yaml@4 .github/workflows/deploy.yml > /dev/null && echo OK` | `OK` |
 
@@ -137,7 +153,8 @@
 - `.github/dependabot.yml` (crear)
 - `package.json` (solo el campo `engines`)
 - `README.md`, `CLAUDE.md`, `docs/architecture.md`, `docs/booking/architecture.md`,
-  `docs/booking/booking-system-spec.md`, `docs/migration-roadmap.md` (solo un aviso), `src/pages/_dev/components.astro` (solo el comentario)
+  `docs/booking/booking-system-spec.md`, `docs/migration-roadmap.md` (solo un aviso), `src/pages/_dev/components.astro` (solo el comentario),
+  `.env.example` (solo la línea 14)
 - `plans/README.md` (fila de estado)
 
 **Out of scope** (NO tocar):
@@ -189,7 +206,7 @@ on:
 
 **Verify**: `npx -y js-yaml@4 .github/workflows/deploy.yml > /dev/null && echo OK` → `OK` ·
 `grep -c "actions/checkout@v7\|actions/setup-node@v7\|node-version: '24'\|npm run check" .github/workflows/deploy.yml` → `4` ·
-`grep -c "npx astro check\|@v5" .github/workflows/deploy.yml` → `2` (solo `upload-pages-artifact@v5` y `deploy-pages@v5`).
+`grep -c "npx astro check\|@v5" .github/workflows/deploy.yml` → `3` (`upload-pages-artifact@v5`, `deploy-pages@v5` y el comentario de la línea 15, `# Permissions necessary for actions/deploy-pages@v5`).
 
 ### Step 2: CI en los pull requests
 
@@ -321,8 +338,19 @@ En `package.json`:
 npm run dev            # http://localhost:4321/
 ```
 
-4. `docs/architecture.md`, sección "## 11. Hosting y deploy": sustituye las líneas de "URL inicial
-   (staging)" y "Path a producción" (incluida la lista numerada de 4 pasos) por:
+4. `docs/architecture.md`, sección "## 11. Hosting y deploy":
+
+   a. Sustituye el bloque `**GitHub Action** (…):` y sus 3 viñetas (Trigger, Build, Deploy) por:
+
+```md
+**GitHub Actions:**
+- `deploy.yml`: en cada push a `main` (salvo si solo cambian `docs/`, `plans/`, `README.md` o `CLAUDE.md`) y a mano desde la pestaña Actions. Con Node 24 ejecuta `npm ci`, `npm run check`, `npm test` y `npm run build`, y publica en GitHub Pages.
+- `ci.yml`: las mismas comprobaciones, sin desplegar, en cada pull request a `main` (incluidos los de Dependabot).
+- `dependabot.yml`: pull requests semanales de dependencias npm (grupos `astro` y `tooling`) y mensuales de GitHub Actions.
+```
+
+   b. Sustituye las líneas de "URL inicial (staging)" y "Path a producción" (incluida la lista numerada de 4
+   pasos) por:
 
 ```md
 **URL de producción:** `https://vorama.es` (dominio propio en dondominio, DNS apuntando a GitHub Pages;
@@ -355,15 +383,25 @@ con `base: '/vorama-astro/'` hasta la migración de dominio.
 8. `src/pages/_dev/components.astro:5`: `URL: /vorama-astro/_dev/components/` → `URL: /_dev/components/`
    (recuerda: esa página no se construye, es solo para `npm run dev`).
 
+9. `.env.example:14`: cambia la línea por
+
+```
+#   - HTTP referrer: https://vorama.es/* (único dominio del sitio)
+```
+
 **Verify**:
-- `grep -rn "vorama-astro/" README.md CLAUDE.md docs/architecture.md docs/booking src/pages/_dev` → sin resultados
-  (las menciones que quedan están solo en `docs/migration-roadmap.md`, marcado como histórico, y en la nota "Histórico" de `architecture.md`)
+- `grep -rn "vorama-astro/" README.md CLAUDE.md docs/booking src/pages/_dev` → sin resultados
+- `grep -n "vorama-astro/" docs/architecture.md` → **exactamente 3 líneas**: la 38 (carpeta raíz del árbol, correcta)
+  y las 2 líneas de la nota "Histórico" que acabas de escribir. (Las de `docs/migration-roadmap.md` se quedan:
+  es un documento histórico.)
+- `grep -rn "magnusmcmdev.github.io" .env.example docs/booking` → sin resultados
+- `grep -c "GitHub Actions:\|ci.yml\|dependabot.yml" docs/architecture.md` → `≥3`
 - `grep -c "vorama.es" README.md CLAUDE.md` → `≥1` en cada uno
 - `grep -c "magnusmcmdev.github.io/vorama-astro" docs/booking/booking-system-spec.md` → `0`
 
 ### Step 6: Verificación local completa
 
-**Verify**: `npm ci` → OK · `npm run check` → 0 errors · `npm test` → pasa · `npm run build` → OK.
+**Verify**: `npm ci` → OK · `npm run check` → 0 errors · `npm test` → `31 passed` · `npm run build` → OK (16 páginas).
 
 ## Test plan
 
@@ -390,14 +428,18 @@ No hay tests automáticos para YAML de CI. La verificación real es el propio de
   `PUBLIC_GCAL_API_KEY`, `PUBLIC_GCAL_CALENDAR_ID`, `PUBLIC_WEB3FORMS_KEY`,
   `PUBLIC_WEB3FORMS_KEY_CONTACTO`, `PUBLIC_WEB3FORMS_KEY_REGALA`.
 - **GitHub → Settings → Pages**: origen "GitHub Actions" y dominio `vorama.es` con "Enforce HTTPS" activo.
+- **GitHub → Settings → Advanced Security**: activar **Dependabot alerts** y **Dependabot security updates**
+  (comprobado el 2026-09-23: las dos están desactivadas). `dependabot.yml` solo programa las actualizaciones
+  de versión semanales; las alertas avisan de una vulnerabilidad el mismo día que se publica.
 
 ## Done criteria
 
 - [ ] `deploy.yml` con `checkout@v7`, `setup-node@v7`, `node-version: '24'`, `npm run check` y `paths-ignore`
 - [ ] `.github/workflows/ci.yml` y `.github/dependabot.yml` creados y con YAML válido
 - [ ] `package.json` → `engines.node` = `^22.12.0 || ^24 || >=26`
-- [ ] `grep -rn "vorama-astro/" README.md CLAUDE.md docs/architecture.md docs/booking src/pages/_dev` → sin resultados
-- [ ] `npm run check` 0 errors · `npm test` pasa · `npm run build` OK
+- [ ] `grep -rn "vorama-astro/" README.md CLAUDE.md docs/booking src/pages/_dev` → sin resultados; en `docs/architecture.md`, solo las 3 líneas esperadas
+- [ ] `.env.example` y `docs/booking` sin `magnusmcmdev.github.io`
+- [ ] `npm run check` 0 errors · `npm test` 31 passed · `npm run build` OK
 - [ ] `git status` sin cambios fuera del Scope
 - [ ] Fila 015 de `plans/README.md` actualizada
 - [ ] (Tras el merge) el despliegue queda en verde con Node 24
