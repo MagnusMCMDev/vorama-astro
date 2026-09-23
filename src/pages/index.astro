@@ -110,6 +110,10 @@ const jsonLd = {
           </svg>
         </span>
       </button>
+      <p class="video-note">
+        El vídeo se carga desde YouTube (modo de privacidad mejorada) solo al pulsar reproducir.
+        <a href={`${base}politica-de-cookies/`}>Más información</a>.
+      </p>
     </div>
 
     <div class="benefits-grid">
@@ -327,6 +331,13 @@ const jsonLd = {
   .video-wrap {
     max-width: 900px;
     margin: 0 auto var(--vrm-space-2xl);
+  }
+
+  .video-note {
+    margin-top: var(--vrm-space-sm);
+    font-size: var(--vrm-font-size-xs);
+    color: var(--vrm-color-text-muted);
+    text-align: center;
   }
 
   .video {

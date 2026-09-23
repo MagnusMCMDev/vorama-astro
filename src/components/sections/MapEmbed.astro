@@ -18,6 +18,7 @@ const embedSrc = `https://www.google.com/maps?q=${encodeURIComponent(query)}&out
     </svg>
     <span class="map-embed__label">Ver mapa</span>
     <span class="map-embed__hint">{title}</span>
+    <span class="map-embed__note">Se cargará Google Maps, que puede usar cookies</span>
   </button>
 </div>
 
@@ -60,6 +61,10 @@ const embedSrc = `https://www.google.com/maps?q=${encodeURIComponent(query)}&out
   .map-embed__label { font-weight: var(--vrm-font-weight-semibold); }
   .map-embed__hint {
     font-size: var(--vrm-font-size-sm);
+    color: var(--vrm-color-text-muted);
+  }
+  .map-embed__note {
+    font-size: var(--vrm-font-size-xs);
     color: var(--vrm-color-text-muted);
   }
 </style>
