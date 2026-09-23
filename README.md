@@ -6,7 +6,7 @@ Sitio estático del centro de masaje californiano **Voramà Terapias**
 solicitud por email con Web3Forms — sin backend).
 
 - **Stack**: Astro (static) + TypeScript estricto + CSS scoped con tokens `--vrm-*`. Sin frameworks de UI.
-- **Hosting**: GitHub Pages. `base: '/vorama-astro/'`, `output: 'static'`.
+- **Hosting**: GitHub Pages con dominio propio `https://vorama.es` (`base: '/'`, `output: 'static'`).
 - **Node**: >= 22.12.0.
 
 ## Puesta en marcha
@@ -14,7 +14,7 @@ solicitud por email con Web3Forms — sin backend).
 ```sh
 npm install
 cp .env.example .env   # rellena las claves (ver más abajo)
-npm run dev            # http://localhost:4321/vorama-astro/
+npm run dev            # http://localhost:4321/
 ```
 
 En desarrollo el widget de reservas usa un mock de disponibilidad (todos los

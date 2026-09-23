@@ -31,7 +31,7 @@ sin frameworks de UI). Lee esto antes de tocar nada.
 
 ## Restricciones del proyecto
 
-- `output: 'static'`, GitHub Pages, `base: '/vorama-astro/'`. No introducir
+- `output: 'static'`, GitHub Pages con dominio propio (`vorama.es`), `base: '/'`. No introducir
   backend ni cambiar a hybrid sin discutirlo (ver `docs/project-rules.md`).
 - Mantener las URLs actuales (continuidad SEO).
 - Las páginas de prueba viven en `src/pages/_dev/` (ocultas a buscadores).

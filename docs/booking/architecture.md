@@ -161,7 +161,7 @@ Inyectadas en build via `import.meta.env.PUBLIC_*`. Las restricciones de segurid
 | Web3Forms 250/mes insuficiente | Volumen actual lo cubre; si se llega al límite, plan paid o swap a Formspree. |
 | Race condition (dos solicitudes mismo slot) | Aceptable: la segunda verá el slot libre porque Miguel aún no creó el evento. Miguel resuelve por WhatsApp. |
 | URL del calendario filtrada | Solo expone busy times opacos, no detalles. Riesgo bajo. |
-| GH Pages base path (`/vorama-astro/`) | Tener en cuenta en URLs internas y en el referrer de la API key. |
+| Dominio propio (`https://vorama.es`, `base: '/'`) | Tener en cuenta en URLs internas y en el referrer de la API key. |
 | GCal o Web3Forms caídos | El widget muestra `BookingError` con CTA a WhatsApp como fallback. |
 
 ---

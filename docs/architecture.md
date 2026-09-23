@@ -285,18 +285,16 @@ Alimenta el bloque `Reviews` y el JSON-LD `LocalBusiness.review`.
 
 **Repo:** `vorama-astro` (independiente del actual `MagnusMCMDev.github.io`).
 
-**GitHub Action** (`.github/workflows/deploy.yml`):
-- Trigger: push a `main`.
-- Build: `npm ci && npm run build`.
-- Deploy: a GitHub Pages del propio repo `vorama-astro`.
+**GitHub Actions:**
+- `deploy.yml`: en cada push a `main` (salvo si solo cambian `docs/`, `plans/`, `README.md` o `CLAUDE.md`) y a mano desde la pestaña Actions. Con Node 24 ejecuta `npm ci`, `npm run check`, `npm test` y `npm run build`, y publica en GitHub Pages.
+- `ci.yml`: las mismas comprobaciones, sin desplegar, en cada pull request a `main` (incluidos los de Dependabot).
+- `dependabot.yml`: pull requests semanales de dependencias npm (grupos `astro` y `tooling`) y mensuales de GitHub Actions.
 
-**URL inicial (staging):** `https://magnusmcmdev.github.io/vorama-astro/` (project page, requiere `base: '/vorama-astro/'` en `astro.config.mjs`).
+**URL de producción:** `https://vorama.es` (dominio propio en dondominio, DNS apuntando a GitHub Pages;
+`public/CNAME` contiene el dominio y `astro.config.mjs` usa `site: 'https://vorama.es'` y `base: '/'`).
 
-**Path a producción** (cuando el usuario esté listo):
-1. Configurar dominio custom en GitHub Pages settings (CNAME).
-2. Cambiar `base: '/'` y `site: 'https://el-dominio-final.es'` en astro.config.
-3. Apuntar DNS al GitHub Pages CNAME.
-4. El sitio antiguo (`magnusmcmdev.github.io`) sigue funcionando hasta que el usuario decida desconectarlo.
+**Histórico:** el sitio estuvo publicado como *project page* en `https://magnusmcmdev.github.io/vorama-astro/`
+con `base: '/vorama-astro/'` hasta la migración de dominio.
 
 **Alternativas de hosting** (no instalar ahora, evaluar al final):
 - Cloudflare Pages — conectar repo, dominio custom, build cache. **Recomendado** si se quiere brotli (que GH Pages no tiene).

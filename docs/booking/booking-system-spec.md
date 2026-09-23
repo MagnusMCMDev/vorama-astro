@@ -140,7 +140,7 @@ Para cada día D del mes consultado:
 3. APIs & Services → Credentials → Create Credentials → API key.
 4. Editar la key creada:
    - **Application restrictions: HTTP referrers (web sites)**.
-   - Añadir referrer: `https://magnusmcmdev.github.io/vorama-astro/*` (y el dominio final si se cambia más adelante).
+   - Añadir referrer: `https://vorama.es/*` (único dominio del sitio; retirar cualquier referrer antiguo de `github.io`).
    - **API restrictions: Restrict key**.
    - Marcar solo "Google Calendar API".
 5. Guardar y copiar la key.

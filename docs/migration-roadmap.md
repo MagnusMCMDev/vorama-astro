@@ -1,5 +1,9 @@
 # Migration Roadmap — Voramà Astro (Fase B)
 
+> **Documento histórico.** Describe la migración de WordPress a Astro y el staging en
+> `magnusmcmdev.github.io/vorama-astro/`. El sitio está en producción en https://vorama.es
+> desde 2026-06 con `base: '/'`; las URLs de staging de este documento ya no son válidas.
+
 > Plan cronológico de la migración de WordPress estático a Astro.
 > Última revisión: 2026-05-08.
 
