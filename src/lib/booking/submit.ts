@@ -14,14 +14,23 @@ const RATE_KEY = 'booking:last-submit';
 const RATE_WINDOW_MS = 60_000; // 1 minuto
 
 function checkRateLimit(): void {
-  const last = sessionStorage.getItem(RATE_KEY);
+  let last: string | null = null;
+  try {
+    last = sessionStorage.getItem(RATE_KEY);
+  } catch {
+    // Almacenamiento bloqueado o no disponible: el rate-limit es una ayuda, no debe impedir reservar.
+  }
   if (last && Date.now() - Number(last) < RATE_WINDOW_MS) {
     throw new Error('RATE_LIMIT');
   }
 }
 
 function markSubmit(): void {
-  sessionStorage.setItem(RATE_KEY, String(Date.now()));
+  try {
+    sessionStorage.setItem(RATE_KEY, String(Date.now()));
+  } catch {
+    // La reserva ya se ha enviado: no convertir un fallo de almacenamiento en error.
+  }
 }
 
 // ── Formateo del email ────────────────────────────────────────────────────────
