@@ -82,7 +82,7 @@ arreglo probado, listo para `git apply`).
 | Tras desplegar 017 | Borrar del correo (y del panel de Web3Forms, si lo permite) las solicitudes de más de 18 meses, sobre todo las que traen datos de salud | 017 |
 | Cuando convenga | El repositorio es público y su historial de git conserva el NIF y la dirección que quitó el 018: hacerlo privado (GitHub Pages en repo privado exige plan de pago) o reescribir el historial y forzar el push | 018 |
 | Tras desplegar 014 | Validar la portada en el test de resultados enriquecidos; forzar re-scrape de la vista previa en el depurador de Facebook | 014 |
-| Tras desplegar 014 | Search Console: sitemap enviado; lista de 404 → añadir cada URL antigua a `redirects` | 014 |
+| Tras desplegar 014 | Search Console: `sitemap-index.xml` enviado por el titular el 2026-09-23 (el sitio lo sirve bien: 200 `application/xml`, también a Googlebot, apunta a `sitemap-0.xml` con 15 URLs; el "No se ha podido obtener" inicial es transitorio). **Eliminar de Search Console el `page-sitemap.xml` de WordPress** (hoy 404). Lista de 404 → añadir cada URL antigua a `redirects` | 014 |
 | Tras mergear 015 | Comprobar el deploy en verde con Node 24 y el primer PR de Dependabot con el CI en verde | 015 |
 | Cuando convenga | Si la cuenta de Gmail del calendario de reservas es también personal, usar un calendario secundario solo para citas | 015 |
 
