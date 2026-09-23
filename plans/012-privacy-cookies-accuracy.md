@@ -8,11 +8,11 @@
 > maintain the index.
 >
 > **Drift check (run first)**: `git diff --stat 8bdbb94..HEAD -- src/content/legal src/lib/booking/widget-render.ts src/lib/booking/submit.ts src/components/sections/MapEmbed.astro src/pages/index.astro src/components/booking/BookingDialog.astro src/components/interactive/ContactForm.astro`
-> Cambios esperados según el orden recomendado (010 → 016 → 011 → 013 → 014 → 018 → 017 → **012**):
+> Cambios esperados según el orden recomendado (010 → 016 → 011 → 013 → 014 → 018 → 019 → 017 → **012**):
 > `widget-render.ts` (016, 011 y 017: formulario con la pregunta de salud), `submit.ts` (017: email con el
 > bloque de salud; `checkRateLimit`/`markSubmit` siguen como en "Current state"), `ContactForm.astro` (011 y
 > 013), `index.astro` (014: `jsonLd` y props del layout), `BookingDialog.astro` (017: estilos) y
-> `privacidad.md`/`aviso-legal.md` (018: identidad reducida a nombre y teléfono, `lastUpdated` 2026-09-23).
+> `privacidad.md`/`aviso-legal.md` (018 y 019: identidad = nombre, teléfono y email, `lastUpdated` 2026-09-23).
 > Ninguno toca el bloque del vídeo, `MapEmbed.astro`, `cookies.md` ni las secciones de `privacidad.md` que
 > reescribe este plan. Cualquier otro cambio: compara con "Current state" y, si no coincide, STOP.
 
@@ -21,7 +21,7 @@
 - **Priority**: P2
 - **Effort**: M
 - **Risk**: LOW (texto legal + dos `try/catch` con test). **El texto legal se publica a nombre del titular: no se mergea sin su visto bueno** (ver "Decisiones del titular").
-- **Depends on**: 011 (páginas legales), 018 (identidad ya reducida) y **017** (la pregunta de salud que este texto describe)
+- **Depends on**: 011 (páginas legales), 018 y 019 (identidad) y **017** (la pregunta de salud que este texto describe)
 - **Category**: compliance / bug
 - **Planned at**: commit `8bdbb94`, 2026-09-22 · **v2** en `f2e3515`, 2026-09-23 (salud con consentimiento explícito, identidad reducida)
 
@@ -66,7 +66,7 @@ ejecutarlo:
 1. **Datos de salud → SÍ se piden**, con pregunta obligatoria y consentimiento explícito (plan 017,
    decidido por el titular el 2026-09-23). Este plan redacta la política para ese formulario.
 2. **Plazo de conservación → 18 meses** (confirmado por el titular el 2026-09-23).
-3. **Identidad → solo nombre y teléfono** (plan 018, ya publicado): este plan no toca esas líneas.
+3. **Identidad → nombre, teléfono y email** (planes 018 y 019): este plan no toca esas líneas.
 4. Fuera del repo (lo hace el titular, no el ejecutor): aceptar el **acuerdo de encargo de tratamiento
    (DPA) de Web3Forms** (su política dice que lo ofrece) y revisar si su panel permite borrar envíos antiguos.
    Con datos de salud pasando por Web3Forms, el DPA deja de ser opcional.
@@ -84,9 +84,9 @@ Step 2 y añade `health: 'no'` al test; los recuentos parten de los 29 tests que
   (47-51), Fines (53-55), Retención (57-59), Destinatarios (61-63), Menores (65-67), Secreto y seguridad
   (69-71), Derechos (73-88), Reclamaciones (90-92); luego `## II. ACEPTACIÓN…` (94-98) y la línea final
   100 (`*Este documento de Política de Privacidad fue creado el día 06/11/2024.*`).
-  - **Identidad y derechos**: tras el plan 018, la sección de identidad solo tiene el nombre y el teléfono
-    del titular, y el párrafo de derechos remite al formulario de contacto y al teléfono/WhatsApp. **No los
-    toques.** Los números de línea de este bloque son los de `8bdbb94`: guíate siempre por los encabezados.
+  - **Identidad y derechos**: tras los planes 018 y 019, la sección de identidad tiene el nombre, el teléfono
+    y el email del titular, y el párrafo de derechos remite al formulario de contacto, al email y al
+    teléfono/WhatsApp. **No los toques.** Los números de línea de este bloque son los de `8bdbb94`: guíate siempre por los encabezados.
   - Línea 16: `- El Real Decreto 1720/2007, de 21 de diciembre, por el que se aprueba el Reglamento de desarrollo de la Ley Orgánica 15/1999, … (RDLOPD).`
   - Líneas 27-29:
 
@@ -104,7 +104,8 @@ Step 2 y añade `health: 'no'` al test; los recuentos parten de los 29 tests que
 - `src/content/legal/cookies.md` (39 líneas): secciones "Cookies propias", "Cookies de terceros"
   (Google Analytics), "Cookies de redes sociales" (Facebook, Instagram, YouTube) y "Deshabilitar…". Se
   reescribe entero.
-- Front matter de ambos: `lastUpdated: "2024-11-06"` (schema: `z.string().regex(/^\d{4}-\d{2}-\d{2}$/)`).
+- Front matter: `cookies.md` tiene `lastUpdated: "2024-11-06"`; `privacidad.md`, `"2026-09-23"` (lo cambió el
+  plan 018). Schema: `z.string().regex(/^\d{4}-\d{2}-\d{2}$/)`.
   Tras el plan 011, `LegalContent.astro` pinta "Última actualización: …" a partir de este campo.
 - Formularios reales (lo que la política debe describir):
   - `ContactForm.astro` variante `contacto`: nombre, apellidos, email, teléfono, comentario, casilla de privacidad.
@@ -242,7 +243,7 @@ En la solicitud de reserva se pregunta, además, si el Usuario tiene alguna lesi
 - **Formulario de contacto:** el consentimiento del Usuario (artículo 6.1.a del RGPD), que presta al marcar la casilla de aceptación antes de enviarlo.
 - **Datos de salud de la solicitud de reserva:** el consentimiento explícito del Usuario (artículo 9.2.a del RGPD), que presta marcando la casilla específica que aparece cuando indica que tiene un problema de salud. Sin ese consentimiento no se puede enviar la descripción.
 
-El Usuario puede retirar su consentimiento en cualquier momento a través del formulario de contacto o por teléfono o WhatsApp, sin que ello afecte a la licitud del tratamiento anterior a la retirada.
+El Usuario puede retirar su consentimiento en cualquier momento a través del formulario de contacto, por email o por teléfono o WhatsApp, sin que ello afecte a la licitud del tratamiento anterior a la retirada.
 ```
 
 **3f.** Sustituye el párrafo de `### Períodos de retención de los datos personales` por:
@@ -275,7 +276,7 @@ Antes de enviar cualquier formulario, el Usuario debe leer esta Política de Pri
 
 **3i.** Borra la última línea (`*Este documento de Política de Privacidad fue creado el día 06/11/2024.*`): la página ya muestra la fecha del front matter.
 
-**3j.** En el front matter, cambia `lastUpdated: "2024-11-06"` por la fecha de hoy en formato `"YYYY-MM-DD"`.
+**3j.** En el front matter, pon en `lastUpdated` la fecha de hoy en formato `"YYYY-MM-DD"` (hoy vale `"2026-09-23"`, del plan 018: si ejecutas el plan ese mismo día, déjalo igual).
 
 **Verify**:
 - `grep -c "Google Analytics\|1720/2007\|implicará la aceptación\|creado el día" src/content/legal/privacidad.md` → `0`
