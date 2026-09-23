@@ -31,6 +31,10 @@ interface Props {
   bodyClass?: string | undefined;
   /** Imagen LCP de la página. Si se provee, se inyecta <link rel="preload" as="image">. */
   lcpImage?: ImageMetadata | undefined;
+  /** Anchos del <Image> LCP; deben coincidir con los de la página. */
+  lcpWidths?: number[] | undefined;
+  /** `sizes` del <Image> LCP; debe coincidir con el de la página. */
+  lcpSizes?: string | undefined;
 }
 
 const {
@@ -41,6 +45,8 @@ const {
   jsonLd,
   bodyClass,
   lcpImage,
+  lcpWidths,
+  lcpSizes,
 } = Astro.props;
 
 const siteOrigin = Astro.site?.origin ?? '';
@@ -56,6 +62,16 @@ const ogFallback = await getImage({
   format: 'jpg',
 });
 const ogImageUrl = ogImage ?? new URL(ogFallback.src, siteOrigin).href;
+
+// Preload del LCP: hay que generar las MISMAS variantes que el <Image> de la página,
+// o el navegador descarga una imagen de más (era el caso con `lcpImage.src`, el original).
+const lcpPreload = lcpImage
+  ? await getImage({
+      src: lcpImage,
+      widths: lcpWidths ?? [480, 768, 1024, 1400],
+      sizes: lcpSizes ?? '100vw',
+    })
+  : null;
 
 // JSON-LD: normaliza a array para el bucle
 const jsonLdSchemas = jsonLd
@@ -106,8 +122,15 @@ const base = import.meta.env.BASE_URL;
     <link rel="preload" as="font" type="font/woff2" href={brygadaFontUrl} crossorigin />
 
     <!-- Preload de imagen LCP por página (opcional) -->
-    {lcpImage && (
-      <link rel="preload" as="image" href={lcpImage.src} />
+    {lcpPreload && (
+      <link
+        rel="preload"
+        as="image"
+        href={lcpPreload.src}
+        imagesrcset={lcpPreload.srcSet.attribute}
+        imagesizes={lcpSizes}
+        fetchpriority="high"
+      />
     )}
 
     <!-- Favicon -->
