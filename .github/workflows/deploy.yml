@@ -35,6 +35,8 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: '24'
+          # Siempre la última corrección de Node 24 (no la que el runner tenga en caché).
+          check-latest: true
           cache: 'npm'
 
       - name: Install dependencies
